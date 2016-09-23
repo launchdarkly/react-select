@@ -164,6 +164,10 @@ var Async = (function (_Component) {
 				inputValue = inputValue.toLowerCase();
 			}
 
+			if (this.props.onInputChange) {
+				this.props.onInputChange(inputValue);
+			}
+
 			return this.loadOptions(inputValue);
 		}
 	}, {
@@ -429,6 +433,9 @@ var Creatable = _react2['default'].createClass({
 
 	onInputChange: function onInputChange(input) {
 		// This value may be needed in between Select mounts (when this.select is null)
+		if (this.props.onInputChange) {
+			this.props.onInputChange(input);
+		}
 		this.inputValue = input;
 	},
 
