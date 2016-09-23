@@ -526,6 +526,9 @@ var Creatable = _react2['default'].createClass({
 		}
 
 		// This value may be needed in between Select mounts (when this.select is null)
+		if (this.props.onInputChange) {
+			this.props.onInputChange(input);
+		}
 		this.inputValue = input;
 	},
 
