@@ -45,6 +45,10 @@ var _componentsNumericSelect = require('./components/NumericSelect');
 
 var _componentsNumericSelect2 = _interopRequireDefault(_componentsNumericSelect);
 
+var _componentsBooleanSelect = require('./components/BooleanSelect');
+
+var _componentsBooleanSelect2 = _interopRequireDefault(_componentsBooleanSelect);
+
 var _componentsVirtualized = require('./components/Virtualized');
 
 var _componentsVirtualized2 = _interopRequireDefault(_componentsVirtualized);
@@ -62,6 +66,7 @@ _reactDom2['default'].render(_react2['default'].createElement(
 	_react2['default'].createElement(_componentsContributors2['default'], { label: 'Contributors (Async)' }),
 	_react2['default'].createElement(_componentsGithubUsers2['default'], { label: 'Github users (Async with fetch.js)' }),
 	_react2['default'].createElement(_componentsNumericSelect2['default'], { label: 'Numeric Values' }),
+	_react2['default'].createElement(_componentsBooleanSelect2['default'], { label: 'Boolean Values' }),
 	_react2['default'].createElement(_componentsCustomRender2['default'], { label: 'Custom Render Methods' }),
 	_react2['default'].createElement(_componentsCustomComponents2['default'], { label: 'Custom Placeholder, Option, Value, and Arrow Components' }),
 	_react2['default'].createElement(_componentsCreatable2['default'], {
@@ -70,7 +75,139 @@ _reactDom2['default'].render(_react2['default'].createElement(
 	})
 ), document.getElementById('example'));
 
-},{"./components/Contributors":2,"./components/Creatable":3,"./components/CustomComponents":4,"./components/CustomRender":5,"./components/GithubUsers":6,"./components/Multiselect":7,"./components/NumericSelect":8,"./components/States":9,"./components/Virtualized":10,"react":undefined,"react-dom":undefined,"react-select":undefined}],2:[function(require,module,exports){
+},{"./components/BooleanSelect":2,"./components/Contributors":3,"./components/Creatable":4,"./components/CustomComponents":5,"./components/CustomRender":6,"./components/GithubUsers":7,"./components/Multiselect":8,"./components/NumericSelect":9,"./components/States":10,"./components/Virtualized":11,"react":undefined,"react-dom":undefined,"react-select":37}],2:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactSelect = require('react-select');
+
+var _reactSelect2 = _interopRequireDefault(_reactSelect);
+
+var ValuesAsBooleansField = _react2['default'].createClass({
+	displayName: 'ValuesAsBooleansField',
+	propTypes: {
+		label: _react2['default'].PropTypes.string
+	},
+	getInitialState: function getInitialState() {
+		return {
+			options: [{ value: true, label: 'Yes' }, { value: false, label: 'No' }],
+			matchPos: 'any',
+			matchValue: true,
+			matchLabel: true,
+			value: null,
+			multi: false
+		};
+	},
+	onChangeMatchStart: function onChangeMatchStart(event) {
+		this.setState({
+			matchPos: event.target.checked ? 'start' : 'any'
+		});
+	},
+	onChangeMatchValue: function onChangeMatchValue(event) {
+		this.setState({
+			matchValue: event.target.checked
+		});
+	},
+	onChangeMatchLabel: function onChangeMatchLabel(event) {
+		this.setState({
+			matchLabel: event.target.checked
+		});
+	},
+	onChange: function onChange(value) {
+		this.setState({ value: value });
+		console.log('Boolean Select value changed to', value);
+	},
+	onChangeMulti: function onChangeMulti(event) {
+		this.setState({
+			multi: event.target.checked
+		});
+	},
+	render: function render() {
+		var matchProp = 'any';
+		if (this.state.matchLabel && !this.state.matchValue) {
+			matchProp = 'label';
+		}
+		if (!this.state.matchLabel && this.state.matchValue) {
+			matchProp = 'value';
+		}
+		return _react2['default'].createElement(
+			'div',
+			{ className: 'section' },
+			_react2['default'].createElement(
+				'h3',
+				{ className: 'section-heading' },
+				this.props.label
+			),
+			_react2['default'].createElement(_reactSelect2['default'], {
+				matchPos: this.state.matchPos,
+				matchProp: matchProp,
+				multi: this.state.multi,
+				onChange: this.onChange,
+				options: this.state.options,
+				simpleValue: true,
+				value: this.state.value
+			}),
+			_react2['default'].createElement(
+				'div',
+				{ className: 'checkbox-list' },
+				_react2['default'].createElement(
+					'label',
+					{ className: 'checkbox' },
+					_react2['default'].createElement('input', { type: 'checkbox', className: 'checkbox-control', checked: this.state.multi, onChange: this.onChangeMulti }),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'checkbox-label' },
+						'Multi-Select'
+					)
+				),
+				_react2['default'].createElement(
+					'label',
+					{ className: 'checkbox' },
+					_react2['default'].createElement('input', { type: 'checkbox', className: 'checkbox-control', checked: this.state.matchValue, onChange: this.onChangeMatchValue }),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'checkbox-label' },
+						'Match value'
+					)
+				),
+				_react2['default'].createElement(
+					'label',
+					{ className: 'checkbox' },
+					_react2['default'].createElement('input', { type: 'checkbox', className: 'checkbox-control', checked: this.state.matchLabel, onChange: this.onChangeMatchLabel }),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'checkbox-label' },
+						'Match label'
+					)
+				),
+				_react2['default'].createElement(
+					'label',
+					{ className: 'checkbox' },
+					_react2['default'].createElement('input', { type: 'checkbox', className: 'checkbox-control', checked: this.state.matchPos === 'start', onChange: this.onChangeMatchStart }),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'checkbox-label' },
+						'Only include matches from the start of the string'
+					)
+				)
+			),
+			_react2['default'].createElement(
+				'div',
+				{ className: 'hint' },
+				'This example uses simple boolean values'
+			)
+		);
+	}
+});
+
+module.exports = ValuesAsBooleansField;
+
+},{"react":undefined,"react-select":37}],3:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -176,7 +313,7 @@ var Contributors = _react2['default'].createClass({
 
 module.exports = Contributors;
 
-},{"../data/contributors":12,"react":undefined,"react-select":undefined}],3:[function(require,module,exports){
+},{"../data/contributors":13,"react":undefined,"react-select":37}],4:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -284,7 +421,7 @@ var CreatableDemo = _react2['default'].createClass({
 
 module.exports = CreatableDemo;
 
-},{"react":undefined,"react-select":undefined}],4:[function(require,module,exports){
+},{"react":undefined,"react-select":37}],5:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -437,7 +574,7 @@ function arrowRenderer() {
 
 module.exports = UsersField;
 
-},{"../data/users":14,"react":undefined,"react-gravatar":30,"react-select":undefined}],5:[function(require,module,exports){
+},{"../data/users":15,"react":undefined,"react-gravatar":31,"react-select":37}],6:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -518,7 +655,7 @@ var DisabledUpsellOptions = _react2['default'].createClass({
 });
 module.exports = DisabledUpsellOptions;
 
-},{"react":undefined,"react-highlight-words":31,"react-select":undefined}],6:[function(require,module,exports){
+},{"react":undefined,"react-highlight-words":32,"react-select":37}],7:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -542,6 +679,7 @@ var GithubUsers = _react2['default'].createClass({
 	},
 	getInitialState: function getInitialState() {
 		return {
+			backspaceRemoves: true,
 			multi: true
 		};
 	},
@@ -563,6 +701,10 @@ var GithubUsers = _react2['default'].createClass({
 		});
 	},
 	getUsers: function getUsers(input) {
+		if (!input) {
+			return Promise.resolve({ options: [] });
+		}
+
 		return (0, _isomorphicFetch2['default'])('https://api.github.com/search/users?q=' + input).then(function (response) {
 			return response.json();
 		}).then(function (json) {
@@ -572,7 +714,19 @@ var GithubUsers = _react2['default'].createClass({
 	gotoUser: function gotoUser(value, event) {
 		window.open(value.html_url);
 	},
+	toggleBackspaceRemoves: function toggleBackspaceRemoves() {
+		this.setState({
+			backspaceRemoves: !this.state.backspaceRemoves
+		});
+	},
+	toggleCreatable: function toggleCreatable() {
+		this.setState({
+			creatable: !this.state.creatable
+		});
+	},
 	render: function render() {
+		var AsyncComponent = this.state.creatable ? _reactSelect2['default'].AsyncCreatable : _reactSelect2['default'].Async;
+
 		return _react2['default'].createElement(
 			'div',
 			{ className: 'section' },
@@ -581,7 +735,7 @@ var GithubUsers = _react2['default'].createClass({
 				{ className: 'section-heading' },
 				this.props.label
 			),
-			_react2['default'].createElement(_reactSelect2['default'].Async, { multi: this.state.multi, value: this.state.value, onChange: this.onChange, onValueClick: this.gotoUser, valueKey: 'id', labelKey: 'login', loadOptions: this.getUsers, minimumInput: 1, backspaceRemoves: false }),
+			_react2['default'].createElement(AsyncComponent, { multi: this.state.multi, value: this.state.value, onChange: this.onChange, onValueClick: this.gotoUser, valueKey: 'id', labelKey: 'login', loadOptions: this.getUsers, backspaceRemoves: this.state.backspaceRemoves }),
 			_react2['default'].createElement(
 				'div',
 				{ className: 'checkbox-list' },
@@ -608,6 +762,30 @@ var GithubUsers = _react2['default'].createClass({
 			),
 			_react2['default'].createElement(
 				'div',
+				{ className: 'checkbox-list' },
+				_react2['default'].createElement(
+					'label',
+					{ className: 'checkbox' },
+					_react2['default'].createElement('input', { type: 'checkbox', className: 'checkbox-control', checked: this.state.creatable, onChange: this.toggleCreatable }),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'checkbox-label' },
+						'Creatable?'
+					)
+				),
+				_react2['default'].createElement(
+					'label',
+					{ className: 'checkbox' },
+					_react2['default'].createElement('input', { type: 'checkbox', className: 'checkbox-control', checked: this.state.backspaceRemoves, onChange: this.toggleBackspaceRemoves }),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'checkbox-label' },
+						'Backspace Removes?'
+					)
+				)
+			),
+			_react2['default'].createElement(
+				'div',
 				{ className: 'hint' },
 				'This example uses fetch.js for showing Async options with Promises'
 			)
@@ -617,7 +795,7 @@ var GithubUsers = _react2['default'].createClass({
 
 module.exports = GithubUsers;
 
-},{"isomorphic-fetch":22,"react":undefined,"react-select":undefined}],7:[function(require,module,exports){
+},{"isomorphic-fetch":23,"react":undefined,"react-select":37}],8:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -701,7 +879,7 @@ var MultiSelectField = _react2['default'].createClass({
 
 module.exports = MultiSelectField;
 
-},{"react":undefined,"react-select":undefined}],8:[function(require,module,exports){
+},{"react":undefined,"react-select":37}],9:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -833,7 +1011,7 @@ var ValuesAsNumbersField = _react2['default'].createClass({
 
 module.exports = ValuesAsNumbersField;
 
-},{"react":undefined,"react-select":undefined}],9:[function(require,module,exports){
+},{"react":undefined,"react-select":37}],10:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -971,7 +1149,7 @@ var StatesField = _react2['default'].createClass({
 
 module.exports = StatesField;
 
-},{"../data/states":13,"react":undefined,"react-select":undefined}],10:[function(require,module,exports){
+},{"../data/states":14,"react":undefined,"react-select":37}],11:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -1040,29 +1218,29 @@ var CitiesField = _react2['default'].createClass({
 
 module.exports = CitiesField;
 
-},{"../data/cities":11,"react":undefined,"react-virtualized-select":34}],11:[function(require,module,exports){
+},{"../data/cities":12,"react":undefined,"react-virtualized-select":45}],12:[function(require,module,exports){
 'use strict';
 
 exports.CITIES = [{ name: 'Abilene' }, { name: 'Addison' }, { name: 'Akron' }, { name: 'Alameda' }, { name: 'Albany' }, { name: 'Albany' }, { name: 'Albany' }, { name: 'Albuquerque' }, { name: 'Alexandria' }, { name: 'Alexandria' }, { name: 'Alhambra' }, { name: 'Aliso Viejo' }, { name: 'Allen' }, { name: 'Allentown' }, { name: 'Alpharetta' }, { name: 'Altamonte Springs' }, { name: 'Altoona' }, { name: 'Amarillo' }, { name: 'Ames' }, { name: 'Anaheim' }, { name: 'Anchorage' }, { name: 'Anderson' }, { name: 'Ankeny' }, { name: 'Ann Arbor' }, { name: 'Annapolis' }, { name: 'Antioch' }, { name: 'Apache Junction' }, { name: 'Apex' }, { name: 'Apopka' }, { name: 'Apple Valley' }, { name: 'Apple Valley' }, { name: 'Appleton' }, { name: 'Arcadia' }, { name: 'Arlington' }, { name: 'Arlington Heights' }, { name: 'Arvada' }, { name: 'Asheville' }, { name: 'Athens-Clarke County' }, { name: 'Atlanta' }, { name: 'Atlantic City' }, { name: 'Attleboro' }, { name: 'Auburn' }, { name: 'Auburn' }, { name: 'Augusta-Richmond County' }, { name: 'Aurora' }, { name: 'Aurora' }, { name: 'Austin' }, { name: 'Aventura' }, { name: 'Avondale' }, { name: 'Azusa' }, { name: 'Bakersfield' }, { name: 'Baldwin Park' }, { name: 'Baltimore' }, { name: 'Barnstable Town' }, { name: 'Bartlett' }, { name: 'Bartlett' }, { name: 'Baton Rouge' }, { name: 'Battle Creek' }, { name: 'Bayonne' }, { name: 'Baytown' }, { name: 'Beaumont' }, { name: 'Beaumont' }, { name: 'Beavercreek' }, { name: 'Beaverton' }, { name: 'Bedford' }, { name: 'Bell Gardens' }, { name: 'Belleville' }, { name: 'Bellevue' }, { name: 'Bellevue' }, { name: 'Bellflower' }, { name: 'Bellingham' }, { name: 'Beloit' }, { name: 'Bend' }, { name: 'Bentonville' }, { name: 'Berkeley' }, { name: 'Berwyn' }, { name: 'Bethlehem' }, { name: 'Beverly' }, { name: 'Billings' }, { name: 'Biloxi' }, { name: 'Binghamton' }, { name: 'Birmingham' }, { name: 'Bismarck' }, { name: 'Blacksburg' }, { name: 'Blaine' }, { name: 'Bloomington' }, { name: 'Bloomington' }, { name: 'Bloomington' }, { name: 'Blue Springs' }, { name: 'Boca Raton' }, { name: 'Boise City' }, { name: 'Bolingbrook' }, { name: 'Bonita Springs' }, { name: 'Bossier City' }, { name: 'Boston' }, { name: 'Boulder' }, { name: 'Bountiful' }, { name: 'Bowie' }, { name: 'Bowling Green' }, { name: 'Boynton Beach' }, { name: 'Bozeman' }, { name: 'Bradenton' }, { name: 'Brea' }, { name: 'Bremerton' }, { name: 'Brentwood' }, { name: 'Brentwood' }, { name: 'Bridgeport' }, { name: 'Bristol' }, { name: 'Brockton' }, { name: 'Broken Arrow' }, { name: 'Brookfield' }, { name: 'Brookhaven' }, { name: 'Brooklyn Park' }, { name: 'Broomfield' }, { name: 'Brownsville' }, { name: 'Bryan' }, { name: 'Buckeye' }, { name: 'Buena Park' }, { name: 'Buffalo' }, { name: 'Buffalo Grove' }, { name: 'Bullhead City' }, { name: 'Burbank' }, { name: 'Burien' }, { name: 'Burleson' }, { name: 'Burlington' }, { name: 'Burlington' }, { name: 'Burnsville' }, { name: 'Caldwell' }, { name: 'Calexico' }, { name: 'Calumet City' }, { name: 'Camarillo' }, { name: 'Cambridge' }, { name: 'Camden' }, { name: 'Campbell' }, { name: 'Canton' }, { name: 'Cape Coral' }, { name: 'Cape Girardeau' }, { name: 'Carlsbad' }, { name: 'Carmel' }, { name: 'Carol Stream' }, { name: 'Carpentersville' }, { name: 'Carrollton' }, { name: 'Carson' }, { name: 'Carson City' }, { name: 'Cary' }, { name: 'Casa Grande' }, { name: 'Casper' }, { name: 'Castle Rock' }, { name: 'Cathedral City' }, { name: 'Cedar Falls' }, { name: 'Cedar Hill' }, { name: 'Cedar Park' }, { name: 'Cedar Rapids' }, { name: 'Centennial' }, { name: 'Ceres' }, { name: 'Cerritos' }, { name: 'Champaign' }, { name: 'Chandler' }, { name: 'Chapel Hill' }, { name: 'Charleston' }, { name: 'Charleston' }, { name: 'Charlotte' }, { name: 'Charlottesville' }, { name: 'Chattanooga' }, { name: 'Chelsea' }, { name: 'Chesapeake' }, { name: 'Chesterfield' }, { name: 'Cheyenne' }, { name: 'Chicago' }, { name: 'Chico' }, { name: 'Chicopee' }, { name: 'Chino' }, { name: 'Chino Hills' }, { name: 'Chula Vista' }, { name: 'Cicero' }, { name: 'Cincinnati' }, { name: 'Citrus Heights' }, { name: 'Clarksville' }, { name: 'Clearwater' }, { name: 'Cleveland' }, { name: 'Cleveland' }, { name: 'Cleveland Heights' }, { name: 'Clifton' }, { name: 'Clovis' }, { name: 'Clovis' }, { name: 'Coachella' }, { name: 'Coconut Creek' }, { name: 'Coeur d\'Alene' }, { name: 'College Station' }, { name: 'Collierville' }, { name: 'Colorado Springs' }, { name: 'Colton' }, { name: 'Columbia' }, { name: 'Columbia' }, { name: 'Columbus' }, { name: 'Columbus' }, { name: 'Columbus' }, { name: 'Commerce City' }, { name: 'Compton' }, { name: 'Concord' }, { name: 'Concord' }, { name: 'Concord' }, { name: 'Conroe' }, { name: 'Conway' }, { name: 'Coon Rapids' }, { name: 'Coppell' }, { name: 'Coral Gables' }, { name: 'Coral Springs' }, { name: 'Corona' }, { name: 'Corpus Christi' }, { name: 'Corvallis' }, { name: 'Costa Mesa' }, { name: 'Council Bluffs' }, { name: 'Covina' }, { name: 'Covington' }, { name: 'Cranston' }, { name: 'Crystal Lake' }, { name: 'Culver City' }, { name: 'Cupertino' }, { name: 'Cutler Bay' }, { name: 'Cuyahoga Falls' }, { name: 'Cypress' }, { name: 'Dallas' }, { name: 'Daly City' }, { name: 'Danbury' }, { name: 'Danville' }, { name: 'Danville' }, { name: 'Davenport' }, { name: 'Davie' }, { name: 'Davis' }, { name: 'Dayton' }, { name: 'Daytona Beach' }, { name: 'DeKalb' }, { name: 'DeSoto' }, { name: 'Dearborn' }, { name: 'Dearborn Heights' }, { name: 'Decatur' }, { name: 'Decatur' }, { name: 'Deerfield Beach' }, { name: 'Delano' }, { name: 'Delray Beach' }, { name: 'Deltona' }, { name: 'Denton' }, { name: 'Denver' }, { name: 'Des Moines' }, { name: 'Des Plaines' }, { name: 'Detroit' }, { name: 'Diamond Bar' }, { name: 'Doral' }, { name: 'Dothan' }, { name: 'Dover' }, { name: 'Downers Grove' }, { name: 'Downey' }, { name: 'Draper' }, { name: 'Dublin' }, { name: 'Dublin' }, { name: 'Dubuque' }, { name: 'Duluth' }, { name: 'Duncanville' }, { name: 'Dunwoody' }, { name: 'Durham' }, { name: 'Eagan' }, { name: 'East Lansing' }, { name: 'East Orange' }, { name: 'East Providence' }, { name: 'Eastvale' }, { name: 'Eau Claire' }, { name: 'Eden Prairie' }, { name: 'Edina' }, { name: 'Edinburg' }, { name: 'Edmond' }, { name: 'Edmonds' }, { name: 'El Cajon' }, { name: 'El Centro' }, { name: 'El Monte' }, { name: 'El Paso' }, { name: 'Elgin' }, { name: 'Elizabeth' }, { name: 'Elk Grove' }, { name: 'Elkhart' }, { name: 'Elmhurst' }, { name: 'Elyria' }, { name: 'Encinitas' }, { name: 'Enid' }, { name: 'Erie' }, { name: 'Escondido' }, { name: 'Euclid' }, { name: 'Eugene' }, { name: 'Euless' }, { name: 'Evanston' }, { name: 'Evansville' }, { name: 'Everett' }, { name: 'Everett' }, { name: 'Fairfield' }, { name: 'Fairfield' }, { name: 'Fall River' }, { name: 'Fargo' }, { name: 'Farmington' }, { name: 'Farmington Hills' }, { name: 'Fayetteville' }, { name: 'Fayetteville' }, { name: 'Federal Way' }, { name: 'Findlay' }, { name: 'Fishers' }, { name: 'Fitchburg' }, { name: 'Flagstaff' }, { name: 'Flint' }, { name: 'Florence' }, { name: 'Florence' }, { name: 'Florissant' }, { name: 'Flower Mound' }, { name: 'Folsom' }, { name: 'Fond du Lac' }, { name: 'Fontana' }, { name: 'Fort Collins' }, { name: 'Fort Lauderdale' }, { name: 'Fort Myers' }, { name: 'Fort Pierce' }, { name: 'Fort Smith' }, { name: 'Fort Wayne' }, { name: 'Fort Worth' }, { name: 'Fountain Valley' }, { name: 'Franklin' }, { name: 'Frederick' }, { name: 'Freeport' }, { name: 'Fremont' }, { name: 'Fresno' }, { name: 'Friendswood' }, { name: 'Frisco' }, { name: 'Fullerton' }, { name: 'Gainesville' }, { name: 'Gaithersburg' }, { name: 'Galveston' }, { name: 'Garden Grove' }, { name: 'Gardena' }, { name: 'Garland' }, { name: 'Gary' }, { name: 'Gastonia' }, { name: 'Georgetown' }, { name: 'Germantown' }, { name: 'Gilbert' }, { name: 'Gilroy' }, { name: 'Glendale' }, { name: 'Glendale' }, { name: 'Glendora' }, { name: 'Glenview' }, { name: 'Goodyear' }, { name: 'Goose Creek' }, { name: 'Grand Forks' }, { name: 'Grand Island' }, { name: 'Grand Junction' }, { name: 'Grand Prairie' }, { name: 'Grand Rapids' }, { name: 'Grapevine' }, { name: 'Great Falls' }, { name: 'Greeley' }, { name: 'Green Bay' }, { name: 'Greenacres' }, { name: 'Greenfield' }, { name: 'Greensboro' }, { name: 'Greenville' }, { name: 'Greenville' }, { name: 'Greenwood' }, { name: 'Gresham' }, { name: 'Grove City' }, { name: 'Gulfport' }, { name: 'Hackensack' }, { name: 'Hagerstown' }, { name: 'Hallandale Beach' }, { name: 'Haltom City' }, { name: 'Hamilton' }, { name: 'Hammond' }, { name: 'Hampton' }, { name: 'Hanford' }, { name: 'Hanover Park' }, { name: 'Harlingen' }, { name: 'Harrisburg' }, { name: 'Harrisonburg' }, { name: 'Hartford' }, { name: 'Hattiesburg' }, { name: 'Haverhill' }, { name: 'Hawthorne' }, { name: 'Hayward' }, { name: 'Hemet' }, { name: 'Hempstead' }, { name: 'Henderson' }, { name: 'Hendersonville' }, { name: 'Hesperia' }, { name: 'Hialeah' }, { name: 'Hickory' }, { name: 'High Point' }, { name: 'Highland' }, { name: 'Hillsboro' }, { name: 'Hilton Head Island' }, { name: 'Hoboken' }, { name: 'Hoffman Estates' }, { name: 'Hollywood' }, { name: 'Holyoke' }, { name: 'Homestead' }, { name: 'Honolulu' }, { name: 'Hoover' }, { name: 'Houston' }, { name: 'Huber Heights' }, { name: 'Huntersville' }, { name: 'Huntington' }, { name: 'Huntington Beach' }, { name: 'Huntington Park' }, { name: 'Huntsville' }, { name: 'Huntsville' }, { name: 'Hurst' }, { name: 'Hutchinson' }, { name: 'Idaho Falls' }, { name: 'Independence' }, { name: 'Indianapolis' }, { name: 'Indio' }, { name: 'Inglewood' }, { name: 'Iowa City' }, { name: 'Irvine' }, { name: 'Irving' }, { name: 'Jackson' }, { name: 'Jackson' }, { name: 'Jacksonville' }, { name: 'Jacksonville' }, { name: 'Janesville' }, { name: 'Jefferson City' }, { name: 'Jeffersonville' }, { name: 'Jersey City' }, { name: 'Johns Creek' }, { name: 'Johnson City' }, { name: 'Joliet' }, { name: 'Jonesboro' }, { name: 'Joplin' }, { name: 'Jupiter' }, { name: 'Jurupa Valley' }, { name: 'Kalamazoo' }, { name: 'Kannapolis' }, { name: 'Kansas City' }, { name: 'Kansas City' }, { name: 'Kearny' }, { name: 'Keizer' }, { name: 'Keller' }, { name: 'Kenner' }, { name: 'Kennewick' }, { name: 'Kenosha' }, { name: 'Kent' }, { name: 'Kentwood' }, { name: 'Kettering' }, { name: 'Killeen' }, { name: 'Kingsport' }, { name: 'Kirkland' }, { name: 'Kissimmee' }, { name: 'Knoxville' }, { name: 'Kokomo' }, { name: 'La Crosse' }, { name: 'La Habra' }, { name: 'La Mesa' }, { name: 'La Mirada' }, { name: 'La Puente' }, { name: 'La Quinta' }, { name: 'Lacey' }, { name: 'Lafayette' }, { name: 'Lafayette' }, { name: 'Laguna Niguel' }, { name: 'Lake Charles' }, { name: 'Lake Elsinore' }, { name: 'Lake Forest' }, { name: 'Lake Havasu City' }, { name: 'Lake Oswego' }, { name: 'Lakeland' }, { name: 'Lakeville' }, { name: 'Lakewood' }, { name: 'Lakewood' }, { name: 'Lakewood' }, { name: 'Lakewood' }, { name: 'Lancaster' }, { name: 'Lancaster' }, { name: 'Lancaster' }, { name: 'Lancaster' }, { name: 'Lansing' }, { name: 'Laredo' }, { name: 'Largo' }, { name: 'Las Cruces' }, { name: 'Las Vegas' }, { name: 'Lauderhill' }, { name: 'Lawrence' }, { name: 'Lawrence' }, { name: 'Lawrence' }, { name: 'Lawton' }, { name: 'Layton' }, { name: 'League City' }, { name: 'Lee\'s Summit' }, { name: 'Leesburg' }, { name: 'Lehi' }, { name: 'Lenexa' }, { name: 'Leominster' }, { name: 'Lewisville' }, { name: 'Lexington-Fayette' }, { name: 'Lima' }, { name: 'Lincoln' }, { name: 'Lincoln' }, { name: 'Lincoln Park' }, { name: 'Linden' }, { name: 'Little Rock' }, { name: 'Littleton' }, { name: 'Livermore' }, { name: 'Livonia' }, { name: 'Lodi' }, { name: 'Logan' }, { name: 'Lombard' }, { name: 'Lompoc' }, { name: 'Long Beach' }, { name: 'Longmont' }, { name: 'Longview' }, { name: 'Lorain' }, { name: 'Los Angeles' }, { name: 'Louisville/Jefferson County' }, { name: 'Loveland' }, { name: 'Lowell' }, { name: 'Lubbock' }, { name: 'Lynchburg' }, { name: 'Lynn' }, { name: 'Lynwood' }, { name: 'Macon' }, { name: 'Madera' }, { name: 'Madison' }, { name: 'Madison' }, { name: 'Malden' }, { name: 'Manassas' }, { name: 'Manchester' }, { name: 'Manhattan' }, { name: 'Mankato' }, { name: 'Mansfield' }, { name: 'Mansfield' }, { name: 'Manteca' }, { name: 'Maple Grove' }, { name: 'Maplewood' }, { name: 'Marana' }, { name: 'Margate' }, { name: 'Maricopa' }, { name: 'Marietta' }, { name: 'Marlborough' }, { name: 'Martinez' }, { name: 'Marysville' }, { name: 'McAllen' }, { name: 'McKinney' }, { name: 'Medford' }, { name: 'Medford' }, { name: 'Melbourne' }, { name: 'Memphis' }, { name: 'Menifee' }, { name: 'Mentor' }, { name: 'Merced' }, { name: 'Meriden' }, { name: 'Meridian' }, { name: 'Meridian' }, { name: 'Mesa' }, { name: 'Mesquite' }, { name: 'Methuen' }, { name: 'Miami' }, { name: 'Miami Beach' }, { name: 'Miami Gardens' }, { name: 'Middletown' }, { name: 'Middletown' }, { name: 'Midland' }, { name: 'Midland' }, { name: 'Midwest City' }, { name: 'Milford' }, { name: 'Milpitas' }, { name: 'Milwaukee' }, { name: 'Minneapolis' }, { name: 'Minnetonka' }, { name: 'Minot' }, { name: 'Miramar' }, { name: 'Mishawaka' }, { name: 'Mission' }, { name: 'Mission Viejo' }, { name: 'Missoula' }, { name: 'Missouri City' }, { name: 'Mobile' }, { name: 'Modesto' }, { name: 'Moline' }, { name: 'Monroe' }, { name: 'Monrovia' }, { name: 'Montclair' }, { name: 'Montebello' }, { name: 'Monterey Park' }, { name: 'Montgomery' }, { name: 'Moore' }, { name: 'Moorhead' }, { name: 'Moreno Valley' }, { name: 'Morgan Hill' }, { name: 'Mount Pleasant' }, { name: 'Mount Prospect' }, { name: 'Mount Vernon' }, { name: 'Mountain View' }, { name: 'Muncie' }, { name: 'Murfreesboro' }, { name: 'Murray' }, { name: 'Murrieta' }, { name: 'Muskegon' }, { name: 'Muskogee' }, { name: 'Nampa' }, { name: 'Napa' }, { name: 'Naperville' }, { name: 'Nashua' }, { name: 'Nashville-Davidson' }, { name: 'National City' }, { name: 'New Bedford' }, { name: 'New Berlin' }, { name: 'New Braunfels' }, { name: 'New Britain' }, { name: 'New Brunswick' }, { name: 'New Haven' }, { name: 'New Orleans' }, { name: 'New Rochelle' }, { name: 'New York' }, { name: 'Newark' }, { name: 'Newark' }, { name: 'Newark' }, { name: 'Newport Beach' }, { name: 'Newport News' }, { name: 'Newton' }, { name: 'Niagara Falls' }, { name: 'Noblesville' }, { name: 'Norfolk' }, { name: 'Normal' }, { name: 'Norman' }, { name: 'North Charleston' }, { name: 'North Las Vegas' }, { name: 'North Lauderdale' }, { name: 'North Little Rock' }, { name: 'North Miami' }, { name: 'North Miami Beach' }, { name: 'North Port' }, { name: 'North Richland Hills' }, { name: 'Northglenn' }, { name: 'Norwalk' }, { name: 'Norwalk' }, { name: 'Norwich' }, { name: 'Novato' }, { name: 'Novi' }, { name: 'O\'Fallon' }, { name: 'Oak Lawn' }, { name: 'Oak Park' }, { name: 'Oakland' }, { name: 'Oakland Park' }, { name: 'Oakley' }, { name: 'Ocala' }, { name: 'Oceanside' }, { name: 'Ocoee' }, { name: 'Odessa' }, { name: 'Ogden' }, { name: 'Oklahoma City' }, { name: 'Olathe' }, { name: 'Olympia' }, { name: 'Omaha' }, { name: 'Ontario' }, { name: 'Orange' }, { name: 'Orem' }, { name: 'Orland Park' }, { name: 'Orlando' }, { name: 'Ormond Beach' }, { name: 'Oro Valley' }, { name: 'Oshkosh' }, { name: 'Overland Park' }, { name: 'Owensboro' }, { name: 'Oxnard' }, { name: 'Pacifica' }, { name: 'Palatine' }, { name: 'Palm Bay' }, { name: 'Palm Beach Gardens' }, { name: 'Palm Coast' }, { name: 'Palm Desert' }, { name: 'Palm Springs' }, { name: 'Palmdale' }, { name: 'Palo Alto' }, { name: 'Panama City' }, { name: 'Paramount' }, { name: 'Park Ridge' }, { name: 'Parker' }, { name: 'Parma' }, { name: 'Pasadena' }, { name: 'Pasadena' }, { name: 'Pasco' }, { name: 'Passaic' }, { name: 'Paterson' }, { name: 'Pawtucket' }, { name: 'Peabody' }, { name: 'Peachtree Corners' }, { name: 'Pearland' }, { name: 'Pembroke Pines' }, { name: 'Pensacola' }, { name: 'Peoria' }, { name: 'Peoria' }, { name: 'Perris' }, { name: 'Perth Amboy' }, { name: 'Petaluma' }, { name: 'Pflugerville' }, { name: 'Pharr' }, { name: 'Phenix City' }, { name: 'Philadelphia' }, { name: 'Phoenix' }, { name: 'Pico Rivera' }, { name: 'Pine Bluff' }, { name: 'Pinellas Park' }, { name: 'Pittsburg' }, { name: 'Pittsburgh' }, { name: 'Pittsfield' }, { name: 'Placentia' }, { name: 'Plainfield' }, { name: 'Plainfield' }, { name: 'Plano' }, { name: 'Plantation' }, { name: 'Pleasanton' }, { name: 'Plymouth' }, { name: 'Pocatello' }, { name: 'Pomona' }, { name: 'Pompano Beach' }, { name: 'Pontiac' }, { name: 'Port Arthur' }, { name: 'Port Orange' }, { name: 'Port St. Lucie' }, { name: 'Portage' }, { name: 'Porterville' }, { name: 'Portland' }, { name: 'Portland' }, { name: 'Portsmouth' }, { name: 'Poway' }, { name: 'Prescott' }, { name: 'Prescott Valley' }, { name: 'Providence' }, { name: 'Provo' }, { name: 'Pueblo' }, { name: 'Puyallup' }, { name: 'Quincy' }, { name: 'Quincy' }, { name: 'Racine' }, { name: 'Raleigh' }, { name: 'Rancho Cordova' }, { name: 'Rancho Cucamonga' }, { name: 'Rancho Palos Verdes' }, { name: 'Rancho Santa Margarita' }, { name: 'Rapid City' }, { name: 'Reading' }, { name: 'Redding' }, { name: 'Redlands' }, { name: 'Redmond' }, { name: 'Redondo Beach' }, { name: 'Redwood City' }, { name: 'Reno' }, { name: 'Renton' }, { name: 'Revere' }, { name: 'Rialto' }, { name: 'Richardson' }, { name: 'Richland' }, { name: 'Richmond' }, { name: 'Richmond' }, { name: 'Rio Rancho' }, { name: 'Riverside' }, { name: 'Riverton' }, { name: 'Roanoke' }, { name: 'Rochester' }, { name: 'Rochester' }, { name: 'Rochester Hills' }, { name: 'Rock Hill' }, { name: 'Rock Island' }, { name: 'Rockford' }, { name: 'Rocklin' }, { name: 'Rockville' }, { name: 'Rockwall' }, { name: 'Rocky Mount' }, { name: 'Rogers' }, { name: 'Rohnert Park' }, { name: 'Romeoville' }, { name: 'Rosemead' }, { name: 'Roseville' }, { name: 'Roseville' }, { name: 'Roswell' }, { name: 'Roswell' }, { name: 'Round Rock' }, { name: 'Rowlett' }, { name: 'Roy' }, { name: 'Royal Oak' }, { name: 'Sacramento' }, { name: 'Saginaw' }, { name: 'Salem' }, { name: 'Salem' }, { name: 'Salina' }, { name: 'Salinas' }, { name: 'Salt Lake City' }, { name: 'Sammamish' }, { name: 'San Angelo' }, { name: 'San Antonio' }, { name: 'San Bernardino' }, { name: 'San Bruno' }, { name: 'San Buenaventura (Ventura)' }, { name: 'San Clemente' }, { name: 'San Diego' }, { name: 'San Francisco' }, { name: 'San Gabriel' }, { name: 'San Jacinto' }, { name: 'San Jose' }, { name: 'San Leandro' }, { name: 'San Luis Obispo' }, { name: 'San Marcos' }, { name: 'San Marcos' }, { name: 'San Mateo' }, { name: 'San Rafael' }, { name: 'San Ramon' }, { name: 'Sandy' }, { name: 'Sandy Springs' }, { name: 'Sanford' }, { name: 'Santa Ana' }, { name: 'Santa Barbara' }, { name: 'Santa Clara' }, { name: 'Santa Clarita' }, { name: 'Santa Cruz' }, { name: 'Santa Fe' }, { name: 'Santa Maria' }, { name: 'Santa Monica' }, { name: 'Santa Rosa' }, { name: 'Santee' }, { name: 'Sarasota' }, { name: 'Savannah' }, { name: 'Sayreville' }, { name: 'Schaumburg' }, { name: 'Schenectady' }, { name: 'Scottsdale' }, { name: 'Scranton' }, { name: 'Seattle' }, { name: 'Shakopee' }, { name: 'Shawnee' }, { name: 'Sheboygan' }, { name: 'Shelton' }, { name: 'Sherman' }, { name: 'Shoreline' }, { name: 'Shreveport' }, { name: 'Sierra Vista' }, { name: 'Simi Valley' }, { name: 'Sioux City' }, { name: 'Sioux Falls' }, { name: 'Skokie' }, { name: 'Smyrna' }, { name: 'Smyrna' }, { name: 'Somerville' }, { name: 'South Bend' }, { name: 'South Gate' }, { name: 'South Jordan' }, { name: 'South San Francisco' }, { name: 'Southaven' }, { name: 'Southfield' }, { name: 'Spanish Fork' }, { name: 'Sparks' }, { name: 'Spartanburg' }, { name: 'Spokane' }, { name: 'Spokane Valley' }, { name: 'Springdale' }, { name: 'Springfield' }, { name: 'Springfield' }, { name: 'Springfield' }, { name: 'Springfield' }, { name: 'Springfield' }, { name: 'St. Charles' }, { name: 'St. Clair Shores' }, { name: 'St. Cloud' }, { name: 'St. Cloud' }, { name: 'St. George' }, { name: 'St. Joseph' }, { name: 'St. Louis' }, { name: 'St. Louis Park' }, { name: 'St. Paul' }, { name: 'St. Peters' }, { name: 'St. Petersburg' }, { name: 'Stamford' }, { name: 'Stanton' }, { name: 'State College' }, { name: 'Sterling Heights' }, { name: 'Stillwater' }, { name: 'Stockton' }, { name: 'Streamwood' }, { name: 'Strongsville' }, { name: 'Suffolk' }, { name: 'Sugar Land' }, { name: 'Summerville' }, { name: 'Sumter' }, { name: 'Sunnyvale' }, { name: 'Sunrise' }, { name: 'Surprise' }, { name: 'Syracuse' }, { name: 'Tacoma' }, { name: 'Tallahassee' }, { name: 'Tamarac' }, { name: 'Tampa' }, { name: 'Taunton' }, { name: 'Taylor' }, { name: 'Taylorsville' }, { name: 'Temecula' }, { name: 'Tempe' }, { name: 'Temple' }, { name: 'Terre Haute' }, { name: 'Texarkana' }, { name: 'Texas City' }, { name: 'The Colony' }, { name: 'Thornton' }, { name: 'Thousand Oaks' }, { name: 'Tigard' }, { name: 'Tinley Park' }, { name: 'Titusville' }, { name: 'Toledo' }, { name: 'Topeka' }, { name: 'Torrance' }, { name: 'Tracy' }, { name: 'Trenton' }, { name: 'Troy' }, { name: 'Troy' }, { name: 'Tucson' }, { name: 'Tulare' }, { name: 'Tulsa' }, { name: 'Turlock' }, { name: 'Tuscaloosa' }, { name: 'Tustin' }, { name: 'Twin Falls' }, { name: 'Tyler' }, { name: 'Union City' }, { name: 'Union City' }, { name: 'Upland' }, { name: 'Urbana' }, { name: 'Urbandale' }, { name: 'Utica' }, { name: 'Vacaville' }, { name: 'Valdosta' }, { name: 'Vallejo' }, { name: 'Valley Stream' }, { name: 'Vancouver' }, { name: 'Victoria' }, { name: 'Victorville' }, { name: 'Vineland' }, { name: 'Virginia Beach' }, { name: 'Visalia' }, { name: 'Vista' }, { name: 'Waco' }, { name: 'Walnut Creek' }, { name: 'Waltham' }, { name: 'Warner Robins' }, { name: 'Warren' }, { name: 'Warren' }, { name: 'Warwick' }, { name: 'Washington' }, { name: 'Waterbury' }, { name: 'Waterloo' }, { name: 'Watsonville' }, { name: 'Waukegan' }, { name: 'Waukesha' }, { name: 'Wausau' }, { name: 'Wauwatosa' }, { name: 'Wellington' }, { name: 'Weslaco' }, { name: 'West Allis' }, { name: 'West Covina' }, { name: 'West Des Moines' }, { name: 'West Haven' }, { name: 'West Jordan' }, { name: 'West New York' }, { name: 'West Palm Beach' }, { name: 'West Sacramento' }, { name: 'West Valley City' }, { name: 'Westerville' }, { name: 'Westfield' }, { name: 'Westland' }, { name: 'Westminster' }, { name: 'Westminster' }, { name: 'Weston' }, { name: 'Weymouth Town' }, { name: 'Wheaton' }, { name: 'Wheeling' }, { name: 'White Plains' }, { name: 'Whittier' }, { name: 'Wichita' }, { name: 'Wichita Falls' }, { name: 'Wilkes-Barre' }, { name: 'Wilmington' }, { name: 'Wilmington' }, { name: 'Wilson' }, { name: 'Winston-Salem' }, { name: 'Winter Garden' }, { name: 'Woburn' }, { name: 'Woodbury' }, { name: 'Woodland' }, { name: 'Woonsocket' }, { name: 'Worcester' }, { name: 'Wylie' }, { name: 'Wyoming' }, { name: 'Yakima' }, { name: 'Yonkers' }, { name: 'Yorba Linda' }, { name: 'York' }, { name: 'Youngstown' }, { name: 'Yuba City' }, { name: 'Yucaipa' }, { name: 'Yuma' }];
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = [{ github: 'jedwatson', name: 'Jed Watson' }, { github: 'bruderstein', name: 'Dave Brotherstone' }, { github: 'jossmac', name: 'Joss Mackison' }, { github: 'jniechcial', name: 'Jakub Niechciał' }, { github: 'craigdallimore', name: 'Craig Dallimore' }, { github: 'julen', name: 'Julen Ruiz Aizpuru' }, { github: 'dcousens', name: 'Daniel Cousens' }, { github: 'jgautsch', name: 'Jon Gautsch' }, { github: 'dmitry-smirnov', name: 'Dmitry Smirnov' }];
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 exports.AU = [{ value: 'australian-capital-territory', label: 'Australian Capital Territory', className: 'State-ACT' }, { value: 'new-south-wales', label: 'New South Wales', className: 'State-NSW' }, { value: 'victoria', label: 'Victoria', className: 'State-Vic' }, { value: 'queensland', label: 'Queensland', className: 'State-Qld' }, { value: 'western-australia', label: 'Western Australia', className: 'State-WA' }, { value: 'south-australia', label: 'South Australia', className: 'State-SA' }, { value: 'tasmania', label: 'Tasmania', className: 'State-Tas' }, { value: 'northern-territory', label: 'Northern Territory', className: 'State-NT' }];
 
 exports.US = [{ value: 'AL', label: 'Alabama', disabled: true }, { value: 'AK', label: 'Alaska' }, { value: 'AS', label: 'American Samoa' }, { value: 'AZ', label: 'Arizona' }, { value: 'AR', label: 'Arkansas' }, { value: 'CA', label: 'California' }, { value: 'CO', label: 'Colorado' }, { value: 'CT', label: 'Connecticut' }, { value: 'DE', label: 'Delaware' }, { value: 'DC', label: 'District Of Columbia' }, { value: 'FM', label: 'Federated States Of Micronesia' }, { value: 'FL', label: 'Florida' }, { value: 'GA', label: 'Georgia' }, { value: 'GU', label: 'Guam' }, { value: 'HI', label: 'Hawaii' }, { value: 'ID', label: 'Idaho' }, { value: 'IL', label: 'Illinois' }, { value: 'IN', label: 'Indiana' }, { value: 'IA', label: 'Iowa' }, { value: 'KS', label: 'Kansas' }, { value: 'KY', label: 'Kentucky' }, { value: 'LA', label: 'Louisiana' }, { value: 'ME', label: 'Maine' }, { value: 'MH', label: 'Marshall Islands' }, { value: 'MD', label: 'Maryland' }, { value: 'MA', label: 'Massachusetts' }, { value: 'MI', label: 'Michigan' }, { value: 'MN', label: 'Minnesota' }, { value: 'MS', label: 'Mississippi' }, { value: 'MO', label: 'Missouri' }, { value: 'MT', label: 'Montana' }, { value: 'NE', label: 'Nebraska' }, { value: 'NV', label: 'Nevada' }, { value: 'NH', label: 'New Hampshire' }, { value: 'NJ', label: 'New Jersey' }, { value: 'NM', label: 'New Mexico' }, { value: 'NY', label: 'New York' }, { value: 'NC', label: 'North Carolina' }, { value: 'ND', label: 'North Dakota' }, { value: 'MP', label: 'Northern Mariana Islands' }, { value: 'OH', label: 'Ohio' }, { value: 'OK', label: 'Oklahoma' }, { value: 'OR', label: 'Oregon' }, { value: 'PW', label: 'Palau' }, { value: 'PA', label: 'Pennsylvania' }, { value: 'PR', label: 'Puerto Rico' }, { value: 'RI', label: 'Rhode Island' }, { value: 'SC', label: 'South Carolina' }, { value: 'SD', label: 'South Dakota' }, { value: 'TN', label: 'Tennessee' }, { value: 'TX', label: 'Texas' }, { value: 'UT', label: 'Utah' }, { value: 'VT', label: 'Vermont' }, { value: 'VI', label: 'Virgin Islands' }, { value: 'VA', label: 'Virginia' }, { value: 'WA', label: 'Washington' }, { value: 'WV', label: 'West Virginia' }, { value: 'WI', label: 'Wisconsin' }, { value: 'WY', label: 'Wyoming' }];
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 module.exports = [{ value: 'John Smith', label: 'John Smith', email: 'john@smith.com' }, { value: 'Merry Jane', label: 'Merry Jane', email: 'merry@jane.com' }, { value: 'Stan Hoper', label: 'Stan Hoper', email: 'stan@hoper.com' }];
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var charenc = {
   // UTF-8 encoding
   utf8: {
@@ -1097,7 +1275,7 @@ var charenc = {
 
 module.exports = charenc;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function() {
   var base64map
       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -1195,10 +1373,10 @@ module.exports = charenc;
   module.exports = crypt;
 })();
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 module.exports = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var canUseDOM = require('./inDOM');
@@ -1224,7 +1402,7 @@ module.exports = function (recalc) {
 
   return size;
 };
-},{"./inDOM":17}],19:[function(require,module,exports){
+},{"./inDOM":18}],20:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -1291,26 +1469,30 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],20:[function(require,module,exports){
-/**
- * Determine if an object is Buffer
+},{}],21:[function(require,module,exports){
+/*!
+ * Determine if an object is a Buffer
  *
- * Author:   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * License:  MIT
- *
- * `npm install is-buffer`
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
  */
 
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
 module.exports = function (obj) {
-  return !!(obj != null &&
-    (obj._isBuffer || // For Safari 5-7 (missing Object.prototype.constructor)
-      (obj.constructor &&
-      typeof obj.constructor.isBuffer === 'function' &&
-      obj.constructor.isBuffer(obj))
-    ))
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
 }
 
-},{}],21:[function(require,module,exports){
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+},{}],22:[function(require,module,exports){
 module.exports = function() {
   var mediaQuery;
   if (typeof window !== "undefined" && window !== null) {
@@ -1325,7 +1507,7 @@ module.exports = function() {
   return false;
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // the whatwg-fetch polyfill installs the fetch() function
 // on the global object (window or self)
 //
@@ -1333,7 +1515,7 @@ module.exports = function() {
 require('whatwg-fetch');
 module.exports = self.fetch.bind(self);
 
-},{"whatwg-fetch":72}],23:[function(require,module,exports){
+},{"whatwg-fetch":93}],24:[function(require,module,exports){
 (function(){
   var crypt = require('crypt'),
       utf8 = require('charenc').utf8,
@@ -1484,8 +1666,8 @@ module.exports = self.fetch.bind(self);
   md5._digestsize = 16;
 
   module.exports = function (message, options) {
-    if(typeof message == 'undefined')
-      return;
+    if (message === undefined || message === null)
+      throw new Error('Illegal argument ' + message);
 
     var digestbytes = crypt.wordsToBytes(md5(message, options));
     return options && options.asBytes ? digestbytes :
@@ -1495,7 +1677,7 @@ module.exports = self.fetch.bind(self);
 
 })();
 
-},{"charenc":15,"crypt":16,"is-buffer":20}],24:[function(require,module,exports){
+},{"charenc":16,"crypt":17,"is-buffer":21}],25:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -1580,7 +1762,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process){
 // Generated by CoffeeScript 1.7.1
 (function() {
@@ -1616,10 +1798,96 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 }).call(this);
 
 }).call(this,require('_process'))
-},{"_process":26}],26:[function(require,module,exports){
+},{"_process":27}],27:[function(require,module,exports){
 // shim for using process in browser
-
 var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
 var queue = [];
 var draining = false;
 var currentQueue;
@@ -1644,7 +1912,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = setTimeout(cleanUpNextTick);
+    var timeout = runTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -1661,7 +1929,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    clearTimeout(timeout);
+    runClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -1673,7 +1941,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        setTimeout(drainQueue, 0);
+        runTimeout(drainQueue);
     }
 };
 
@@ -1712,7 +1980,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 'use strict';
 var strictUriEncode = require('strict-uri-encode');
 var objectAssign = require('object-assign');
@@ -1812,7 +2080,7 @@ exports.stringify = function (obj, opts) {
 	}).join('&') : '';
 };
 
-},{"object-assign":24,"strict-uri-encode":71}],28:[function(require,module,exports){
+},{"object-assign":25,"strict-uri-encode":92}],29:[function(require,module,exports){
 (function (global){
 var now = require('performance-now')
   , root = typeof window === 'undefined' ? global : window
@@ -1888,9 +2156,9 @@ module.exports.polyfill = function() {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"performance-now":25}],29:[function(require,module,exports){
+},{"performance-now":26}],30:[function(require,module,exports){
 module.exports = require('react/lib/shallowCompare');
-},{"react/lib/shallowCompare":70}],30:[function(require,module,exports){
+},{"react/lib/shallowCompare":91}],31:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -1935,12 +2203,7 @@ var Gravatar = function (_React$Component) {
   _createClass(Gravatar, [{
     key: 'render',
     value: function render() {
-      var base = void 0;
-      if (this.props.https) {
-        base = 'https://secure.gravatar.com/avatar/';
-      } else {
-        base = 'http://www.gravatar.com/avatar/';
-      }
+      var base = '//www.gravatar.com/avatar/';
 
       var query = _queryString2.default.stringify({
         s: this.props.size,
@@ -2033,13 +2296,12 @@ Gravatar.propTypes = {
 Gravatar.defaultProps = {
   size: 50,
   rating: 'g',
-  https: false,
   default: 'retro'
 };
 
 
 module.exports = Gravatar;
-},{"is-retina":21,"md5":23,"query-string":27,"react":undefined}],31:[function(require,module,exports){
+},{"is-retina":22,"md5":24,"query-string":28,"react":undefined}],32:[function(require,module,exports){
 module.exports =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -2312,7 +2574,2087 @@ module.exports =
 /***/ }
 /******/ ]);
 
-},{"react":undefined}],32:[function(require,module,exports){
+},{"react":undefined}],33:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Select = require('./Select');
+
+var _Select2 = _interopRequireDefault(_Select);
+
+var _utilsStripDiacritics = require('./utils/stripDiacritics');
+
+var _utilsStripDiacritics2 = _interopRequireDefault(_utilsStripDiacritics);
+
+var propTypes = {
+	autoload: _react2['default'].PropTypes.bool.isRequired, // automatically call the `loadOptions` prop on-mount; defaults to true
+	cache: _react2['default'].PropTypes.any, // object to use to cache results; set to null/false to disable caching
+	children: _react2['default'].PropTypes.func.isRequired, // Child function responsible for creating the inner Select component; (props: Object): PropTypes.element
+	ignoreAccents: _react2['default'].PropTypes.bool, // strip diacritics when filtering; defaults to true
+	ignoreCase: _react2['default'].PropTypes.bool, // perform case-insensitive filtering; defaults to true
+	loadingPlaceholder: _react.PropTypes.string.isRequired, // replaces the placeholder while options are loading
+	loadOptions: _react2['default'].PropTypes.func.isRequired, // callback to load options asynchronously; (inputValue: string, callback: Function): ?Promise
+	options: _react.PropTypes.array.isRequired, // array of options
+	placeholder: _react2['default'].PropTypes.oneOfType([// field placeholder, displayed when there's no value (shared with Select)
+	_react2['default'].PropTypes.string, _react2['default'].PropTypes.node]),
+	searchPromptText: _react2['default'].PropTypes.oneOfType([// label to prompt for search input
+	_react2['default'].PropTypes.string, _react2['default'].PropTypes.node])
+};
+
+var defaultProps = {
+	autoload: true,
+	cache: {},
+	children: defaultChildren,
+	ignoreAccents: true,
+	ignoreCase: true,
+	loadingPlaceholder: 'Loading...',
+	options: [],
+	searchPromptText: 'Type to search'
+};
+
+var Async = (function (_Component) {
+	_inherits(Async, _Component);
+
+	function Async(props, context) {
+		_classCallCheck(this, Async);
+
+		_get(Object.getPrototypeOf(Async.prototype), 'constructor', this).call(this, props, context);
+
+		this.state = {
+			isLoading: false,
+			options: props.options
+		};
+
+		this._onInputChange = this._onInputChange.bind(this);
+	}
+
+	_createClass(Async, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var autoload = this.props.autoload;
+
+			if (autoload) {
+				this.loadOptions('');
+			}
+		}
+	}, {
+		key: 'componentWillUpdate',
+		value: function componentWillUpdate(nextProps, nextState) {
+			var _this = this;
+
+			var propertiesToSync = ['options'];
+			propertiesToSync.forEach(function (prop) {
+				if (_this.props[prop] !== nextProps[prop]) {
+					_this.setState(_defineProperty({}, prop, nextProps[prop]));
+				}
+			});
+		}
+	}, {
+		key: 'loadOptions',
+		value: function loadOptions(inputValue) {
+			var _this2 = this;
+
+			var _props = this.props;
+			var cache = _props.cache;
+			var loadOptions = _props.loadOptions;
+
+			if (cache && cache.hasOwnProperty(inputValue)) {
+				this.setState({
+					options: cache[inputValue]
+				});
+
+				return;
+			}
+
+			var callback = function callback(error, data) {
+				if (callback === _this2._callback) {
+					_this2._callback = null;
+
+					var options = data && data.options || [];
+
+					if (cache) {
+						cache[inputValue] = options;
+					}
+
+					_this2.setState({
+						isLoading: false,
+						options: options
+					});
+				}
+			};
+
+			// Ignore all but the most recent request
+			this._callback = callback;
+
+			var promise = loadOptions(inputValue, callback);
+			if (promise) {
+				promise.then(function (data) {
+					return callback(null, data);
+				}, function (error) {
+					return callback(error);
+				});
+			}
+
+			if (this._callback && !this.state.isLoading) {
+				this.setState({
+					isLoading: true
+				});
+			}
+
+			return inputValue;
+		}
+	}, {
+		key: '_onInputChange',
+		value: function _onInputChange(inputValue) {
+			var _props2 = this.props;
+			var ignoreAccents = _props2.ignoreAccents;
+			var ignoreCase = _props2.ignoreCase;
+
+			if (ignoreAccents) {
+				inputValue = (0, _utilsStripDiacritics2['default'])(inputValue);
+			}
+
+			if (ignoreCase) {
+				inputValue = inputValue.toLowerCase();
+			}
+
+			return this.loadOptions(inputValue);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _props3 = this.props;
+			var children = _props3.children;
+			var loadingPlaceholder = _props3.loadingPlaceholder;
+			var placeholder = _props3.placeholder;
+			var searchPromptText = _props3.searchPromptText;
+			var _state = this.state;
+			var isLoading = _state.isLoading;
+			var options = _state.options;
+
+			var props = {
+				noResultsText: isLoading ? loadingPlaceholder : searchPromptText,
+				placeholder: isLoading ? loadingPlaceholder : placeholder,
+				options: isLoading ? [] : options
+			};
+
+			return children(_extends({}, this.props, props, {
+				isLoading: isLoading,
+				onInputChange: this._onInputChange
+			}));
+		}
+	}]);
+
+	return Async;
+})(_react.Component);
+
+exports['default'] = Async;
+
+Async.propTypes = propTypes;
+Async.defaultProps = defaultProps;
+
+function defaultChildren(props) {
+	return _react2['default'].createElement(_Select2['default'], props);
+};
+module.exports = exports['default'];
+},{"./Select":37,"./utils/stripDiacritics":42,"react":undefined}],34:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Select = require('./Select');
+
+var _Select2 = _interopRequireDefault(_Select);
+
+var AsyncCreatable = _react2['default'].createClass({
+	displayName: 'AsyncCreatableSelect',
+
+	render: function render() {
+		var _this = this;
+
+		return _react2['default'].createElement(
+			_Select2['default'].Async,
+			this.props,
+			function (asyncProps) {
+				return _react2['default'].createElement(
+					_Select2['default'].Creatable,
+					_this.props,
+					function (creatableProps) {
+						return _react2['default'].createElement(_Select2['default'], _extends({}, asyncProps, creatableProps, {
+							onInputChange: function (input) {
+								creatableProps.onInputChange(input);
+								return asyncProps.onInputChange(input);
+							}
+						}));
+					}
+				);
+			}
+		);
+	}
+});
+
+module.exports = AsyncCreatable;
+},{"./Select":37,"react":undefined}],35:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Select = require('./Select');
+
+var _Select2 = _interopRequireDefault(_Select);
+
+var _utilsDefaultFilterOptions = require('./utils/defaultFilterOptions');
+
+var _utilsDefaultFilterOptions2 = _interopRequireDefault(_utilsDefaultFilterOptions);
+
+var _utilsDefaultMenuRenderer = require('./utils/defaultMenuRenderer');
+
+var _utilsDefaultMenuRenderer2 = _interopRequireDefault(_utilsDefaultMenuRenderer);
+
+var Creatable = _react2['default'].createClass({
+	displayName: 'CreatableSelect',
+
+	propTypes: {
+		// Child function responsible for creating the inner Select component
+		// This component can be used to compose HOCs (eg Creatable and Async)
+		// (props: Object): PropTypes.element
+		children: _react2['default'].PropTypes.func,
+
+		// See Select.propTypes.filterOptions
+		filterOptions: _react2['default'].PropTypes.any,
+
+		// Searches for any matching option within the set of options.
+		// This function prevents duplicate options from being created.
+		// ({ option: Object, options: Array, labelKey: string, valueKey: string }): boolean
+		isOptionUnique: _react2['default'].PropTypes.func,
+
+		// Determines if the current input text represents a valid option.
+		// ({ label: string }): boolean
+		isValidNewOption: _react2['default'].PropTypes.func,
+
+		// See Select.propTypes.menuRenderer
+		menuRenderer: _react2['default'].PropTypes.any,
+
+		// Factory to create new option.
+		// ({ label: string, labelKey: string, valueKey: string }): Object
+		newOptionCreator: _react2['default'].PropTypes.func,
+
+		// See Select.propTypes.options
+		options: _react2['default'].PropTypes.array,
+
+		// Creates prompt/placeholder option text.
+		// (filterText: string): string
+		promptTextCreator: _react2['default'].PropTypes.func,
+
+		// Decides if a keyDown event (eg its `keyCode`) should result in the creation of a new option.
+		shouldKeyDownEventCreateNewOption: _react2['default'].PropTypes.func
+	},
+
+	// Default prop methods
+	statics: {
+		isOptionUnique: isOptionUnique,
+		isValidNewOption: isValidNewOption,
+		newOptionCreator: newOptionCreator,
+		promptTextCreator: promptTextCreator,
+		shouldKeyDownEventCreateNewOption: shouldKeyDownEventCreateNewOption
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			filterOptions: _utilsDefaultFilterOptions2['default'],
+			isOptionUnique: isOptionUnique,
+			isValidNewOption: isValidNewOption,
+			menuRenderer: _utilsDefaultMenuRenderer2['default'],
+			newOptionCreator: newOptionCreator,
+			promptTextCreator: promptTextCreator,
+			shouldKeyDownEventCreateNewOption: shouldKeyDownEventCreateNewOption
+		};
+	},
+
+	createNewOption: function createNewOption() {
+		var _props = this.props;
+		var isValidNewOption = _props.isValidNewOption;
+		var newOptionCreator = _props.newOptionCreator;
+		var _props$options = _props.options;
+		var options = _props$options === undefined ? [] : _props$options;
+		var shouldKeyDownEventCreateNewOption = _props.shouldKeyDownEventCreateNewOption;
+
+		if (isValidNewOption({ label: this.inputValue })) {
+			var option = newOptionCreator({ label: this.inputValue, labelKey: this.labelKey, valueKey: this.valueKey });
+			var _isOptionUnique = this.isOptionUnique({ option: option });
+
+			// Don't add the same option twice.
+			if (_isOptionUnique) {
+				options.unshift(option);
+
+				this.select.selectValue(option);
+			}
+		}
+	},
+
+	filterOptions: function filterOptions() {
+		var _props2 = this.props;
+		var filterOptions = _props2.filterOptions;
+		var isValidNewOption = _props2.isValidNewOption;
+		var options = _props2.options;
+		var promptTextCreator = _props2.promptTextCreator;
+
+		// TRICKY Check currently selected options as well.
+		// Don't display a create-prompt for a value that's selected.
+		// This covers async edge-cases where a newly-created Option isn't yet in the async-loaded array.
+		var excludeOptions = arguments[2] || [];
+
+		var filteredOptions = filterOptions.apply(undefined, arguments) || [];
+
+		if (isValidNewOption({ label: this.inputValue })) {
+			var _newOptionCreator = this.props.newOptionCreator;
+
+			var option = _newOptionCreator({
+				label: this.inputValue,
+				labelKey: this.labelKey,
+				valueKey: this.valueKey
+			});
+
+			// TRICKY Compare to all options (not just filtered options) in case option has already been selected).
+			// For multi-selects, this would remove it from the filtered list.
+			var _isOptionUnique2 = this.isOptionUnique({
+				option: option,
+				options: excludeOptions.concat(filteredOptions)
+			});
+
+			if (_isOptionUnique2) {
+				var _prompt = promptTextCreator(this.inputValue);
+
+				this._createPlaceholderOption = _newOptionCreator({
+					label: _prompt,
+					labelKey: this.labelKey,
+					valueKey: this.valueKey
+				});
+
+				filteredOptions.unshift(this._createPlaceholderOption);
+			}
+		}
+
+		return filteredOptions;
+	},
+
+	isOptionUnique: function isOptionUnique(_ref2) {
+		var option = _ref2.option;
+		var options = _ref2.options;
+		var isOptionUnique = this.props.isOptionUnique;
+
+		options = options || this.select.filterOptions();
+
+		return isOptionUnique({
+			labelKey: this.labelKey,
+			option: option,
+			options: options,
+			valueKey: this.valueKey
+		});
+	},
+
+	menuRenderer: function menuRenderer(params) {
+		var menuRenderer = this.props.menuRenderer;
+
+		return menuRenderer(_extends({}, params, {
+			onSelect: this.onOptionSelect
+		}));
+	},
+
+	onInputChange: function onInputChange(input) {
+		// This value may be needed in between Select mounts (when this.select is null)
+		this.inputValue = input;
+	},
+
+	onInputKeyDown: function onInputKeyDown(event) {
+		var shouldKeyDownEventCreateNewOption = this.props.shouldKeyDownEventCreateNewOption;
+
+		var focusedOption = this.select.getFocusedOption();
+
+		if (focusedOption && focusedOption === this._createPlaceholderOption && shouldKeyDownEventCreateNewOption({ keyCode: event.keyCode })) {
+			this.createNewOption();
+
+			// Prevent decorated Select from doing anything additional with this keyDown event
+			event.preventDefault();
+		}
+	},
+
+	onOptionSelect: function onOptionSelect(option, event) {
+		if (option === this._createPlaceholderOption) {
+			this.createNewOption();
+		} else {
+			this.select.selectValue(option);
+		}
+	},
+
+	render: function render() {
+		var _this = this;
+
+		var _props3 = this.props;
+		var _props3$children = _props3.children;
+		var children = _props3$children === undefined ? defaultChildren : _props3$children;
+		var newOptionCreator = _props3.newOptionCreator;
+		var shouldKeyDownEventCreateNewOption = _props3.shouldKeyDownEventCreateNewOption;
+
+		var restProps = _objectWithoutProperties(_props3, ['children', 'newOptionCreator', 'shouldKeyDownEventCreateNewOption']);
+
+		var props = _extends({}, restProps, {
+			allowCreate: true,
+			filterOptions: this.filterOptions,
+			menuRenderer: this.menuRenderer,
+			onInputChange: this.onInputChange,
+			onInputKeyDown: this.onInputKeyDown,
+			ref: function ref(_ref) {
+				_this.select = _ref;
+
+				// These values may be needed in between Select mounts (when this.select is null)
+				if (_ref) {
+					_this.labelKey = _ref.props.labelKey;
+					_this.valueKey = _ref.props.valueKey;
+				}
+			}
+		});
+
+		return children(props);
+	}
+});
+
+function defaultChildren(props) {
+	return _react2['default'].createElement(_Select2['default'], props);
+};
+
+function isOptionUnique(_ref3) {
+	var option = _ref3.option;
+	var options = _ref3.options;
+	var labelKey = _ref3.labelKey;
+	var valueKey = _ref3.valueKey;
+
+	return options.filter(function (existingOption) {
+		return existingOption[labelKey] === option[labelKey] || existingOption[valueKey] === option[valueKey];
+	}).length === 0;
+};
+
+function isValidNewOption(_ref4) {
+	var label = _ref4.label;
+
+	return !!label;
+};
+
+function newOptionCreator(_ref5) {
+	var label = _ref5.label;
+	var labelKey = _ref5.labelKey;
+	var valueKey = _ref5.valueKey;
+
+	var option = {};
+	option[valueKey] = label;
+	option[labelKey] = label;
+	option.className = 'Select-create-option-placeholder';
+	return option;
+};
+
+function promptTextCreator(label) {
+	return 'Create option "' + label + '"';
+}
+
+function shouldKeyDownEventCreateNewOption(_ref6) {
+	var keyCode = _ref6.keyCode;
+
+	switch (keyCode) {
+		case 9: // TAB
+		case 13: // ENTER
+		case 188:
+			// COMMA
+			return true;
+	}
+
+	return false;
+};
+
+module.exports = Creatable;
+},{"./Select":37,"./utils/defaultFilterOptions":40,"./utils/defaultMenuRenderer":41,"react":undefined}],36:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var Option = _react2['default'].createClass({
+	displayName: 'Option',
+
+	propTypes: {
+		children: _react2['default'].PropTypes.node,
+		className: _react2['default'].PropTypes.string, // className (based on mouse position)
+		instancePrefix: _react2['default'].PropTypes.string.isRequired, // unique prefix for the ids (used for aria)
+		isDisabled: _react2['default'].PropTypes.bool, // the option is disabled
+		isFocused: _react2['default'].PropTypes.bool, // the option is focused
+		isSelected: _react2['default'].PropTypes.bool, // the option is selected
+		onFocus: _react2['default'].PropTypes.func, // method to handle mouseEnter on option element
+		onSelect: _react2['default'].PropTypes.func, // method to handle click on option element
+		onUnfocus: _react2['default'].PropTypes.func, // method to handle mouseLeave on option element
+		option: _react2['default'].PropTypes.object.isRequired, // object that is base for that option
+		optionIndex: _react2['default'].PropTypes.number },
+	// index of the option, used to generate unique ids for aria
+	blockEvent: function blockEvent(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		if (event.target.tagName !== 'A' || !('href' in event.target)) {
+			return;
+		}
+		if (event.target.target) {
+			window.open(event.target.href, event.target.target);
+		} else {
+			window.location.href = event.target.href;
+		}
+	},
+
+	handleMouseDown: function handleMouseDown(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		this.props.onSelect(this.props.option, event);
+	},
+
+	handleMouseEnter: function handleMouseEnter(event) {
+		this.onFocus(event);
+	},
+
+	handleMouseMove: function handleMouseMove(event) {
+		this.onFocus(event);
+	},
+
+	handleTouchEnd: function handleTouchEnd(event) {
+		// Check if the view is being dragged, In this case
+		// we don't want to fire the click event (because the user only wants to scroll)
+		if (this.dragging) return;
+
+		this.handleMouseDown(event);
+	},
+
+	handleTouchMove: function handleTouchMove(event) {
+		// Set a flag that the view is being dragged
+		this.dragging = true;
+	},
+
+	handleTouchStart: function handleTouchStart(event) {
+		// Set a flag that the view is not being dragged
+		this.dragging = false;
+	},
+
+	onFocus: function onFocus(event) {
+		if (!this.props.isFocused) {
+			this.props.onFocus(this.props.option, event);
+		}
+	},
+	render: function render() {
+		var _props = this.props;
+		var option = _props.option;
+		var instancePrefix = _props.instancePrefix;
+		var optionIndex = _props.optionIndex;
+
+		var className = (0, _classnames2['default'])(this.props.className, option.className);
+
+		return option.disabled ? _react2['default'].createElement(
+			'div',
+			{ className: className,
+				onMouseDown: this.blockEvent,
+				onClick: this.blockEvent },
+			this.props.children
+		) : _react2['default'].createElement(
+			'div',
+			{ className: className,
+				style: option.style,
+				role: 'option',
+				onMouseDown: this.handleMouseDown,
+				onMouseEnter: this.handleMouseEnter,
+				onMouseMove: this.handleMouseMove,
+				onTouchStart: this.handleTouchStart,
+				onTouchMove: this.handleTouchMove,
+				onTouchEnd: this.handleTouchEnd,
+				id: instancePrefix + '-option-' + optionIndex,
+				title: option.title },
+			this.props.children
+		);
+	}
+});
+
+module.exports = Option;
+},{"classnames":undefined,"react":undefined}],37:[function(require,module,exports){
+/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/react-select
+*/
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactInputAutosize = require('react-input-autosize');
+
+var _reactInputAutosize2 = _interopRequireDefault(_reactInputAutosize);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _utilsDefaultArrowRenderer = require('./utils/defaultArrowRenderer');
+
+var _utilsDefaultArrowRenderer2 = _interopRequireDefault(_utilsDefaultArrowRenderer);
+
+var _utilsDefaultFilterOptions = require('./utils/defaultFilterOptions');
+
+var _utilsDefaultFilterOptions2 = _interopRequireDefault(_utilsDefaultFilterOptions);
+
+var _utilsDefaultMenuRenderer = require('./utils/defaultMenuRenderer');
+
+var _utilsDefaultMenuRenderer2 = _interopRequireDefault(_utilsDefaultMenuRenderer);
+
+var _Async = require('./Async');
+
+var _Async2 = _interopRequireDefault(_Async);
+
+var _AsyncCreatable = require('./AsyncCreatable');
+
+var _AsyncCreatable2 = _interopRequireDefault(_AsyncCreatable);
+
+var _Creatable = require('./Creatable');
+
+var _Creatable2 = _interopRequireDefault(_Creatable);
+
+var _Option = require('./Option');
+
+var _Option2 = _interopRequireDefault(_Option);
+
+var _Value = require('./Value');
+
+var _Value2 = _interopRequireDefault(_Value);
+
+function stringifyValue(value) {
+	var valueType = typeof value;
+	if (valueType === 'string') {
+		return value;
+	} else if (valueType === 'object') {
+		return JSON.stringify(value);
+	} else if (valueType === 'number' || valueType === 'boolean') {
+		return String(value);
+	} else {
+		return '';
+	}
+}
+
+var stringOrNode = _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.node]);
+
+var instanceId = 1;
+
+var Select = _react2['default'].createClass({
+
+	displayName: 'Select',
+
+	propTypes: {
+		addLabelText: _react2['default'].PropTypes.string, // placeholder displayed when you want to add a label on a multi-value input
+		'aria-label': _react2['default'].PropTypes.string, // Aria label (for assistive tech)
+		'aria-labelledby': _react2['default'].PropTypes.string, // HTML ID of an element that should be used as the label (for assistive tech)
+		arrowRenderer: _react2['default'].PropTypes.func, // Create drop-down caret element
+		autoBlur: _react2['default'].PropTypes.bool, // automatically blur the component when an option is selected
+		autofocus: _react2['default'].PropTypes.bool, // autofocus the component on mount
+		autosize: _react2['default'].PropTypes.bool, // whether to enable autosizing or not
+		backspaceRemoves: _react2['default'].PropTypes.bool, // whether backspace removes an item if there is no text input
+		backspaceToRemoveMessage: _react2['default'].PropTypes.string, // Message to use for screenreaders to press backspace to remove the current item - {label} is replaced with the item label
+		className: _react2['default'].PropTypes.string, // className for the outer element
+		clearAllText: stringOrNode, // title for the "clear" control when multi: true
+		clearValueText: stringOrNode, // title for the "clear" control
+		clearable: _react2['default'].PropTypes.bool, // should it be possible to reset value
+		delimiter: _react2['default'].PropTypes.string, // delimiter to use to join multiple values for the hidden field value
+		disabled: _react2['default'].PropTypes.bool, // whether the Select is disabled or not
+		escapeClearsValue: _react2['default'].PropTypes.bool, // whether escape clears the value when the menu is closed
+		filterOption: _react2['default'].PropTypes.func, // method to filter a single option (option, filterString)
+		filterOptions: _react2['default'].PropTypes.any, // boolean to enable default filtering or function to filter the options array ([options], filterString, [values])
+		ignoreAccents: _react2['default'].PropTypes.bool, // whether to strip diacritics when filtering
+		ignoreCase: _react2['default'].PropTypes.bool, // whether to perform case-insensitive filtering
+		inputProps: _react2['default'].PropTypes.object, // custom attributes for the Input
+		inputRenderer: _react2['default'].PropTypes.func, // returns a custom input component
+		instanceId: _react2['default'].PropTypes.string, // set the components instanceId
+		isLoading: _react2['default'].PropTypes.bool, // whether the Select is loading externally or not (such as options being loaded)
+		joinValues: _react2['default'].PropTypes.bool, // joins multiple values into a single form field with the delimiter (legacy mode)
+		labelKey: _react2['default'].PropTypes.string, // path of the label value in option objects
+		matchPos: _react2['default'].PropTypes.string, // (any|start) match the start or entire string when filtering
+		matchProp: _react2['default'].PropTypes.string, // (any|label|value) which option property to filter on
+		menuBuffer: _react2['default'].PropTypes.number, // optional buffer (in px) between the bottom of the viewport and the bottom of the menu
+		menuContainerStyle: _react2['default'].PropTypes.object, // optional style to apply to the menu container
+		menuRenderer: _react2['default'].PropTypes.func, // renders a custom menu with options
+		menuStyle: _react2['default'].PropTypes.object, // optional style to apply to the menu
+		multi: _react2['default'].PropTypes.bool, // multi-value input
+		name: _react2['default'].PropTypes.string, // generates a hidden <input /> tag with this field name for html forms
+		noResultsText: stringOrNode, // placeholder displayed when there are no matching search results
+		onBlur: _react2['default'].PropTypes.func, // onBlur handler: function (event) {}
+		onBlurResetsInput: _react2['default'].PropTypes.bool, // whether input is cleared on blur
+		onChange: _react2['default'].PropTypes.func, // onChange handler: function (newValue) {}
+		onClose: _react2['default'].PropTypes.func, // fires when the menu is closed
+		onCloseResetsInput: _react2['default'].PropTypes.bool, // whether input is cleared when menu is closed through the arrow
+		onFocus: _react2['default'].PropTypes.func, // onFocus handler: function (event) {}
+		onInputChange: _react2['default'].PropTypes.func, // onInputChange handler: function (inputValue) {}
+		onInputKeyDown: _react2['default'].PropTypes.func, // input keyDown handler: function (event) {}
+		onMenuScrollToBottom: _react2['default'].PropTypes.func, // fires when the menu is scrolled to the bottom; can be used to paginate options
+		onOpen: _react2['default'].PropTypes.func, // fires when the menu is opened
+		onValueClick: _react2['default'].PropTypes.func, // onClick handler for value labels: function (value, event) {}
+		openAfterFocus: _react2['default'].PropTypes.bool, // boolean to enable opening dropdown when focused
+		openOnFocus: _react2['default'].PropTypes.bool, // always open options menu on focus
+		optionClassName: _react2['default'].PropTypes.string, // additional class(es) to apply to the <Option /> elements
+		optionComponent: _react2['default'].PropTypes.func, // option component to render in dropdown
+		optionRenderer: _react2['default'].PropTypes.func, // optionRenderer: function (option) {}
+		options: _react2['default'].PropTypes.array, // array of options
+		pageSize: _react2['default'].PropTypes.number, // number of entries to page when using page up/down keys
+		placeholder: stringOrNode, // field placeholder, displayed when there's no value
+		required: _react2['default'].PropTypes.bool, // applies HTML5 required attribute when needed
+		resetValue: _react2['default'].PropTypes.any, // value to use when you clear the control
+		scrollMenuIntoView: _react2['default'].PropTypes.bool, // boolean to enable the viewport to shift so that the full menu fully visible when engaged
+		searchable: _react2['default'].PropTypes.bool, // whether to enable searching feature or not
+		simpleValue: _react2['default'].PropTypes.bool, // pass the value to onChange as a simple value (legacy pre 1.0 mode), defaults to false
+		style: _react2['default'].PropTypes.object, // optional style to apply to the control
+		tabIndex: _react2['default'].PropTypes.string, // optional tab index of the control
+		tabSelectsValue: _react2['default'].PropTypes.bool, // whether to treat tabbing out while focused to be value selection
+		value: _react2['default'].PropTypes.any, // initial field value
+		valueComponent: _react2['default'].PropTypes.func, // value component to render
+		valueKey: _react2['default'].PropTypes.string, // path of the label value in option objects
+		valueRenderer: _react2['default'].PropTypes.func, // valueRenderer: function (option) {}
+		wrapperStyle: _react2['default'].PropTypes.object },
+
+	// optional style to apply to the component wrapper
+	statics: { Async: _Async2['default'], AsyncCreatable: _AsyncCreatable2['default'], Creatable: _Creatable2['default'] },
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			addLabelText: 'Add "{label}"?',
+			arrowRenderer: _utilsDefaultArrowRenderer2['default'],
+			autosize: true,
+			backspaceRemoves: true,
+			backspaceToRemoveMessage: 'Press backspace to remove {label}',
+			clearable: true,
+			clearAllText: 'Clear all',
+			clearValueText: 'Clear value',
+			delimiter: ',',
+			disabled: false,
+			escapeClearsValue: true,
+			filterOptions: _utilsDefaultFilterOptions2['default'],
+			ignoreAccents: true,
+			ignoreCase: true,
+			inputProps: {},
+			isLoading: false,
+			joinValues: false,
+			labelKey: 'label',
+			matchPos: 'any',
+			matchProp: 'any',
+			menuBuffer: 0,
+			menuRenderer: _utilsDefaultMenuRenderer2['default'],
+			multi: false,
+			noResultsText: 'No results found',
+			onBlurResetsInput: true,
+			onCloseResetsInput: true,
+			openAfterFocus: false,
+			optionComponent: _Option2['default'],
+			pageSize: 5,
+			placeholder: 'Select...',
+			required: false,
+			scrollMenuIntoView: true,
+			searchable: true,
+			simpleValue: false,
+			tabSelectsValue: true,
+			valueComponent: _Value2['default'],
+			valueKey: 'value'
+		};
+	},
+
+	getInitialState: function getInitialState() {
+		return {
+			inputValue: '',
+			isFocused: false,
+			isOpen: false,
+			isPseudoFocused: false,
+			required: false
+		};
+	},
+
+	componentWillMount: function componentWillMount() {
+		this._instancePrefix = 'react-select-' + (this.props.instanceId || ++instanceId) + '-';
+		var valueArray = this.getValueArray(this.props.value);
+
+		if (this.props.required) {
+			this.setState({
+				required: this.handleRequired(valueArray[0], this.props.multi)
+			});
+		}
+	},
+
+	componentDidMount: function componentDidMount() {
+		if (this.props.autofocus) {
+			this.focus();
+		}
+	},
+
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		var valueArray = this.getValueArray(nextProps.value, nextProps);
+
+		if (nextProps.required) {
+			this.setState({
+				required: this.handleRequired(valueArray[0], nextProps.multi)
+			});
+		}
+	},
+
+	componentWillUpdate: function componentWillUpdate(nextProps, nextState) {
+		if (nextState.isOpen !== this.state.isOpen) {
+			this.toggleTouchOutsideEvent(nextState.isOpen);
+			var handler = nextState.isOpen ? nextProps.onOpen : nextProps.onClose;
+			handler && handler();
+		}
+	},
+
+	componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+		// focus to the selected option
+		if (this.menu && this.focused && this.state.isOpen && !this.hasScrolledToOption) {
+			var focusedOptionNode = _reactDom2['default'].findDOMNode(this.focused);
+			var menuNode = _reactDom2['default'].findDOMNode(this.menu);
+			menuNode.scrollTop = focusedOptionNode.offsetTop;
+			this.hasScrolledToOption = true;
+		} else if (!this.state.isOpen) {
+			this.hasScrolledToOption = false;
+		}
+
+		if (this._scrollToFocusedOptionOnUpdate && this.focused && this.menu) {
+			this._scrollToFocusedOptionOnUpdate = false;
+			var focusedDOM = _reactDom2['default'].findDOMNode(this.focused);
+			var menuDOM = _reactDom2['default'].findDOMNode(this.menu);
+			var focusedRect = focusedDOM.getBoundingClientRect();
+			var menuRect = menuDOM.getBoundingClientRect();
+			if (focusedRect.bottom > menuRect.bottom || focusedRect.top < menuRect.top) {
+				menuDOM.scrollTop = focusedDOM.offsetTop + focusedDOM.clientHeight - menuDOM.offsetHeight;
+			}
+		}
+		if (this.props.scrollMenuIntoView && this.menuContainer) {
+			var menuContainerRect = this.menuContainer.getBoundingClientRect();
+			if (window.innerHeight < menuContainerRect.bottom + this.props.menuBuffer) {
+				window.scrollBy(0, menuContainerRect.bottom + this.props.menuBuffer - window.innerHeight);
+			}
+		}
+		if (prevProps.disabled !== this.props.disabled) {
+			this.setState({ isFocused: false }); // eslint-disable-line react/no-did-update-set-state
+			this.closeMenu();
+		}
+	},
+
+	componentWillUnmount: function componentWillUnmount() {
+		document.removeEventListener('touchstart', this.handleTouchOutside);
+	},
+
+	toggleTouchOutsideEvent: function toggleTouchOutsideEvent(enabled) {
+		if (enabled) {
+			document.addEventListener('touchstart', this.handleTouchOutside);
+		} else {
+			document.removeEventListener('touchstart', this.handleTouchOutside);
+		}
+	},
+
+	handleTouchOutside: function handleTouchOutside(event) {
+		// handle touch outside on ios to dismiss menu
+		if (this.wrapper && !this.wrapper.contains(event.target)) {
+			this.closeMenu();
+		}
+	},
+
+	focus: function focus() {
+		if (!this.input) return;
+		this.input.focus();
+
+		if (this.props.openAfterFocus) {
+			this.setState({
+				isOpen: true
+			});
+		}
+	},
+
+	blurInput: function blurInput() {
+		if (!this.input) return;
+		this.input.blur();
+	},
+
+	handleTouchMove: function handleTouchMove(event) {
+		// Set a flag that the view is being dragged
+		this.dragging = true;
+	},
+
+	handleTouchStart: function handleTouchStart(event) {
+		// Set a flag that the view is not being dragged
+		this.dragging = false;
+	},
+
+	handleTouchEnd: function handleTouchEnd(event) {
+		// Check if the view is being dragged, In this case
+		// we don't want to fire the click event (because the user only wants to scroll)
+		if (this.dragging) return;
+
+		// Fire the mouse events
+		this.handleMouseDown(event);
+	},
+
+	handleTouchEndClearValue: function handleTouchEndClearValue(event) {
+		// Check if the view is being dragged, In this case
+		// we don't want to fire the click event (because the user only wants to scroll)
+		if (this.dragging) return;
+
+		// Clear the value
+		this.clearValue(event);
+	},
+
+	handleMouseDown: function handleMouseDown(event) {
+		// if the event was triggered by a mousedown and not the primary
+		// button, or if the component is disabled, ignore it.
+		if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
+			return;
+		}
+
+		if (event.target.tagName === 'INPUT') {
+			return;
+		}
+
+		// prevent default event handlers
+		event.stopPropagation();
+		event.preventDefault();
+
+		// for the non-searchable select, toggle the menu
+		if (!this.props.searchable) {
+			this.focus();
+			return this.setState({
+				isOpen: !this.state.isOpen
+			});
+		}
+
+		if (this.state.isFocused) {
+			// On iOS, we can get into a state where we think the input is focused but it isn't really,
+			// since iOS ignores programmatic calls to input.focus() that weren't triggered by a click event.
+			// Call focus() again here to be safe.
+			this.focus();
+
+			var input = this.input;
+			if (typeof input.getInput === 'function') {
+				// Get the actual DOM input if the ref is an <AutosizeInput /> component
+				input = input.getInput();
+			}
+
+			// clears the value so that the cursor will be at the end of input when the component re-renders
+			input.value = '';
+
+			// if the input is focused, ensure the menu is open
+			this.setState({
+				isOpen: true,
+				isPseudoFocused: false
+			});
+		} else {
+			// otherwise, focus the input and open the menu
+			this._openAfterFocus = true;
+			this.focus();
+		}
+	},
+
+	handleMouseDownOnArrow: function handleMouseDownOnArrow(event) {
+		// if the event was triggered by a mousedown and not the primary
+		// button, or if the component is disabled, ignore it.
+		if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
+			return;
+		}
+		// If the menu isn't open, let the event bubble to the main handleMouseDown
+		if (!this.state.isOpen) {
+			return;
+		}
+		// prevent default event handlers
+		event.stopPropagation();
+		event.preventDefault();
+		// close the menu
+		this.closeMenu();
+	},
+
+	handleMouseDownOnMenu: function handleMouseDownOnMenu(event) {
+		// if the event was triggered by a mousedown and not the primary
+		// button, or if the component is disabled, ignore it.
+		if (this.props.disabled || event.type === 'mousedown' && event.button !== 0) {
+			return;
+		}
+		event.stopPropagation();
+		event.preventDefault();
+
+		this._openAfterFocus = true;
+		this.focus();
+	},
+
+	closeMenu: function closeMenu() {
+		if (this.props.onCloseResetsInput) {
+			this.setState({
+				isOpen: false,
+				isPseudoFocused: this.state.isFocused && !this.props.multi,
+				inputValue: ''
+			});
+		} else {
+			this.setState({
+				isOpen: false,
+				isPseudoFocused: this.state.isFocused && !this.props.multi,
+				inputValue: this.state.inputValue
+			});
+		}
+		this.hasScrolledToOption = false;
+	},
+
+	handleInputFocus: function handleInputFocus(event) {
+		if (this.props.disabled) return;
+		var isOpen = this.state.isOpen || this._openAfterFocus || this.props.openOnFocus;
+		if (this.props.onFocus) {
+			this.props.onFocus(event);
+		}
+		this.setState({
+			isFocused: true,
+			isOpen: isOpen
+		});
+		this._openAfterFocus = false;
+	},
+
+	handleInputBlur: function handleInputBlur(event) {
+		// The check for menu.contains(activeElement) is necessary to prevent IE11's scrollbar from closing the menu in certain contexts.
+		if (this.menu && (this.menu === document.activeElement || this.menu.contains(document.activeElement))) {
+			this.focus();
+			return;
+		}
+
+		if (this.props.onBlur) {
+			this.props.onBlur(event);
+		}
+		var onBlurredState = {
+			isFocused: false,
+			isOpen: false,
+			isPseudoFocused: false
+		};
+		if (this.props.onBlurResetsInput) {
+			onBlurredState.inputValue = '';
+		}
+		this.setState(onBlurredState);
+	},
+
+	handleInputChange: function handleInputChange(event) {
+		var newInputValue = event.target.value;
+
+		if (this.state.inputValue !== event.target.value && this.props.onInputChange) {
+			var nextState = this.props.onInputChange(newInputValue);
+			// Note: != used deliberately here to catch undefined and null
+			if (nextState != null && typeof nextState !== 'object') {
+				newInputValue = '' + nextState;
+			}
+		}
+
+		this.setState({
+			isOpen: true,
+			isPseudoFocused: false,
+			inputValue: newInputValue
+		});
+	},
+
+	handleKeyDown: function handleKeyDown(event) {
+		if (this.props.disabled) return;
+
+		if (typeof this.props.onInputKeyDown === 'function') {
+			this.props.onInputKeyDown(event);
+			if (event.defaultPrevented) {
+				return;
+			}
+		}
+
+		switch (event.keyCode) {
+			case 8:
+				// backspace
+				if (!this.state.inputValue && this.props.backspaceRemoves) {
+					event.preventDefault();
+					this.popValue();
+				}
+				return;
+			case 9:
+				// tab
+				if (event.shiftKey || !this.state.isOpen || !this.props.tabSelectsValue) {
+					return;
+				}
+				this.selectFocusedOption();
+				return;
+			case 13:
+				// enter
+				if (!this.state.isOpen) return;
+				event.stopPropagation();
+				this.selectFocusedOption();
+				break;
+			case 27:
+				// escape
+				if (this.state.isOpen) {
+					this.closeMenu();
+					event.stopPropagation();
+				} else if (this.props.clearable && this.props.escapeClearsValue) {
+					this.clearValue(event);
+					event.stopPropagation();
+				}
+				break;
+			case 38:
+				// up
+				this.focusPreviousOption();
+				break;
+			case 40:
+				// down
+				this.focusNextOption();
+				break;
+			case 33:
+				// page up
+				this.focusPageUpOption();
+				break;
+			case 34:
+				// page down
+				this.focusPageDownOption();
+				break;
+			case 35:
+				// end key
+				if (event.shiftKey) {
+					return;
+				}
+				this.focusEndOption();
+				break;
+			case 36:
+				// home key
+				if (event.shiftKey) {
+					return;
+				}
+				this.focusStartOption();
+				break;
+			default:
+				return;
+		}
+		event.preventDefault();
+	},
+
+	handleValueClick: function handleValueClick(option, event) {
+		if (!this.props.onValueClick) return;
+		this.props.onValueClick(option, event);
+	},
+
+	handleMenuScroll: function handleMenuScroll(event) {
+		if (!this.props.onMenuScrollToBottom) return;
+		var target = event.target;
+
+		if (target.scrollHeight > target.offsetHeight && !(target.scrollHeight - target.offsetHeight - target.scrollTop)) {
+			this.props.onMenuScrollToBottom();
+		}
+	},
+
+	handleRequired: function handleRequired(value, multi) {
+		if (!value) return true;
+		return multi ? value.length === 0 : Object.keys(value).length === 0;
+	},
+
+	getOptionLabel: function getOptionLabel(op) {
+		return op[this.props.labelKey];
+	},
+
+	/**
+  * Turns a value into an array from the given options
+  * @param	{String|Number|Array}	value		- the value of the select input
+  * @param	{Object}		nextProps	- optionally specify the nextProps so the returned array uses the latest configuration
+  * @returns	{Array}	the value of the select represented in an array
+  */
+	getValueArray: function getValueArray(value, nextProps) {
+		var _this = this;
+
+		/** support optionally passing in the `nextProps` so `componentWillReceiveProps` updates will function as expected */
+		var props = typeof nextProps === 'object' ? nextProps : this.props;
+		if (props.multi) {
+			if (typeof value === 'string') value = value.split(props.delimiter);
+			if (!Array.isArray(value)) {
+				if (value === null || value === undefined) return [];
+				value = [value];
+			}
+			return value.map(function (value) {
+				return _this.expandValue(value, props);
+			}).filter(function (i) {
+				return i;
+			});
+		}
+		var expandedValue = this.expandValue(value, props);
+		return expandedValue ? [expandedValue] : [];
+	},
+
+	/**
+  * Retrieve a value from the given options and valueKey
+  * @param	{String|Number|Array}	value	- the selected value(s)
+  * @param	{Object}		props	- the Select component's props (or nextProps)
+  */
+	expandValue: function expandValue(value, props) {
+		var valueType = typeof value;
+		if (valueType !== 'string' && valueType !== 'number' && valueType !== 'boolean') return value;
+		var options = props.options;
+		var valueKey = props.valueKey;
+
+		if (!options) return;
+		for (var i = 0; i < options.length; i++) {
+			if (options[i][valueKey] === value) return options[i];
+		}
+	},
+
+	setValue: function setValue(value) {
+		var _this2 = this;
+
+		if (this.props.autoBlur) {
+			this.blurInput();
+		}
+		if (!this.props.onChange) return;
+		if (this.props.required) {
+			var required = this.handleRequired(value, this.props.multi);
+			this.setState({ required: required });
+		}
+		if (this.props.simpleValue && value) {
+			value = this.props.multi ? value.map(function (i) {
+				return i[_this2.props.valueKey];
+			}).join(this.props.delimiter) : value[this.props.valueKey];
+		}
+		this.props.onChange(value);
+	},
+
+	selectValue: function selectValue(value) {
+		var _this3 = this;
+
+		//NOTE: update value in the callback to make sure the input value is empty so that there are no styling issues (Chrome had issue otherwise)
+		this.hasScrolledToOption = false;
+		if (this.props.multi) {
+			this.setState({
+				inputValue: '',
+				focusedIndex: null
+			}, function () {
+				_this3.addValue(value);
+			});
+		} else {
+			this.setState({
+				isOpen: false,
+				inputValue: '',
+				isPseudoFocused: this.state.isFocused
+			}, function () {
+				_this3.setValue(value);
+			});
+		}
+	},
+
+	addValue: function addValue(value) {
+		var valueArray = this.getValueArray(this.props.value);
+		this.setValue(valueArray.concat(value));
+	},
+
+	popValue: function popValue() {
+		var valueArray = this.getValueArray(this.props.value);
+		if (!valueArray.length) return;
+		if (valueArray[valueArray.length - 1].clearableValue === false) return;
+		this.setValue(valueArray.slice(0, valueArray.length - 1));
+	},
+
+	removeValue: function removeValue(value) {
+		var valueArray = this.getValueArray(this.props.value);
+		this.setValue(valueArray.filter(function (i) {
+			return i !== value;
+		}));
+		this.focus();
+	},
+
+	clearValue: function clearValue(event) {
+		// if the event was triggered by a mousedown and not the primary
+		// button, ignore it.
+		if (event && event.type === 'mousedown' && event.button !== 0) {
+			return;
+		}
+		event.stopPropagation();
+		event.preventDefault();
+		this.setValue(this.getResetValue());
+		this.setState({
+			isOpen: false,
+			inputValue: ''
+		}, this.focus);
+	},
+
+	getResetValue: function getResetValue() {
+		if (this.props.resetValue !== undefined) {
+			return this.props.resetValue;
+		} else if (this.props.multi) {
+			return [];
+		} else {
+			return null;
+		}
+	},
+
+	focusOption: function focusOption(option) {
+		this.setState({
+			focusedOption: option
+		});
+	},
+
+	focusNextOption: function focusNextOption() {
+		this.focusAdjacentOption('next');
+	},
+
+	focusPreviousOption: function focusPreviousOption() {
+		this.focusAdjacentOption('previous');
+	},
+
+	focusPageUpOption: function focusPageUpOption() {
+		this.focusAdjacentOption('page_up');
+	},
+
+	focusPageDownOption: function focusPageDownOption() {
+		this.focusAdjacentOption('page_down');
+	},
+
+	focusStartOption: function focusStartOption() {
+		this.focusAdjacentOption('start');
+	},
+
+	focusEndOption: function focusEndOption() {
+		this.focusAdjacentOption('end');
+	},
+
+	focusAdjacentOption: function focusAdjacentOption(dir) {
+		var options = this._visibleOptions.map(function (option, index) {
+			return { option: option, index: index };
+		}).filter(function (option) {
+			return !option.option.disabled;
+		});
+		this._scrollToFocusedOptionOnUpdate = true;
+		if (!this.state.isOpen) {
+			this.setState({
+				isOpen: true,
+				inputValue: '',
+				focusedOption: this._focusedOption || options[dir === 'next' ? 0 : options.length - 1].option
+			});
+			return;
+		}
+		if (!options.length) return;
+		var focusedIndex = -1;
+		for (var i = 0; i < options.length; i++) {
+			if (this._focusedOption === options[i].option) {
+				focusedIndex = i;
+				break;
+			}
+		}
+		if (dir === 'next' && focusedIndex !== -1) {
+			focusedIndex = (focusedIndex + 1) % options.length;
+		} else if (dir === 'previous') {
+			if (focusedIndex > 0) {
+				focusedIndex = focusedIndex - 1;
+			} else {
+				focusedIndex = options.length - 1;
+			}
+		} else if (dir === 'start') {
+			focusedIndex = 0;
+		} else if (dir === 'end') {
+			focusedIndex = options.length - 1;
+		} else if (dir === 'page_up') {
+			var potentialIndex = focusedIndex - this.props.pageSize;
+			if (potentialIndex < 0) {
+				focusedIndex = 0;
+			} else {
+				focusedIndex = potentialIndex;
+			}
+		} else if (dir === 'page_down') {
+			var potentialIndex = focusedIndex + this.props.pageSize;
+			if (potentialIndex > options.length - 1) {
+				focusedIndex = options.length - 1;
+			} else {
+				focusedIndex = potentialIndex;
+			}
+		}
+
+		if (focusedIndex === -1) {
+			focusedIndex = 0;
+		}
+
+		this.setState({
+			focusedIndex: options[focusedIndex].index,
+			focusedOption: options[focusedIndex].option
+		});
+	},
+
+	getFocusedOption: function getFocusedOption() {
+		return this._focusedOption;
+	},
+
+	getInputValue: function getInputValue() {
+		return this.state.inputValue;
+	},
+
+	selectFocusedOption: function selectFocusedOption() {
+		if (this._focusedOption) {
+			return this.selectValue(this._focusedOption);
+		}
+	},
+
+	renderLoading: function renderLoading() {
+		if (!this.props.isLoading) return;
+		return _react2['default'].createElement(
+			'span',
+			{ className: 'Select-loading-zone', 'aria-hidden': 'true' },
+			_react2['default'].createElement('span', { className: 'Select-loading' })
+		);
+	},
+
+	renderValue: function renderValue(valueArray, isOpen) {
+		var _this4 = this;
+
+		var renderLabel = this.props.valueRenderer || this.getOptionLabel;
+		var ValueComponent = this.props.valueComponent;
+		if (!valueArray.length) {
+			return !this.state.inputValue ? _react2['default'].createElement(
+				'div',
+				{ className: 'Select-placeholder' },
+				this.props.placeholder
+			) : null;
+		}
+		var onClick = this.props.onValueClick ? this.handleValueClick : null;
+		if (this.props.multi) {
+			return valueArray.map(function (value, i) {
+				return _react2['default'].createElement(
+					ValueComponent,
+					{
+						id: _this4._instancePrefix + '-value-' + i,
+						instancePrefix: _this4._instancePrefix,
+						disabled: _this4.props.disabled || value.clearableValue === false,
+						key: 'value-' + i + '-' + value[_this4.props.valueKey],
+						onClick: onClick,
+						onRemove: _this4.removeValue,
+						value: value
+					},
+					renderLabel(value, i),
+					_react2['default'].createElement(
+						'span',
+						{ className: 'Select-aria-only' },
+						' '
+					)
+				);
+			});
+		} else if (!this.state.inputValue) {
+			if (isOpen) onClick = null;
+			return _react2['default'].createElement(
+				ValueComponent,
+				{
+					id: this._instancePrefix + '-value-item',
+					disabled: this.props.disabled,
+					instancePrefix: this._instancePrefix,
+					onClick: onClick,
+					value: valueArray[0]
+				},
+				renderLabel(valueArray[0])
+			);
+		}
+	},
+
+	renderInput: function renderInput(valueArray, focusedOptionIndex) {
+		var _this5 = this;
+
+		if (this.props.inputRenderer) {
+			return this.props.inputRenderer();
+		} else {
+			var _classNames;
+
+			var className = (0, _classnames2['default'])('Select-input', this.props.inputProps.className);
+			var isOpen = !!this.state.isOpen;
+
+			var ariaOwns = (0, _classnames2['default'])((_classNames = {}, _defineProperty(_classNames, this._instancePrefix + '-list', isOpen), _defineProperty(_classNames, this._instancePrefix + '-backspace-remove-message', this.props.multi && !this.props.disabled && this.state.isFocused && !this.state.inputValue), _classNames));
+
+			// TODO: Check how this project includes Object.assign()
+			var inputProps = _extends({}, this.props.inputProps, {
+				role: 'combobox',
+				'aria-expanded': '' + isOpen,
+				'aria-owns': ariaOwns,
+				'aria-haspopup': '' + isOpen,
+				'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
+				'aria-labelledby': this.props['aria-labelledby'],
+				'aria-label': this.props['aria-label'],
+				className: className,
+				tabIndex: this.props.tabIndex,
+				onBlur: this.handleInputBlur,
+				onChange: this.handleInputChange,
+				onFocus: this.handleInputFocus,
+				ref: function ref(_ref) {
+					return _this5.input = _ref;
+				},
+				required: this.state.required,
+				value: this.state.inputValue
+			});
+
+			if (this.props.disabled || !this.props.searchable) {
+				var _props$inputProps = this.props.inputProps;
+				var inputClassName = _props$inputProps.inputClassName;
+
+				var divProps = _objectWithoutProperties(_props$inputProps, ['inputClassName']);
+
+				return _react2['default'].createElement('div', _extends({}, divProps, {
+					role: 'combobox',
+					'aria-expanded': isOpen,
+					'aria-owns': isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value',
+					'aria-activedescendant': isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value',
+					className: className,
+					tabIndex: this.props.tabIndex || 0,
+					onBlur: this.handleInputBlur,
+					onFocus: this.handleInputFocus,
+					ref: function (ref) {
+						return _this5.input = ref;
+					},
+					'aria-readonly': '' + !!this.props.disabled,
+					style: { border: 0, width: 1, display: 'inline-block' } }));
+			}
+
+			if (this.props.autosize) {
+				return _react2['default'].createElement(_reactInputAutosize2['default'], _extends({}, inputProps, { minWidth: '5px' }));
+			}
+			return _react2['default'].createElement(
+				'div',
+				{ className: className },
+				_react2['default'].createElement('input', inputProps)
+			);
+		}
+	},
+
+	renderClear: function renderClear() {
+		if (!this.props.clearable || !this.props.value || this.props.value === 0 || this.props.multi && !this.props.value.length || this.props.disabled || this.props.isLoading) return;
+		return _react2['default'].createElement(
+			'span',
+			{ className: 'Select-clear-zone', title: this.props.multi ? this.props.clearAllText : this.props.clearValueText,
+				'aria-label': this.props.multi ? this.props.clearAllText : this.props.clearValueText,
+				onMouseDown: this.clearValue,
+				onTouchStart: this.handleTouchStart,
+				onTouchMove: this.handleTouchMove,
+				onTouchEnd: this.handleTouchEndClearValue
+			},
+			_react2['default'].createElement('span', { className: 'Select-clear', dangerouslySetInnerHTML: { __html: '&times;' } })
+		);
+	},
+
+	renderArrow: function renderArrow() {
+		var onMouseDown = this.handleMouseDownOnArrow;
+		var arrow = this.props.arrowRenderer({ onMouseDown: onMouseDown });
+
+		return _react2['default'].createElement(
+			'span',
+			{
+				className: 'Select-arrow-zone',
+				onMouseDown: onMouseDown
+			},
+			arrow
+		);
+	},
+
+	filterOptions: function filterOptions(excludeOptions) {
+		var filterValue = this.state.inputValue;
+		var options = this.props.options || [];
+		if (this.props.filterOptions) {
+			// Maintain backwards compatibility with boolean attribute
+			var filterOptions = typeof this.props.filterOptions === 'function' ? this.props.filterOptions : _utilsDefaultFilterOptions2['default'];
+
+			return filterOptions(options, filterValue, excludeOptions, {
+				filterOption: this.props.filterOption,
+				ignoreAccents: this.props.ignoreAccents,
+				ignoreCase: this.props.ignoreCase,
+				labelKey: this.props.labelKey,
+				matchPos: this.props.matchPos,
+				matchProp: this.props.matchProp,
+				valueKey: this.props.valueKey
+			});
+		} else {
+			return options;
+		}
+	},
+
+	onOptionRef: function onOptionRef(ref, isFocused) {
+		if (isFocused) {
+			this.focused = ref;
+		}
+	},
+
+	renderMenu: function renderMenu(options, valueArray, focusedOption) {
+		if (options && options.length) {
+			return this.props.menuRenderer({
+				focusedOption: focusedOption,
+				focusOption: this.focusOption,
+				instancePrefix: this._instancePrefix,
+				labelKey: this.props.labelKey,
+				onFocus: this.focusOption,
+				onSelect: this.selectValue,
+				optionClassName: this.props.optionClassName,
+				optionComponent: this.props.optionComponent,
+				optionRenderer: this.props.optionRenderer || this.getOptionLabel,
+				options: options,
+				selectValue: this.selectValue,
+				valueArray: valueArray,
+				valueKey: this.props.valueKey,
+				onOptionRef: this.onOptionRef
+			});
+		} else if (this.props.noResultsText) {
+			return _react2['default'].createElement(
+				'div',
+				{ className: 'Select-noresults' },
+				this.props.noResultsText
+			);
+		} else {
+			return null;
+		}
+	},
+
+	renderHiddenField: function renderHiddenField(valueArray) {
+		var _this6 = this;
+
+		if (!this.props.name) return;
+		if (this.props.joinValues) {
+			var value = valueArray.map(function (i) {
+				return stringifyValue(i[_this6.props.valueKey]);
+			}).join(this.props.delimiter);
+			return _react2['default'].createElement('input', {
+				type: 'hidden',
+				ref: function (ref) {
+					return _this6.value = ref;
+				},
+				name: this.props.name,
+				value: value,
+				disabled: this.props.disabled });
+		}
+		return valueArray.map(function (item, index) {
+			return _react2['default'].createElement('input', { key: 'hidden.' + index,
+				type: 'hidden',
+				ref: 'value' + index,
+				name: _this6.props.name,
+				value: stringifyValue(item[_this6.props.valueKey]),
+				disabled: _this6.props.disabled });
+		});
+	},
+
+	getFocusableOptionIndex: function getFocusableOptionIndex(selectedOption) {
+		var options = this._visibleOptions;
+		if (!options.length) return null;
+
+		var focusedOption = this.state.focusedOption || selectedOption;
+		if (focusedOption && !focusedOption.disabled) {
+			var focusedOptionIndex = options.indexOf(focusedOption);
+			if (focusedOptionIndex !== -1) {
+				return focusedOptionIndex;
+			}
+		}
+
+		for (var i = 0; i < options.length; i++) {
+			if (!options[i].disabled) return i;
+		}
+		return null;
+	},
+
+	renderOuter: function renderOuter(options, valueArray, focusedOption) {
+		var _this7 = this;
+
+		var menu = this.renderMenu(options, valueArray, focusedOption);
+		if (!menu) {
+			return null;
+		}
+
+		return _react2['default'].createElement(
+			'div',
+			{ ref: function (ref) {
+					return _this7.menuContainer = ref;
+				}, className: 'Select-menu-outer', style: this.props.menuContainerStyle },
+			_react2['default'].createElement(
+				'div',
+				{ ref: function (ref) {
+						return _this7.menu = ref;
+					}, role: 'listbox', className: 'Select-menu', id: this._instancePrefix + '-list',
+					style: this.props.menuStyle,
+					onScroll: this.handleMenuScroll,
+					onMouseDown: this.handleMouseDownOnMenu },
+				menu
+			)
+		);
+	},
+
+	render: function render() {
+		var _this8 = this;
+
+		var valueArray = this.getValueArray(this.props.value);
+		var options = this._visibleOptions = this.filterOptions(this.props.multi ? this.getValueArray(this.props.value) : null);
+		var isOpen = this.state.isOpen;
+		if (this.props.multi && !options.length && valueArray.length && !this.state.inputValue) isOpen = false;
+		var focusedOptionIndex = this.getFocusableOptionIndex(valueArray[0]);
+
+		var focusedOption = null;
+		if (focusedOptionIndex !== null) {
+			focusedOption = this._focusedOption = options[focusedOptionIndex];
+		} else {
+			focusedOption = this._focusedOption = null;
+		}
+		var className = (0, _classnames2['default'])('Select', this.props.className, {
+			'Select--multi': this.props.multi,
+			'Select--single': !this.props.multi,
+			'is-disabled': this.props.disabled,
+			'is-focused': this.state.isFocused,
+			'is-loading': this.props.isLoading,
+			'is-open': isOpen,
+			'is-pseudo-focused': this.state.isPseudoFocused,
+			'is-searchable': this.props.searchable,
+			'has-value': valueArray.length
+		});
+
+		var removeMessage = null;
+		if (this.props.multi && !this.props.disabled && valueArray.length && !this.state.inputValue && this.state.isFocused && this.props.backspaceRemoves) {
+			removeMessage = _react2['default'].createElement(
+				'span',
+				{ id: this._instancePrefix + '-backspace-remove-message', className: 'Select-aria-only', 'aria-live': 'assertive' },
+				this.props.backspaceToRemoveMessage.replace('{label}', valueArray[valueArray.length - 1][this.props.labelKey])
+			);
+		}
+
+		return _react2['default'].createElement(
+			'div',
+			{ ref: function (ref) {
+					return _this8.wrapper = ref;
+				},
+				className: className,
+				style: this.props.wrapperStyle },
+			this.renderHiddenField(valueArray),
+			_react2['default'].createElement(
+				'div',
+				{ ref: function (ref) {
+						return _this8.control = ref;
+					},
+					className: 'Select-control',
+					style: this.props.style,
+					onKeyDown: this.handleKeyDown,
+					onMouseDown: this.handleMouseDown,
+					onTouchEnd: this.handleTouchEnd,
+					onTouchStart: this.handleTouchStart,
+					onTouchMove: this.handleTouchMove
+				},
+				_react2['default'].createElement(
+					'span',
+					{ className: 'Select-multi-value-wrapper', id: this._instancePrefix + '-value' },
+					this.renderValue(valueArray, isOpen),
+					this.renderInput(valueArray, focusedOptionIndex)
+				),
+				removeMessage,
+				this.renderLoading(),
+				this.renderClear(),
+				this.renderArrow()
+			),
+			isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null
+		);
+	}
+
+});
+
+exports['default'] = Select;
+module.exports = exports['default'];
+},{"./Async":33,"./AsyncCreatable":34,"./Creatable":35,"./Option":36,"./Value":38,"./utils/defaultArrowRenderer":39,"./utils/defaultFilterOptions":40,"./utils/defaultMenuRenderer":41,"classnames":undefined,"react":undefined,"react-dom":undefined,"react-input-autosize":undefined}],38:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var Value = _react2['default'].createClass({
+
+	displayName: 'Value',
+
+	propTypes: {
+		children: _react2['default'].PropTypes.node,
+		disabled: _react2['default'].PropTypes.bool, // disabled prop passed to ReactSelect
+		id: _react2['default'].PropTypes.string, // Unique id for the value - used for aria
+		onClick: _react2['default'].PropTypes.func, // method to handle click on value label
+		onRemove: _react2['default'].PropTypes.func, // method to handle removal of the value
+		value: _react2['default'].PropTypes.object.isRequired },
+
+	// the option object for this value
+	handleMouseDown: function handleMouseDown(event) {
+		if (event.type === 'mousedown' && event.button !== 0) {
+			return;
+		}
+		if (this.props.onClick) {
+			event.stopPropagation();
+			this.props.onClick(this.props.value, event);
+			return;
+		}
+		if (this.props.value.href) {
+			event.stopPropagation();
+		}
+	},
+
+	onRemove: function onRemove(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		this.props.onRemove(this.props.value);
+	},
+
+	handleTouchEndRemove: function handleTouchEndRemove(event) {
+		// Check if the view is being dragged, In this case
+		// we don't want to fire the click event (because the user only wants to scroll)
+		if (this.dragging) return;
+
+		// Fire the mouse events
+		this.onRemove(event);
+	},
+
+	handleTouchMove: function handleTouchMove(event) {
+		// Set a flag that the view is being dragged
+		this.dragging = true;
+	},
+
+	handleTouchStart: function handleTouchStart(event) {
+		// Set a flag that the view is not being dragged
+		this.dragging = false;
+	},
+
+	renderRemoveIcon: function renderRemoveIcon() {
+		if (this.props.disabled || !this.props.onRemove) return;
+		return _react2['default'].createElement(
+			'span',
+			{ className: 'Select-value-icon',
+				'aria-hidden': 'true',
+				onMouseDown: this.onRemove,
+				onTouchEnd: this.handleTouchEndRemove,
+				onTouchStart: this.handleTouchStart,
+				onTouchMove: this.handleTouchMove },
+			'×'
+		);
+	},
+
+	renderLabel: function renderLabel() {
+		var className = 'Select-value-label';
+		return this.props.onClick || this.props.value.href ? _react2['default'].createElement(
+			'a',
+			{ className: className, href: this.props.value.href, target: this.props.value.target, onMouseDown: this.handleMouseDown, onTouchEnd: this.handleMouseDown },
+			this.props.children
+		) : _react2['default'].createElement(
+			'span',
+			{ className: className, role: 'option', 'aria-selected': 'true', id: this.props.id },
+			this.props.children
+		);
+	},
+
+	render: function render() {
+		return _react2['default'].createElement(
+			'div',
+			{ className: (0, _classnames2['default'])('Select-value', this.props.value.className),
+				style: this.props.value.style,
+				title: this.props.value.title
+			},
+			this.renderRemoveIcon(),
+			this.renderLabel()
+		);
+	}
+
+});
+
+module.exports = Value;
+},{"classnames":undefined,"react":undefined}],39:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports["default"] = arrowRenderer;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function arrowRenderer(_ref) {
+	var onMouseDown = _ref.onMouseDown;
+
+	return _react2["default"].createElement("span", {
+		className: "Select-arrow",
+		onMouseDown: onMouseDown
+	});
+}
+
+;
+module.exports = exports["default"];
+},{"react":undefined}],40:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _stripDiacritics = require('./stripDiacritics');
+
+var _stripDiacritics2 = _interopRequireDefault(_stripDiacritics);
+
+function filterOptions(options, filterValue, excludeOptions, props) {
+	var _this = this;
+
+	if (props.ignoreAccents) {
+		filterValue = (0, _stripDiacritics2['default'])(filterValue);
+	}
+
+	if (props.ignoreCase) {
+		filterValue = filterValue.toLowerCase();
+	}
+
+	if (excludeOptions) excludeOptions = excludeOptions.map(function (i) {
+		return i[props.valueKey];
+	});
+
+	return options.filter(function (option) {
+		if (excludeOptions && excludeOptions.indexOf(option[props.valueKey]) > -1) return false;
+		if (props.filterOption) return props.filterOption.call(_this, option, filterValue);
+		if (!filterValue) return true;
+		var valueTest = String(option[props.valueKey]);
+		var labelTest = String(option[props.labelKey]);
+		if (props.ignoreAccents) {
+			if (props.matchProp !== 'label') valueTest = (0, _stripDiacritics2['default'])(valueTest);
+			if (props.matchProp !== 'value') labelTest = (0, _stripDiacritics2['default'])(labelTest);
+		}
+		if (props.ignoreCase) {
+			if (props.matchProp !== 'label') valueTest = valueTest.toLowerCase();
+			if (props.matchProp !== 'value') labelTest = labelTest.toLowerCase();
+		}
+		return props.matchPos === 'start' ? props.matchProp !== 'label' && valueTest.substr(0, filterValue.length) === filterValue || props.matchProp !== 'value' && labelTest.substr(0, filterValue.length) === filterValue : props.matchProp !== 'label' && valueTest.indexOf(filterValue) >= 0 || props.matchProp !== 'value' && labelTest.indexOf(filterValue) >= 0;
+	});
+}
+
+module.exports = filterOptions;
+},{"./stripDiacritics":42}],41:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function menuRenderer(_ref) {
+	var focusedOption = _ref.focusedOption;
+	var instancePrefix = _ref.instancePrefix;
+	var labelKey = _ref.labelKey;
+	var onFocus = _ref.onFocus;
+	var onSelect = _ref.onSelect;
+	var optionClassName = _ref.optionClassName;
+	var optionComponent = _ref.optionComponent;
+	var optionRenderer = _ref.optionRenderer;
+	var options = _ref.options;
+	var valueArray = _ref.valueArray;
+	var valueKey = _ref.valueKey;
+	var onOptionRef = _ref.onOptionRef;
+
+	var Option = optionComponent;
+
+	return options.map(function (option, i) {
+		var isSelected = valueArray && valueArray.indexOf(option) > -1;
+		var isFocused = option === focusedOption;
+		var optionClass = (0, _classnames2['default'])(optionClassName, {
+			'Select-option': true,
+			'is-selected': isSelected,
+			'is-focused': isFocused,
+			'is-disabled': option.disabled
+		});
+
+		return _react2['default'].createElement(
+			Option,
+			{
+				className: optionClass,
+				instancePrefix: instancePrefix,
+				isDisabled: option.disabled,
+				isFocused: isFocused,
+				isSelected: isSelected,
+				key: 'option-' + i + '-' + option[valueKey],
+				onFocus: onFocus,
+				onSelect: onSelect,
+				option: option,
+				optionIndex: i,
+				ref: function (ref) {
+					onOptionRef(ref, isFocused);
+				}
+			},
+			optionRenderer(option, i)
+		);
+	});
+}
+
+module.exports = menuRenderer;
+},{"classnames":undefined,"react":undefined}],42:[function(require,module,exports){
+'use strict';
+
+var map = [{ 'base': 'A', 'letters': /[\u0041\u24B6\uFF21\u00C0\u00C1\u00C2\u1EA6\u1EA4\u1EAA\u1EA8\u00C3\u0100\u0102\u1EB0\u1EAE\u1EB4\u1EB2\u0226\u01E0\u00C4\u01DE\u1EA2\u00C5\u01FA\u01CD\u0200\u0202\u1EA0\u1EAC\u1EB6\u1E00\u0104\u023A\u2C6F]/g }, { 'base': 'AA', 'letters': /[\uA732]/g }, { 'base': 'AE', 'letters': /[\u00C6\u01FC\u01E2]/g }, { 'base': 'AO', 'letters': /[\uA734]/g }, { 'base': 'AU', 'letters': /[\uA736]/g }, { 'base': 'AV', 'letters': /[\uA738\uA73A]/g }, { 'base': 'AY', 'letters': /[\uA73C]/g }, { 'base': 'B', 'letters': /[\u0042\u24B7\uFF22\u1E02\u1E04\u1E06\u0243\u0182\u0181]/g }, { 'base': 'C', 'letters': /[\u0043\u24B8\uFF23\u0106\u0108\u010A\u010C\u00C7\u1E08\u0187\u023B\uA73E]/g }, { 'base': 'D', 'letters': /[\u0044\u24B9\uFF24\u1E0A\u010E\u1E0C\u1E10\u1E12\u1E0E\u0110\u018B\u018A\u0189\uA779]/g }, { 'base': 'DZ', 'letters': /[\u01F1\u01C4]/g }, { 'base': 'Dz', 'letters': /[\u01F2\u01C5]/g }, { 'base': 'E', 'letters': /[\u0045\u24BA\uFF25\u00C8\u00C9\u00CA\u1EC0\u1EBE\u1EC4\u1EC2\u1EBC\u0112\u1E14\u1E16\u0114\u0116\u00CB\u1EBA\u011A\u0204\u0206\u1EB8\u1EC6\u0228\u1E1C\u0118\u1E18\u1E1A\u0190\u018E]/g }, { 'base': 'F', 'letters': /[\u0046\u24BB\uFF26\u1E1E\u0191\uA77B]/g }, { 'base': 'G', 'letters': /[\u0047\u24BC\uFF27\u01F4\u011C\u1E20\u011E\u0120\u01E6\u0122\u01E4\u0193\uA7A0\uA77D\uA77E]/g }, { 'base': 'H', 'letters': /[\u0048\u24BD\uFF28\u0124\u1E22\u1E26\u021E\u1E24\u1E28\u1E2A\u0126\u2C67\u2C75\uA78D]/g }, { 'base': 'I', 'letters': /[\u0049\u24BE\uFF29\u00CC\u00CD\u00CE\u0128\u012A\u012C\u0130\u00CF\u1E2E\u1EC8\u01CF\u0208\u020A\u1ECA\u012E\u1E2C\u0197]/g }, { 'base': 'J', 'letters': /[\u004A\u24BF\uFF2A\u0134\u0248]/g }, { 'base': 'K', 'letters': /[\u004B\u24C0\uFF2B\u1E30\u01E8\u1E32\u0136\u1E34\u0198\u2C69\uA740\uA742\uA744\uA7A2]/g }, { 'base': 'L', 'letters': /[\u004C\u24C1\uFF2C\u013F\u0139\u013D\u1E36\u1E38\u013B\u1E3C\u1E3A\u0141\u023D\u2C62\u2C60\uA748\uA746\uA780]/g }, { 'base': 'LJ', 'letters': /[\u01C7]/g }, { 'base': 'Lj', 'letters': /[\u01C8]/g }, { 'base': 'M', 'letters': /[\u004D\u24C2\uFF2D\u1E3E\u1E40\u1E42\u2C6E\u019C]/g }, { 'base': 'N', 'letters': /[\u004E\u24C3\uFF2E\u01F8\u0143\u00D1\u1E44\u0147\u1E46\u0145\u1E4A\u1E48\u0220\u019D\uA790\uA7A4]/g }, { 'base': 'NJ', 'letters': /[\u01CA]/g }, { 'base': 'Nj', 'letters': /[\u01CB]/g }, { 'base': 'O', 'letters': /[\u004F\u24C4\uFF2F\u00D2\u00D3\u00D4\u1ED2\u1ED0\u1ED6\u1ED4\u00D5\u1E4C\u022C\u1E4E\u014C\u1E50\u1E52\u014E\u022E\u0230\u00D6\u022A\u1ECE\u0150\u01D1\u020C\u020E\u01A0\u1EDC\u1EDA\u1EE0\u1EDE\u1EE2\u1ECC\u1ED8\u01EA\u01EC\u00D8\u01FE\u0186\u019F\uA74A\uA74C]/g }, { 'base': 'OI', 'letters': /[\u01A2]/g }, { 'base': 'OO', 'letters': /[\uA74E]/g }, { 'base': 'OU', 'letters': /[\u0222]/g }, { 'base': 'P', 'letters': /[\u0050\u24C5\uFF30\u1E54\u1E56\u01A4\u2C63\uA750\uA752\uA754]/g }, { 'base': 'Q', 'letters': /[\u0051\u24C6\uFF31\uA756\uA758\u024A]/g }, { 'base': 'R', 'letters': /[\u0052\u24C7\uFF32\u0154\u1E58\u0158\u0210\u0212\u1E5A\u1E5C\u0156\u1E5E\u024C\u2C64\uA75A\uA7A6\uA782]/g }, { 'base': 'S', 'letters': /[\u0053\u24C8\uFF33\u1E9E\u015A\u1E64\u015C\u1E60\u0160\u1E66\u1E62\u1E68\u0218\u015E\u2C7E\uA7A8\uA784]/g }, { 'base': 'T', 'letters': /[\u0054\u24C9\uFF34\u1E6A\u0164\u1E6C\u021A\u0162\u1E70\u1E6E\u0166\u01AC\u01AE\u023E\uA786]/g }, { 'base': 'TZ', 'letters': /[\uA728]/g }, { 'base': 'U', 'letters': /[\u0055\u24CA\uFF35\u00D9\u00DA\u00DB\u0168\u1E78\u016A\u1E7A\u016C\u00DC\u01DB\u01D7\u01D5\u01D9\u1EE6\u016E\u0170\u01D3\u0214\u0216\u01AF\u1EEA\u1EE8\u1EEE\u1EEC\u1EF0\u1EE4\u1E72\u0172\u1E76\u1E74\u0244]/g }, { 'base': 'V', 'letters': /[\u0056\u24CB\uFF36\u1E7C\u1E7E\u01B2\uA75E\u0245]/g }, { 'base': 'VY', 'letters': /[\uA760]/g }, { 'base': 'W', 'letters': /[\u0057\u24CC\uFF37\u1E80\u1E82\u0174\u1E86\u1E84\u1E88\u2C72]/g }, { 'base': 'X', 'letters': /[\u0058\u24CD\uFF38\u1E8A\u1E8C]/g }, { 'base': 'Y', 'letters': /[\u0059\u24CE\uFF39\u1EF2\u00DD\u0176\u1EF8\u0232\u1E8E\u0178\u1EF6\u1EF4\u01B3\u024E\u1EFE]/g }, { 'base': 'Z', 'letters': /[\u005A\u24CF\uFF3A\u0179\u1E90\u017B\u017D\u1E92\u1E94\u01B5\u0224\u2C7F\u2C6B\uA762]/g }, { 'base': 'a', 'letters': /[\u0061\u24D0\uFF41\u1E9A\u00E0\u00E1\u00E2\u1EA7\u1EA5\u1EAB\u1EA9\u00E3\u0101\u0103\u1EB1\u1EAF\u1EB5\u1EB3\u0227\u01E1\u00E4\u01DF\u1EA3\u00E5\u01FB\u01CE\u0201\u0203\u1EA1\u1EAD\u1EB7\u1E01\u0105\u2C65\u0250]/g }, { 'base': 'aa', 'letters': /[\uA733]/g }, { 'base': 'ae', 'letters': /[\u00E6\u01FD\u01E3]/g }, { 'base': 'ao', 'letters': /[\uA735]/g }, { 'base': 'au', 'letters': /[\uA737]/g }, { 'base': 'av', 'letters': /[\uA739\uA73B]/g }, { 'base': 'ay', 'letters': /[\uA73D]/g }, { 'base': 'b', 'letters': /[\u0062\u24D1\uFF42\u1E03\u1E05\u1E07\u0180\u0183\u0253]/g }, { 'base': 'c', 'letters': /[\u0063\u24D2\uFF43\u0107\u0109\u010B\u010D\u00E7\u1E09\u0188\u023C\uA73F\u2184]/g }, { 'base': 'd', 'letters': /[\u0064\u24D3\uFF44\u1E0B\u010F\u1E0D\u1E11\u1E13\u1E0F\u0111\u018C\u0256\u0257\uA77A]/g }, { 'base': 'dz', 'letters': /[\u01F3\u01C6]/g }, { 'base': 'e', 'letters': /[\u0065\u24D4\uFF45\u00E8\u00E9\u00EA\u1EC1\u1EBF\u1EC5\u1EC3\u1EBD\u0113\u1E15\u1E17\u0115\u0117\u00EB\u1EBB\u011B\u0205\u0207\u1EB9\u1EC7\u0229\u1E1D\u0119\u1E19\u1E1B\u0247\u025B\u01DD]/g }, { 'base': 'f', 'letters': /[\u0066\u24D5\uFF46\u1E1F\u0192\uA77C]/g }, { 'base': 'g', 'letters': /[\u0067\u24D6\uFF47\u01F5\u011D\u1E21\u011F\u0121\u01E7\u0123\u01E5\u0260\uA7A1\u1D79\uA77F]/g }, { 'base': 'h', 'letters': /[\u0068\u24D7\uFF48\u0125\u1E23\u1E27\u021F\u1E25\u1E29\u1E2B\u1E96\u0127\u2C68\u2C76\u0265]/g }, { 'base': 'hv', 'letters': /[\u0195]/g }, { 'base': 'i', 'letters': /[\u0069\u24D8\uFF49\u00EC\u00ED\u00EE\u0129\u012B\u012D\u00EF\u1E2F\u1EC9\u01D0\u0209\u020B\u1ECB\u012F\u1E2D\u0268\u0131]/g }, { 'base': 'j', 'letters': /[\u006A\u24D9\uFF4A\u0135\u01F0\u0249]/g }, { 'base': 'k', 'letters': /[\u006B\u24DA\uFF4B\u1E31\u01E9\u1E33\u0137\u1E35\u0199\u2C6A\uA741\uA743\uA745\uA7A3]/g }, { 'base': 'l', 'letters': /[\u006C\u24DB\uFF4C\u0140\u013A\u013E\u1E37\u1E39\u013C\u1E3D\u1E3B\u017F\u0142\u019A\u026B\u2C61\uA749\uA781\uA747]/g }, { 'base': 'lj', 'letters': /[\u01C9]/g }, { 'base': 'm', 'letters': /[\u006D\u24DC\uFF4D\u1E3F\u1E41\u1E43\u0271\u026F]/g }, { 'base': 'n', 'letters': /[\u006E\u24DD\uFF4E\u01F9\u0144\u00F1\u1E45\u0148\u1E47\u0146\u1E4B\u1E49\u019E\u0272\u0149\uA791\uA7A5]/g }, { 'base': 'nj', 'letters': /[\u01CC]/g }, { 'base': 'o', 'letters': /[\u006F\u24DE\uFF4F\u00F2\u00F3\u00F4\u1ED3\u1ED1\u1ED7\u1ED5\u00F5\u1E4D\u022D\u1E4F\u014D\u1E51\u1E53\u014F\u022F\u0231\u00F6\u022B\u1ECF\u0151\u01D2\u020D\u020F\u01A1\u1EDD\u1EDB\u1EE1\u1EDF\u1EE3\u1ECD\u1ED9\u01EB\u01ED\u00F8\u01FF\u0254\uA74B\uA74D\u0275]/g }, { 'base': 'oi', 'letters': /[\u01A3]/g }, { 'base': 'ou', 'letters': /[\u0223]/g }, { 'base': 'oo', 'letters': /[\uA74F]/g }, { 'base': 'p', 'letters': /[\u0070\u24DF\uFF50\u1E55\u1E57\u01A5\u1D7D\uA751\uA753\uA755]/g }, { 'base': 'q', 'letters': /[\u0071\u24E0\uFF51\u024B\uA757\uA759]/g }, { 'base': 'r', 'letters': /[\u0072\u24E1\uFF52\u0155\u1E59\u0159\u0211\u0213\u1E5B\u1E5D\u0157\u1E5F\u024D\u027D\uA75B\uA7A7\uA783]/g }, { 'base': 's', 'letters': /[\u0073\u24E2\uFF53\u00DF\u015B\u1E65\u015D\u1E61\u0161\u1E67\u1E63\u1E69\u0219\u015F\u023F\uA7A9\uA785\u1E9B]/g }, { 'base': 't', 'letters': /[\u0074\u24E3\uFF54\u1E6B\u1E97\u0165\u1E6D\u021B\u0163\u1E71\u1E6F\u0167\u01AD\u0288\u2C66\uA787]/g }, { 'base': 'tz', 'letters': /[\uA729]/g }, { 'base': 'u', 'letters': /[\u0075\u24E4\uFF55\u00F9\u00FA\u00FB\u0169\u1E79\u016B\u1E7B\u016D\u00FC\u01DC\u01D8\u01D6\u01DA\u1EE7\u016F\u0171\u01D4\u0215\u0217\u01B0\u1EEB\u1EE9\u1EEF\u1EED\u1EF1\u1EE5\u1E73\u0173\u1E77\u1E75\u0289]/g }, { 'base': 'v', 'letters': /[\u0076\u24E5\uFF56\u1E7D\u1E7F\u028B\uA75F\u028C]/g }, { 'base': 'vy', 'letters': /[\uA761]/g }, { 'base': 'w', 'letters': /[\u0077\u24E6\uFF57\u1E81\u1E83\u0175\u1E87\u1E85\u1E98\u1E89\u2C73]/g }, { 'base': 'x', 'letters': /[\u0078\u24E7\uFF58\u1E8B\u1E8D]/g }, { 'base': 'y', 'letters': /[\u0079\u24E8\uFF59\u1EF3\u00FD\u0177\u1EF9\u0233\u1E8F\u00FF\u1EF7\u1E99\u1EF5\u01B4\u024F\u1EFF]/g }, { 'base': 'z', 'letters': /[\u007A\u24E9\uFF5A\u017A\u1E91\u017C\u017E\u1E93\u1E95\u01B6\u0225\u0240\u2C6C\uA763]/g }];
+
+module.exports = function stripDiacritics(str) {
+	for (var i = 0; i < map.length; i++) {
+		str = str.replace(map[i].letters, map[i].base);
+	}
+	return str;
+};
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2354,10 +4696,24 @@ var VirtualizedSelect = function (_Component) {
     return _this;
   }
 
+  /** See VirtualScroll#recomputeRowHeights */
+
+
   _createClass(VirtualizedSelect, [{
+    key: 'recomputeOptionHeights',
+    value: function recomputeOptionHeights() {
+      var index = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
+      if (this._virtualScroll) {
+        this._virtualScroll.recomputeRowHeights(index);
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(_reactSelect2.default, _extends({}, this.props, {
+      var SelectComponent = this._getSelectComponent();
+
+      return _react2.default.createElement(SelectComponent, _extends({}, this.props, {
         menuRenderer: this._renderMenu,
         menuStyle: { overflow: 'hidden' }
       }));
@@ -2368,38 +4724,57 @@ var VirtualizedSelect = function (_Component) {
   }, {
     key: '_renderMenu',
     value: function _renderMenu(_ref) {
+      var _this2 = this;
+
       var focusedOption = _ref.focusedOption;
       var focusOption = _ref.focusOption;
       var labelKey = _ref.labelKey;
       var options = _ref.options;
       var selectValue = _ref.selectValue;
       var valueArray = _ref.valueArray;
-      var _props = this.props;
-      var maxHeight = _props.maxHeight;
-      var optionHeight = _props.optionHeight;
-      var optionRenderer = _props.optionRenderer;
+      var optionRenderer = this.props.optionRenderer;
 
       var focusedOptionIndex = options.indexOf(focusedOption);
-      var height = Math.min(maxHeight, options.length * optionHeight);
+      var height = this._calculateVirtualScrollHeight({ options: options });
       var innerRowRenderer = optionRenderer || this._optionRenderer;
 
-      function wrappedRowRenderer(index) {
+      function wrappedRowRenderer(_ref2) {
+        var index = _ref2.index;
+
         var option = options[index];
 
-        return innerRowRenderer({ focusedOption: focusedOption, focusedOptionIndex: focusedOptionIndex, focusOption: focusOption, labelKey: labelKey, option: option, options: options, selectValue: selectValue, valueArray: valueArray });
+        return innerRowRenderer({
+          focusedOption: focusedOption,
+          focusedOptionIndex: focusedOptionIndex,
+          focusOption: focusOption,
+          labelKey: labelKey,
+          option: option,
+          optionIndex: index,
+          options: options,
+          selectValue: selectValue,
+          valueArray: valueArray
+        });
       }
 
       return _react2.default.createElement(
         _reactVirtualized.AutoSizer,
         { disableHeight: true },
-        function (_ref2) {
-          var width = _ref2.width;
+        function (_ref3) {
+          var width = _ref3.width;
           return _react2.default.createElement(_reactVirtualized.VirtualScroll, {
             className: 'VirtualSelectGrid',
             height: height,
-            rowHeight: optionHeight,
+            ref: function ref(_ref5) {
+              return _this2._virtualScroll = _ref5;
+            },
+            rowCount: options.length,
+            rowHeight: function rowHeight(_ref4) {
+              var index = _ref4.index;
+              return _this2._getOptionHeight({
+                option: options[index]
+              });
+            },
             rowRenderer: wrappedRowRenderer,
-            rowsCount: options.length,
             scrollToIndex: focusedOptionIndex,
             width: width
           });
@@ -2407,32 +4782,87 @@ var VirtualizedSelect = function (_Component) {
       );
     }
   }, {
-    key: '_optionRenderer',
-    value: function _optionRenderer(_ref3) {
-      var focusedOption = _ref3.focusedOption;
-      var focusOption = _ref3.focusOption;
-      var labelKey = _ref3.labelKey;
-      var option = _ref3.option;
-      var selectValue = _ref3.selectValue;
+    key: '_calculateVirtualScrollHeight',
+    value: function _calculateVirtualScrollHeight(_ref6) {
+      var options = _ref6.options;
+      var maxHeight = this.props.maxHeight;
+
+
+      var height = 0;
+
+      for (var optionIndex = 0; optionIndex < options.length; optionIndex++) {
+        var option = options[optionIndex];
+
+        height += this._getOptionHeight({ option: option });
+
+        if (height > maxHeight) {
+          return maxHeight;
+        }
+      }
+
+      return height;
+    }
+  }, {
+    key: '_getOptionHeight',
+    value: function _getOptionHeight(_ref7) {
+      var option = _ref7.option;
       var optionHeight = this.props.optionHeight;
 
 
-      var className = option === focusedOption ? 'VirtualizedSelectOption VirtualizedSelectFocusedOption' : 'VirtualizedSelectOption';
+      return optionHeight instanceof Function ? optionHeight({ option: option }) : optionHeight;
+    }
+  }, {
+    key: '_getSelectComponent',
+    value: function _getSelectComponent() {
+      var _props = this.props;
+      var async = _props.async;
+      var selectComponent = _props.selectComponent;
+
+
+      if (selectComponent) {
+        return selectComponent;
+      } else if (async) {
+        return _reactSelect2.default.Async;
+      } else {
+        return _reactSelect2.default;
+      }
+    }
+  }, {
+    key: '_optionRenderer',
+    value: function _optionRenderer(_ref8) {
+      var focusedOption = _ref8.focusedOption;
+      var focusOption = _ref8.focusOption;
+      var labelKey = _ref8.labelKey;
+      var option = _ref8.option;
+      var selectValue = _ref8.selectValue;
+
+      var height = this._getOptionHeight({ option: option });
+
+      var className = ['VirtualizedSelectOption'];
+
+      if (option === focusedOption) {
+        className.push('VirtualizedSelectFocusedOption');
+      }
+
+      if (option.disabled) {
+        className.push('VirtualizedSelectDisabledOption');
+      }
+
+      var events = option.disabled ? {} : {
+        onClick: function onClick() {
+          return selectValue(option);
+        },
+        onMouseOver: function onMouseOver() {
+          return focusOption(option);
+        }
+      };
 
       return _react2.default.createElement(
         'div',
-        {
-          className: className,
-          onClick: function onClick() {
-            return selectValue(option);
-          },
-          onMouseOver: function onMouseOver() {
-            return focusOption(option);
-          },
-          style: {
-            height: optionHeight
-          }
-        },
+        _extends({
+          className: className.join(' '),
+          style: { height: height }
+        }, events),
         option[labelKey]
       );
     }
@@ -2442,16 +4872,19 @@ var VirtualizedSelect = function (_Component) {
 }(_react.Component);
 
 VirtualizedSelect.propTypes = {
+  async: _react.PropTypes.bool,
   maxHeight: _react.PropTypes.number.isRequired,
-  optionHeight: _react.PropTypes.number.isRequired,
-  optionRenderer: _react.PropTypes.func
+  optionHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
+  optionRenderer: _react.PropTypes.func,
+  selectComponent: _react.PropTypes.func
 };
 VirtualizedSelect.defaultProps = {
+  async: false,
   maxHeight: 200,
   optionHeight: 35
 };
 exports.default = VirtualizedSelect;
-},{"react":undefined,"react-select":undefined,"react-virtualized":65}],33:[function(require,module,exports){
+},{"react":undefined,"react-select":37,"react-virtualized":87}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2466,9 +4899,9 @@ var _VirtualizedSelect2 = _interopRequireDefault(_VirtualizedSelect);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _VirtualizedSelect2.default;
-},{"./VirtualizedSelect":32}],34:[function(require,module,exports){
-arguments[4][33][0].apply(exports,arguments)
-},{"./VirtualizedSelect":33,"dup":33}],35:[function(require,module,exports){
+},{"./VirtualizedSelect":43}],45:[function(require,module,exports){
+arguments[4][44][0].apply(exports,arguments)
+},{"./VirtualizedSelect":44,"dup":44}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2496,14 +4929,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * This HOC decorates a virtualized component and responds to arrow-key events by scrolling one row or column at a time.
  */
-
 var ArrowKeyStepper = function (_Component) {
   _inherits(ArrowKeyStepper, _Component);
 
   function ArrowKeyStepper(props, context) {
     _classCallCheck(this, ArrowKeyStepper);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ArrowKeyStepper).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (ArrowKeyStepper.__proto__ || Object.getPrototypeOf(ArrowKeyStepper)).call(this, props, context));
 
     _this.state = {
       scrollToColumn: 0,
@@ -2553,8 +4985,8 @@ var ArrowKeyStepper = function (_Component) {
     key: '_onKeyDown',
     value: function _onKeyDown(event) {
       var _props2 = this.props;
-      var columnsCount = _props2.columnsCount;
-      var rowsCount = _props2.rowsCount;
+      var columnCount = _props2.columnCount;
+      var rowCount = _props2.rowCount;
 
       // The above cases all prevent default event event behavior.
       // This is to keep the grid from scrolling after the snap-to update.
@@ -2563,7 +4995,7 @@ var ArrowKeyStepper = function (_Component) {
         case 'ArrowDown':
           event.preventDefault();
           this.setState({
-            scrollToRow: Math.min(this._rowStopIndex + 1, rowsCount - 1)
+            scrollToRow: Math.min(this._rowStopIndex + 1, rowCount - 1)
           });
           break;
         case 'ArrowLeft':
@@ -2575,7 +5007,7 @@ var ArrowKeyStepper = function (_Component) {
         case 'ArrowRight':
           event.preventDefault();
           this.setState({
-            scrollToColumn: Math.min(this._columnStopIndex + 1, columnsCount - 1)
+            scrollToColumn: Math.min(this._columnStopIndex + 1, columnCount - 1)
           });
           break;
         case 'ArrowUp':
@@ -2607,11 +5039,11 @@ var ArrowKeyStepper = function (_Component) {
 ArrowKeyStepper.propTypes = {
   children: _react.PropTypes.func.isRequired,
   className: _react.PropTypes.string,
-  columnsCount: _react.PropTypes.number.isRequired,
-  rowsCount: _react.PropTypes.number.isRequired
+  columnCount: _react.PropTypes.number.isRequired,
+  rowCount: _react.PropTypes.number.isRequired
 };
 exports.default = ArrowKeyStepper;
-},{"react":undefined,"react-addons-shallow-compare":29}],36:[function(require,module,exports){
+},{"react":undefined,"react-addons-shallow-compare":30}],47:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2627,7 +5059,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _ArrowKeyStepper3.default;
 exports.ArrowKeyStepper = _ArrowKeyStepper3.default;
-},{"./ArrowKeyStepper":35}],37:[function(require,module,exports){
+},{"./ArrowKeyStepper":46}],48:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2657,14 +5089,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Child component should not be declared as a child but should rather be specified by a `ChildComponent` property.
  * All other properties will be passed through to the child component.
  */
-
 var AutoSizer = function (_Component) {
   _inherits(AutoSizer, _Component);
 
   function AutoSizer(props) {
     _classCallCheck(this, AutoSizer);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AutoSizer).call(this, props));
+    var _this = _possibleConstructorReturn(this, (AutoSizer.__proto__ || Object.getPrototypeOf(AutoSizer)).call(this, props));
 
     _this.state = {
       height: 0,
@@ -2680,6 +5111,11 @@ var AutoSizer = function (_Component) {
   _createClass(AutoSizer, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      // Delay access of parentNode until mount.
+      // This handles edge-cases where the component has already been unmounted before its ref has been set,
+      // As well as libraries like react-lite which have a slightly different lifecycle.
+      this._parentNode = this._autoSizer.parentNode;
+
       // Defer requiring resize handler in order to support server-side rendering.
       // See issue #41
       this._detectElementResize = require('../vendor/detectElementResize');
@@ -2769,8 +5205,7 @@ var AutoSizer = function (_Component) {
   }, {
     key: '_setRef',
     value: function _setRef(autoSizer) {
-      // In case the component has been unmounted
-      this._parentNode = autoSizer && autoSizer.parentNode;
+      this._autoSizer = autoSizer;
     }
   }]);
 
@@ -2798,7 +5233,7 @@ AutoSizer.defaultProps = {
   onResize: function onResize() {}
 };
 exports.default = AutoSizer;
-},{"../vendor/detectElementResize":69,"react":undefined,"react-addons-shallow-compare":29}],38:[function(require,module,exports){
+},{"../vendor/detectElementResize":90,"react":undefined,"react-addons-shallow-compare":30}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2814,7 +5249,440 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _AutoSizer3.default;
 exports.AutoSizer = _AutoSizer3.default;
-},{"./AutoSizer":37}],39:[function(require,module,exports){
+},{"./AutoSizer":48}],50:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
+
+var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _defaultCellSizeCache = require('./defaultCellSizeCache');
+
+var _defaultCellSizeCache2 = _interopRequireDefault(_defaultCellSizeCache);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Measures a Grid cell's contents by rendering them in a way that is not visible to the user.
+ * Either a fixed width or height may be provided if it is desirable to measure only in one direction.
+ */
+var CellMeasurer = function (_Component) {
+  _inherits(CellMeasurer, _Component);
+
+  function CellMeasurer(props, state) {
+    _classCallCheck(this, CellMeasurer);
+
+    var _this = _possibleConstructorReturn(this, (CellMeasurer.__proto__ || Object.getPrototypeOf(CellMeasurer)).call(this, props, state));
+
+    _this._cellSizeCache = props.cellSizeCache || new _defaultCellSizeCache2.default();
+
+    _this.getColumnWidth = _this.getColumnWidth.bind(_this);
+    _this.getRowHeight = _this.getRowHeight.bind(_this);
+    _this.resetMeasurements = _this.resetMeasurements.bind(_this);
+    _this.resetMeasurementForColumn = _this.resetMeasurementForColumn.bind(_this);
+    _this.resetMeasurementForRow = _this.resetMeasurementForRow.bind(_this);
+    return _this;
+  }
+
+  _createClass(CellMeasurer, [{
+    key: 'getColumnWidth',
+    value: function getColumnWidth(_ref) {
+      var index = _ref.index;
+
+      if (this._cellSizeCache.hasColumnWidth(index)) {
+        return this._cellSizeCache.getColumnWidth(index);
+      }
+
+      var rowCount = this.props.rowCount;
+
+
+      var maxWidth = 0;
+
+      for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        var _measureCell2 = this._measureCell({
+          clientWidth: true,
+          columnIndex: index,
+          rowIndex: rowIndex
+        });
+
+        var width = _measureCell2.width;
+
+
+        maxWidth = Math.max(maxWidth, width);
+      }
+
+      this._cellSizeCache.setColumnWidth(index, maxWidth);
+
+      return maxWidth;
+    }
+  }, {
+    key: 'getRowHeight',
+    value: function getRowHeight(_ref2) {
+      var index = _ref2.index;
+
+      if (this._cellSizeCache.hasRowHeight(index)) {
+        return this._cellSizeCache.getRowHeight(index);
+      }
+
+      var columnCount = this.props.columnCount;
+
+
+      var maxHeight = 0;
+
+      for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+        var _measureCell3 = this._measureCell({
+          clientHeight: true,
+          columnIndex: columnIndex,
+          rowIndex: index
+        });
+
+        var height = _measureCell3.height;
+
+
+        maxHeight = Math.max(maxHeight, height);
+      }
+
+      this._cellSizeCache.setRowHeight(index, maxHeight);
+
+      return maxHeight;
+    }
+  }, {
+    key: 'resetMeasurementForColumn',
+    value: function resetMeasurementForColumn(columnIndex) {
+      this._cellSizeCache.clearColumnWidth(columnIndex);
+    }
+  }, {
+    key: 'resetMeasurementForRow',
+    value: function resetMeasurementForRow(rowIndex) {
+      this._cellSizeCache.clearRowHeight(rowIndex);
+    }
+  }, {
+    key: 'resetMeasurements',
+    value: function resetMeasurements() {
+      this._cellSizeCache.clearAllColumnWidths();
+      this._cellSizeCache.clearAllRowHeights();
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this._renderAndMount();
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var cellSizeCache = this.props.cellSizeCache;
+
+
+      if (cellSizeCache !== nextProps.cellSizeCache) {
+        this._cellSizeCache = nextProps.cellSizeCache;
+      }
+
+      this._updateDivDimensions(nextProps);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this._unmountContainer();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var children = this.props.children;
+
+
+      return children({
+        getColumnWidth: this.getColumnWidth,
+        getRowHeight: this.getRowHeight,
+        resetMeasurements: this.resetMeasurements,
+        resetMeasurementForColumn: this.resetMeasurementForColumn,
+        resetMeasurementForRow: this.resetMeasurementForRow
+      });
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
+    }
+  }, {
+    key: '_getContainerNode',
+    value: function _getContainerNode(props) {
+      var container = props.container;
+
+
+      if (container) {
+        return _reactDom2.default.findDOMNode(typeof container === 'function' ? container() : container);
+      } else {
+        return document.body;
+      }
+    }
+  }, {
+    key: '_measureCell',
+    value: function _measureCell(_ref3) {
+      var _ref3$clientHeight = _ref3.clientHeight;
+      var clientHeight = _ref3$clientHeight === undefined ? false : _ref3$clientHeight;
+      var _ref3$clientWidth = _ref3.clientWidth;
+      var clientWidth = _ref3$clientWidth === undefined ? true : _ref3$clientWidth;
+      var columnIndex = _ref3.columnIndex;
+      var rowIndex = _ref3.rowIndex;
+      var cellRenderer = this.props.cellRenderer;
+
+
+      var rendered = cellRenderer({
+        columnIndex: columnIndex,
+        rowIndex: rowIndex
+      });
+
+      // Handle edge case where this method is called before the CellMeasurer has completed its initial render (and mounted).
+      this._renderAndMount();
+
+      // @TODO Keep an eye on this for future React updates as the interface may change:
+      // https://twitter.com/soprano/status/737316379712331776
+      _reactDom2.default.unstable_renderSubtreeIntoContainer(this, rendered, this._div);
+
+      var measurements = {
+        height: clientHeight && this._div.clientHeight,
+        width: clientWidth && this._div.clientWidth
+      };
+
+      _reactDom2.default.unmountComponentAtNode(this._div);
+
+      return measurements;
+    }
+  }, {
+    key: '_renderAndMount',
+    value: function _renderAndMount() {
+      if (!this._div) {
+        this._div = document.createElement('div');
+        this._div.style.display = 'inline-block';
+        this._div.style.position = 'absolute';
+        this._div.style.visibility = 'hidden';
+        this._div.style.zIndex = -1;
+
+        this._updateDivDimensions(this.props);
+
+        this._containerNode = this._getContainerNode(this.props);
+        this._containerNode.appendChild(this._div);
+      }
+    }
+  }, {
+    key: '_unmountContainer',
+    value: function _unmountContainer() {
+      if (this._div) {
+        this._containerNode.removeChild(this._div);
+
+        this._div = null;
+      }
+
+      this._containerNode = null;
+    }
+  }, {
+    key: '_updateDivDimensions',
+    value: function _updateDivDimensions(props) {
+      var height = props.height;
+      var width = props.width;
+
+
+      if (height && height !== this._divHeight) {
+        this._divHeight = height;
+        this._div.style.height = height + 'px';
+      }
+
+      if (width && width !== this._divWidth) {
+        this._divWidth = width;
+        this._div.style.width = width + 'px';
+      }
+    }
+  }]);
+
+  return CellMeasurer;
+}(_react.Component);
+
+CellMeasurer.propTypes = {
+  /**
+   * Renders a cell given its indices.
+   * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
+   */
+  cellRenderer: _react.PropTypes.func.isRequired,
+
+  /**
+   * Optional, custom caching strategy for cell sizes.
+   */
+  cellSizeCache: _react.PropTypes.object,
+
+  /**
+   * Function respondible for rendering a virtualized component.
+   * This function should implement the following signature:
+   * ({ getColumnWidth, getRowHeight, resetMeasurements }) => PropTypes.element
+   */
+  children: _react.PropTypes.func.isRequired,
+
+  /**
+   * Number of columns in grid.
+   */
+  columnCount: _react.PropTypes.number.isRequired,
+
+  /**
+   * A Node, Component instance, or function that returns either.
+   * If this property is not specified the document body will be used.
+   */
+  container: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.func, _react2.default.PropTypes.node]),
+
+  /**
+   * Assign a fixed :height in order to measure dynamic text :width only.
+   */
+  height: _react.PropTypes.number,
+
+  /**
+   * Number of rows in grid.
+   */
+  rowCount: _react.PropTypes.number.isRequired,
+
+  /**
+   * Assign a fixed :width in order to measure dynamic text :height only.
+   */
+  width: _react.PropTypes.number
+};
+exports.default = CellMeasurer;
+},{"./defaultCellSizeCache":51,"react":undefined,"react-addons-shallow-compare":30,"react-dom":undefined}],51:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Default CellMeasurer `cellSizeCache` implementation.
+ * Permanently caches all cell sizes (identified by column and row index) unless explicitly cleared.
+ * Can be configured to handle uniform cell widths and/or heights as a way of optimizing certain use cases.
+ */
+var CellSizeCache = function () {
+  function CellSizeCache() {
+    var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+    var _ref$uniformRowHeight = _ref.uniformRowHeight;
+    var uniformRowHeight = _ref$uniformRowHeight === undefined ? false : _ref$uniformRowHeight;
+    var _ref$uniformColumnWid = _ref.uniformColumnWidth;
+    var uniformColumnWidth = _ref$uniformColumnWid === undefined ? false : _ref$uniformColumnWid;
+
+    _classCallCheck(this, CellSizeCache);
+
+    this._uniformRowHeight = uniformRowHeight;
+    this._uniformColumnWidth = uniformColumnWidth;
+
+    this._cachedColumnWidths = {};
+    this._cachedRowHeights = {};
+  }
+
+  _createClass(CellSizeCache, [{
+    key: "clearAllColumnWidths",
+    value: function clearAllColumnWidths() {
+      this._cachedColumnWidth = undefined;
+      this._cachedColumnWidths = {};
+    }
+  }, {
+    key: "clearAllRowHeights",
+    value: function clearAllRowHeights() {
+      this._cachedRowHeight = undefined;
+      this._cachedRowHeights = {};
+    }
+  }, {
+    key: "clearColumnWidth",
+    value: function clearColumnWidth(index) {
+      this._cachedColumnWidth = undefined;
+
+      delete this._cachedColumnWidths[index];
+    }
+  }, {
+    key: "clearRowHeight",
+    value: function clearRowHeight(index) {
+      this._cachedRowHeight = undefined;
+
+      delete this._cachedRowHeights[index];
+    }
+  }, {
+    key: "getColumnWidth",
+    value: function getColumnWidth(index) {
+      return this._uniformColumnWidth ? this._cachedColumnWidth : this._cachedColumnWidths[index];
+    }
+  }, {
+    key: "getRowHeight",
+    value: function getRowHeight(index) {
+      return this._uniformRowHeight ? this._cachedRowHeight : this._cachedRowHeights[index];
+    }
+  }, {
+    key: "hasColumnWidth",
+    value: function hasColumnWidth(index) {
+      return this._uniformColumnWidth ? !!this._cachedColumnWidth : !!this._cachedColumnWidths[index];
+    }
+  }, {
+    key: "hasRowHeight",
+    value: function hasRowHeight(index) {
+      return this._uniformRowHeight ? !!this._cachedRowHeight : !!this._cachedRowHeights[index];
+    }
+  }, {
+    key: "setColumnWidth",
+    value: function setColumnWidth(index, width) {
+      this._cachedColumnWidth = width;
+      this._cachedColumnWidths[index] = width;
+    }
+  }, {
+    key: "setRowHeight",
+    value: function setRowHeight(index, height) {
+      this._cachedRowHeight = height;
+      this._cachedRowHeights[index] = height;
+    }
+  }]);
+
+  return CellSizeCache;
+}();
+
+exports.default = CellSizeCache;
+},{}],52:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultCellSizeCache = exports.CellMeasurer = exports.default = undefined;
+
+var _CellMeasurer2 = require('./CellMeasurer');
+
+var _CellMeasurer3 = _interopRequireDefault(_CellMeasurer2);
+
+var _defaultCellSizeCache2 = require('./defaultCellSizeCache');
+
+var _defaultCellSizeCache3 = _interopRequireDefault(_defaultCellSizeCache2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _CellMeasurer3.default;
+exports.CellMeasurer = _CellMeasurer3.default;
+exports.defaultCellSizeCache = _defaultCellSizeCache3.default;
+},{"./CellMeasurer":50,"./defaultCellSizeCache":51}],53:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2859,30 +5727,49 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Renders scattered or non-linear data.
  * Unlike Grid, which renders checkerboard data, Collection can render arbitrarily positioned- even overlapping- data.
  */
-
 var Collection = function (_Component) {
   _inherits(Collection, _Component);
 
   function Collection(props, context) {
     _classCallCheck(this, Collection);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Collection).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (Collection.__proto__ || Object.getPrototypeOf(Collection)).call(this, props, context));
 
     _this._cellMetadata = [];
     _this._lastRenderedCellIndices = [];
+
+    // Cell cache during scroll (for perforamnce)
+    _this._cellCache = [];
+
+    _this._isScrollingChange = _this._isScrollingChange.bind(_this);
     return _this;
   }
 
-  /** React lifecycle methods */
+  /** See Collection#recomputeCellSizesAndPositions */
+
 
   _createClass(Collection, [{
+    key: 'recomputeCellSizesAndPositions',
+    value: function recomputeCellSizesAndPositions() {
+      this._cellCache = [];
+      this._collectionView.recomputeCellSizesAndPositions();
+    }
+
+    /** React lifecycle methods */
+
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var props = _objectWithoutProperties(this.props, []);
 
       return _react2.default.createElement(_CollectionView2.default, _extends({
         cellLayoutManager: this,
-        ref: 'CollectionView'
+        isScrollingChange: this._isScrollingChange,
+        ref: function ref(_ref) {
+          _this2._collectionView = _ref;
+        }
       }, props));
     }
   }, {
@@ -2930,12 +5817,13 @@ var Collection = function (_Component) {
 
   }, {
     key: 'getScrollPositionForCell',
-    value: function getScrollPositionForCell(_ref) {
-      var cellIndex = _ref.cellIndex;
-      var height = _ref.height;
-      var scrollLeft = _ref.scrollLeft;
-      var scrollTop = _ref.scrollTop;
-      var width = _ref.width;
+    value: function getScrollPositionForCell(_ref2) {
+      var align = _ref2.align;
+      var cellIndex = _ref2.cellIndex;
+      var height = _ref2.height;
+      var scrollLeft = _ref2.scrollLeft;
+      var scrollTop = _ref2.scrollTop;
+      var width = _ref2.width;
       var cellCount = this.props.cellCount;
 
 
@@ -2943,6 +5831,7 @@ var Collection = function (_Component) {
         var cellMetadata = this._cellMetadata[cellIndex];
 
         scrollLeft = (0, _getUpdatedOffsetForIndex2.default)({
+          align: align,
           cellOffset: cellMetadata.x,
           cellSize: cellMetadata.width,
           containerSize: width,
@@ -2951,6 +5840,7 @@ var Collection = function (_Component) {
         });
 
         scrollTop = (0, _getUpdatedOffsetForIndex2.default)({
+          align: align,
           cellOffset: cellMetadata.y,
           cellSize: cellMetadata.height,
           containerSize: height,
@@ -2973,15 +5863,15 @@ var Collection = function (_Component) {
       };
     }
   }, {
-    key: 'renderCells',
-    value: function renderCells(_ref2) {
-      var _this2 = this;
+    key: 'cellRenderers',
+    value: function cellRenderers(_ref3) {
+      var _this3 = this;
 
-      var height = _ref2.height;
-      var isScrolling = _ref2.isScrolling;
-      var width = _ref2.width;
-      var x = _ref2.x;
-      var y = _ref2.y;
+      var height = _ref3.height;
+      var isScrolling = _ref3.isScrolling;
+      var width = _ref3.width;
+      var x = _ref3.x;
+      var y = _ref3.y;
       var _props2 = this.props;
       var cellGroupRenderer = _props2.cellGroupRenderer;
       var cellRenderer = _props2.cellRenderer;
@@ -2996,12 +5886,22 @@ var Collection = function (_Component) {
       });
 
       return cellGroupRenderer({
+        cellCache: this._cellCache,
         cellRenderer: cellRenderer,
-        cellSizeAndPositionGetter: function cellSizeAndPositionGetter(index) {
-          return _this2._sectionManager.getCellMetadata(index);
+        cellSizeAndPositionGetter: function cellSizeAndPositionGetter(_ref4) {
+          var index = _ref4.index;
+          return _this3._sectionManager.getCellMetadata({ index: index });
         },
-        indices: this._lastRenderedCellIndices
+        indices: this._lastRenderedCellIndices,
+        isScrolling: isScrolling
       });
+    }
+  }, {
+    key: '_isScrollingChange',
+    value: function _isScrollingChange(isScrolling) {
+      if (!isScrolling) {
+        this._cellCache = [];
+      }
     }
   }]);
 
@@ -3028,13 +5928,13 @@ Collection.propTypes = {
 
   /**
    * Responsible for rendering a cell given an row and column index.
-   * Should implement the following interface: (index: number): PropTypes.node
+   * Should implement the following interface: ({ index: number }): PropTypes.element
    */
   cellRenderer: _react.PropTypes.func.isRequired,
 
   /**
    * Callback responsible for returning size and offset/position information for a given cell (index).
-   * (index): { height: number, width: number, x: number, y: number }
+   * ({ index: number }): { height: number, width: number, x: number, y: number }
    */
   cellSizeAndPositionGetter: _react.PropTypes.func.isRequired,
 
@@ -3050,14 +5950,37 @@ Collection.defaultProps = {
 exports.default = Collection;
 
 
-function defaultCellGroupRenderer(_ref3) {
-  var cellRenderer = _ref3.cellRenderer;
-  var cellSizeAndPositionGetter = _ref3.cellSizeAndPositionGetter;
-  var indices = _ref3.indices;
+function defaultCellGroupRenderer(_ref5) {
+  var cellCache = _ref5.cellCache;
+  var cellRenderer = _ref5.cellRenderer;
+  var cellSizeAndPositionGetter = _ref5.cellSizeAndPositionGetter;
+  var indices = _ref5.indices;
+  var isScrolling = _ref5.isScrolling;
 
   return indices.map(function (index) {
-    var cellMetadata = cellSizeAndPositionGetter(index);
-    var renderedCell = cellRenderer(index);
+    var cellMetadata = cellSizeAndPositionGetter({ index: index });
+
+    // Avoid re-creating cells while scrolling.
+    // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
+    // If a scroll is in progress- cache and reuse cells.
+    // This cache will be thrown away once scrolling complets.
+    var renderedCell = void 0;
+
+    if (isScrolling) {
+      if (!(index in cellCache)) {
+        cellCache[index] = cellRenderer({
+          index: index,
+          isScrolling: isScrolling
+        });
+      }
+
+      renderedCell = cellCache[index];
+    } else {
+      renderedCell = cellRenderer({
+        index: index,
+        isScrolling: isScrolling
+      });
+    }
 
     if (renderedCell == null || renderedCell === false) {
       return null;
@@ -3081,12 +6004,14 @@ function defaultCellGroupRenderer(_ref3) {
     return !!renderedCell;
   });
 }
-},{"../utils/getUpdatedOffsetForIndex":67,"./CollectionView":40,"./utils/calculateSizeAndPositionData":44,"react":undefined,"react-addons-shallow-compare":29}],40:[function(require,module,exports){
+},{"../utils/getUpdatedOffsetForIndex":89,"./CollectionView":54,"./utils/calculateSizeAndPositionData":58,"react":undefined,"react-addons-shallow-compare":30}],54:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -3150,7 +6075,7 @@ var CollectionView = function (_Component) {
   function CollectionView(props, context) {
     _classCallCheck(this, CollectionView);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CollectionView).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (CollectionView.__proto__ || Object.getPrototypeOf(CollectionView)).call(this, props, context));
 
     _this.state = {
       calculateSizeAndPositionDataOnNextUpdate: false,
@@ -3196,8 +6121,14 @@ var CollectionView = function (_Component) {
       var scrollToCell = _props.scrollToCell;
       var scrollTop = _props.scrollTop;
 
+      // If this component was first rendered server-side, scrollbar size will be undefined.
+      // In that event we need to remeasure.
 
-      this._scrollbarSize = (0, _scrollbarSize2.default)();
+      if (!this._scrollbarSizeMeasured) {
+        this._scrollbarSize = (0, _scrollbarSize2.default)();
+        this._scrollbarSizeMeasured = true;
+        this.setState({});
+      }
 
       if (scrollToCell >= 0) {
         this._updateScrollPositionForScrollToCell();
@@ -3232,6 +6163,7 @@ var CollectionView = function (_Component) {
       var _state = this.state;
       var scrollLeft = _state.scrollLeft;
       var scrollPositionChangeReason = _state.scrollPositionChangeReason;
+      var scrollToAlignment = _state.scrollToAlignment;
       var scrollTop = _state.scrollTop;
 
       // Make sure requested changes to :scrollLeft or :scrollTop get applied.
@@ -3241,16 +6173,16 @@ var CollectionView = function (_Component) {
       // See issue #2 for more information.
 
       if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
-        if (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft) {
-          this.refs.scrollingContainer.scrollLeft = scrollLeft;
+        if (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this._scrollingContainer.scrollLeft) {
+          this._scrollingContainer.scrollLeft = scrollLeft;
         }
-        if (scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop) {
-          this.refs.scrollingContainer.scrollTop = scrollTop;
+        if (scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this._scrollingContainer.scrollTop) {
+          this._scrollingContainer.scrollTop = scrollTop;
         }
       }
 
       // Update scroll offsets if the current :scrollToCell values requires it
-      if (height !== prevProps.height || scrollToCell !== prevProps.scrollToCell || width !== prevProps.width) {
+      if (height !== prevProps.height || scrollToAlignment !== prevProps.scrollToAlignment || scrollToCell !== prevProps.scrollToCell || width !== prevProps.width) {
         this._updateScrollPositionForScrollToCell();
       }
 
@@ -3264,6 +6196,16 @@ var CollectionView = function (_Component) {
 
 
       cellLayoutManager.calculateSizeAndPositionData();
+
+      // If this component is being rendered server-side, getScrollbarSize() will return undefined.
+      // We handle this case in componentDidMount()
+      this._scrollbarSize = (0, _scrollbarSize2.default)();
+      if (this._scrollbarSize === undefined) {
+        this._scrollbarSizeMeasured = false;
+        this._scrollbarSize = 0;
+      } else {
+        this._scrollbarSizeMeasured = true;
+      }
     }
   }, {
     key: 'componentWillUnmount',
@@ -3313,59 +6255,75 @@ var CollectionView = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var _props3 = this.props;
+      var autoHeight = _props3.autoHeight;
+      var cellCount = _props3.cellCount;
       var cellLayoutManager = _props3.cellLayoutManager;
       var className = _props3.className;
       var height = _props3.height;
+      var horizontalOverscanSize = _props3.horizontalOverscanSize;
       var noContentRenderer = _props3.noContentRenderer;
+      var style = _props3.style;
+      var verticalOverscanSize = _props3.verticalOverscanSize;
       var width = _props3.width;
       var _state2 = this.state;
       var isScrolling = _state2.isScrolling;
       var scrollLeft = _state2.scrollLeft;
       var scrollTop = _state2.scrollTop;
 
-
-      var childrenToDisplay = height > 0 && width > 0 ? cellLayoutManager.renderCells({
-        height: height,
-        isScrolling: isScrolling,
-        width: width,
-        x: scrollLeft,
-        y: scrollTop
-      }) : [];
-
       var _cellLayoutManager$ge2 = cellLayoutManager.getTotalSize();
 
       var totalHeight = _cellLayoutManager$ge2.height;
       var totalWidth = _cellLayoutManager$ge2.width;
 
+      // Safely expand the rendered area by the specified overscan amount
 
-      var gridStyle = {
-        height: height,
+      var left = Math.max(0, scrollLeft - horizontalOverscanSize);
+      var top = Math.max(0, scrollTop - verticalOverscanSize);
+      var right = Math.min(totalWidth, scrollLeft + width + horizontalOverscanSize);
+      var bottom = Math.min(totalHeight, scrollTop + height + verticalOverscanSize);
+
+      var childrenToDisplay = height > 0 && width > 0 ? cellLayoutManager.cellRenderers({
+        height: bottom - top,
+        isScrolling: isScrolling,
+        width: right - left,
+        x: left,
+        y: top
+      }) : [];
+
+      var collectionStyle = {
+        height: autoHeight ? 'auto' : height,
         width: width
       };
 
       // Force browser to hide scrollbars when we know they aren't necessary.
       // Otherwise once scrollbars appear they may not disappear again.
       // For more info see issue #116
-      if (totalHeight <= height) {
-        gridStyle.overflowY = 'hidden';
+      var verticalScrollBarSize = totalHeight > height ? this._scrollbarSize : 0;
+      var horizontalScrollBarSize = totalWidth > width ? this._scrollbarSize : 0;
+      if (totalWidth + verticalScrollBarSize <= width) {
+        collectionStyle.overflowX = 'hidden';
       }
-      if (totalWidth <= width) {
-        gridStyle.overflowX = 'hidden';
+      if (totalHeight + horizontalScrollBarSize <= height) {
+        collectionStyle.overflowY = 'hidden';
       }
 
       return _react2.default.createElement(
         'div',
         {
-          ref: 'scrollingContainer',
+          ref: function ref(_ref) {
+            _this2._scrollingContainer = _ref;
+          },
           'aria-label': this.props['aria-label'],
           className: (0, _classnames2.default)('Collection', className),
           onScroll: this._onScroll,
           role: 'grid',
-          style: gridStyle,
+          style: _extends({}, collectionStyle, style),
           tabIndex: 0
         },
-        childrenToDisplay.length > 0 && _react2.default.createElement(
+        cellCount > 0 && _react2.default.createElement(
           'div',
           {
             className: 'Collection__innerScrollContainer',
@@ -3373,13 +6331,13 @@ var CollectionView = function (_Component) {
               height: totalHeight,
               maxHeight: totalHeight,
               maxWidth: totalWidth,
-              pointerEvents: isScrolling ? 'none' : 'auto',
+              pointerEvents: isScrolling ? 'none' : '',
               width: totalWidth
             }
           },
           childrenToDisplay
         ),
-        childrenToDisplay.length === 0 && noContentRenderer()
+        cellCount === 0 && noContentRenderer()
       );
     }
   }, {
@@ -3399,15 +6357,20 @@ var CollectionView = function (_Component) {
   }, {
     key: '_enablePointerEventsAfterDelay',
     value: function _enablePointerEventsAfterDelay() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this._disablePointerEventsTimeoutId) {
         clearTimeout(this._disablePointerEventsTimeoutId);
       }
 
       this._disablePointerEventsTimeoutId = setTimeout(function () {
-        _this2._disablePointerEventsTimeoutId = null;
-        _this2.setState({
+        var isScrollingChange = _this3.props.isScrollingChange;
+
+
+        isScrollingChange(false);
+
+        _this3._disablePointerEventsTimeoutId = null;
+        _this3.setState({
           isScrolling: false
         });
       }, IS_SCROLLING_TIMEOUT);
@@ -3422,24 +6385,26 @@ var CollectionView = function (_Component) {
 
       this._onSectionRenderedMemoizer({
         callback: onSectionRendered,
-        indices: cellLayoutManager.getLastRenderedIndices()
+        indices: {
+          indices: cellLayoutManager.getLastRenderedIndices()
+        }
       });
     }
   }, {
     key: '_invokeOnScrollMemoizer',
-    value: function _invokeOnScrollMemoizer(_ref) {
-      var _this3 = this;
+    value: function _invokeOnScrollMemoizer(_ref2) {
+      var _this4 = this;
 
-      var scrollLeft = _ref.scrollLeft;
-      var scrollTop = _ref.scrollTop;
-      var totalHeight = _ref.totalHeight;
-      var totalWidth = _ref.totalWidth;
+      var scrollLeft = _ref2.scrollLeft;
+      var scrollTop = _ref2.scrollTop;
+      var totalHeight = _ref2.totalHeight;
+      var totalWidth = _ref2.totalWidth;
 
       this._onScrollMemoizer({
-        callback: function callback(_ref2) {
-          var scrollLeft = _ref2.scrollLeft;
-          var scrollTop = _ref2.scrollTop;
-          var _props5 = _this3.props;
+        callback: function callback(_ref3) {
+          var scrollLeft = _ref3.scrollLeft;
+          var scrollTop = _ref3.scrollTop;
+          var _props5 = _this4.props;
           var height = _props5.height;
           var onScroll = _props5.onScroll;
           var width = _props5.width;
@@ -3470,22 +6435,22 @@ var CollectionView = function (_Component) {
   }, {
     key: '_setNextState',
     value: function _setNextState(state) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._setNextStateAnimationFrameId) {
         _raf2.default.cancel(this._setNextStateAnimationFrameId);
       }
 
       this._setNextStateAnimationFrameId = (0, _raf2.default)(function () {
-        _this4._setNextStateAnimationFrameId = null;
-        _this4.setState(state);
+        _this5._setNextStateAnimationFrameId = null;
+        _this5.setState(state);
       });
     }
   }, {
     key: '_setScrollPosition',
-    value: function _setScrollPosition(_ref3) {
-      var scrollLeft = _ref3.scrollLeft;
-      var scrollTop = _ref3.scrollTop;
+    value: function _setScrollPosition(_ref4) {
+      var scrollLeft = _ref4.scrollLeft;
+      var scrollTop = _ref4.scrollTop;
 
       var newState = {
         scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
@@ -3509,6 +6474,7 @@ var CollectionView = function (_Component) {
       var _props6 = this.props;
       var cellLayoutManager = _props6.cellLayoutManager;
       var height = _props6.height;
+      var scrollToAlignment = _props6.scrollToAlignment;
       var scrollToCell = _props6.scrollToCell;
       var width = _props6.width;
       var _state3 = this.state;
@@ -3518,6 +6484,7 @@ var CollectionView = function (_Component) {
 
       if (scrollToCell >= 0) {
         var scrollPosition = cellLayoutManager.getScrollPositionForCell({
+          align: scrollToAlignment,
           cellIndex: scrollToCell,
           height: height,
           scrollLeft: scrollLeft,
@@ -3536,7 +6503,7 @@ var CollectionView = function (_Component) {
       // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
       // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
       // See issue #404 for more information.
-      if (event.target !== this.refs.scrollingContainer) {
+      if (event.target !== this._scrollingContainer) {
         return;
       }
 
@@ -3550,6 +6517,7 @@ var CollectionView = function (_Component) {
       var _props7 = this.props;
       var cellLayoutManager = _props7.cellLayoutManager;
       var height = _props7.height;
+      var isScrollingChange = _props7.isScrollingChange;
       var width = _props7.width;
 
       var scrollbarSize = this._scrollbarSize;
@@ -3559,8 +6527,8 @@ var CollectionView = function (_Component) {
       var totalHeight = _cellLayoutManager$ge3.height;
       var totalWidth = _cellLayoutManager$ge3.width;
 
-      var scrollLeft = Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft);
-      var scrollTop = Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop);
+      var scrollLeft = Math.max(0, Math.min(totalWidth - width + scrollbarSize, event.target.scrollLeft));
+      var scrollTop = Math.max(0, Math.min(totalHeight - height + scrollbarSize, event.target.scrollTop));
 
       // Certain devices (like Apple touchpad) rapid-fire duplicate events.
       // Don't force a re-render if this is the case.
@@ -3575,6 +6543,8 @@ var CollectionView = function (_Component) {
 
         // Synchronously set :isScrolling the first time (since _setNextState will reschedule its animation frame each time it's called)
         if (!this.state.isScrolling) {
+          isScrollingChange(true);
+
           this.setState({
             isScrolling: true
           });
@@ -3604,6 +6574,12 @@ CollectionView.propTypes = {
   'aria-label': _react.PropTypes.string,
 
   /**
+   * Removes fixed height from the scrollingContainer so that the total height
+   * of rows can stretch the window. Intended for use with WindowScroller
+   */
+  autoHeight: _react.PropTypes.bool,
+
+  /**
    * Number of cells in collection.
    */
   cellCount: _react.PropTypes.number.isRequired,
@@ -3624,7 +6600,15 @@ CollectionView.propTypes = {
   height: _react.PropTypes.number.isRequired,
 
   /**
-   * Optional renderer to be used in place of rows when either :rowsCount or :cellCount is 0.
+   * Enables the `Collection` to horiontally "overscan" its content similar to how `Grid` does.
+   * This can reduce flicker around the edges when a user scrolls quickly.
+   */
+  horizontalOverscanSize: _react.PropTypes.number.isRequired,
+
+  isScrollingChange: _react.PropTypes.func,
+
+  /**
+   * Optional renderer to be used in place of rows when either :rowCount or :cellCount is 0.
    */
   noContentRenderer: _react.PropTypes.func.isRequired,
 
@@ -3637,7 +6621,7 @@ CollectionView.propTypes = {
 
   /**
    * Callback invoked with information about the section of the Collection that was just rendered.
-   * This callback is passed an array of the most recently rendered section indices.
+   * This callback is passed a named :indices parameter which is an Array of the most recently rendered section indices.
    */
   onSectionRendered: _react.PropTypes.func.isRequired,
 
@@ -3645,6 +6629,13 @@ CollectionView.propTypes = {
    * Horizontal offset.
    */
   scrollLeft: _react.PropTypes.number,
+
+  /**
+   * Controls scroll-to-cell behavior of the Grid.
+   * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+   * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+   */
+  scrollToAlignment: _react.PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
   /**
    * Cell index to ensure visible (by forcefully scrolling if necessary).
@@ -3657,12 +6648,24 @@ CollectionView.propTypes = {
   scrollTop: _react.PropTypes.number,
 
   /**
+   * Optional custom inline style to attach to root Collection element.
+   */
+  style: _react.PropTypes.object,
+
+  /**
+   * Enables the `Collection` to vertically "overscan" its content similar to how `Grid` does.
+   * This can reduce flicker around the edges when a user scrolls quickly.
+   */
+  verticalOverscanSize: _react.PropTypes.number.isRequired,
+
+  /**
    * Width of Collection; this property determines the number of visible (vs virtualized) columns.
    */
   width: _react.PropTypes.number.isRequired
 };
 CollectionView.defaultProps = {
   'aria-label': 'grid',
+  horizontalOverscanSize: 0,
   noContentRenderer: function noContentRenderer() {
     return null;
   },
@@ -3671,10 +6674,13 @@ CollectionView.defaultProps = {
   },
   onSectionRendered: function onSectionRendered() {
     return null;
-  }
+  },
+  scrollToAlignment: 'auto',
+  style: {},
+  verticalOverscanSize: 0
 };
 exports.default = CollectionView;
-},{"../utils/createCallbackMemoizer":66,"classnames":undefined,"dom-helpers/util/scrollbarSize":18,"raf":28,"react":undefined,"react-addons-shallow-compare":29}],41:[function(require,module,exports){
+},{"../utils/createCallbackMemoizer":88,"classnames":undefined,"dom-helpers/util/scrollbarSize":19,"raf":29,"react":undefined,"react-addons-shallow-compare":30}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3691,7 +6697,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * This enables us to more quickly determine which cells to display in a given region of the Window.
  * Sections have a fixed size and contain 0 to many cells (tracked by their indices).
  */
-
 var Section = function () {
   function Section(_ref) {
     var height = _ref.height;
@@ -3715,7 +6720,9 @@ var Section = function () {
 
   _createClass(Section, [{
     key: 'addCellIndex',
-    value: function addCellIndex(index) {
+    value: function addCellIndex(_ref2) {
+      var index = _ref2.index;
+
       if (!this._indexMap[index]) {
         this._indexMap[index] = true;
         this._indices.push(index);
@@ -3744,7 +6751,7 @@ var Section = function () {
 
 
 exports.default = Section;
-},{}],42:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3773,7 +6780,6 @@ var SECTION_SIZE = 100;
  * Grows (and adds Sections) dynamically as cells are registered.
  * Automatically adds cells to the appropriate Section(s).
  */
-
 var SectionManager = function () {
   function SectionManager() {
     var sectionSize = arguments.length <= 0 || arguments[0] === undefined ? SECTION_SIZE : arguments[0];
@@ -3804,7 +6810,7 @@ var SectionManager = function () {
 
       this.getSections({ height: height, width: width, x: x, y: y }).forEach(function (section) {
         return section.getCellIndices().forEach(function (index) {
-          return indices[index] = index;
+          indices[index] = index;
         });
       });
 
@@ -3818,7 +6824,9 @@ var SectionManager = function () {
 
   }, {
     key: 'getCellMetadata',
-    value: function getCellMetadata(index) {
+    value: function getCellMetadata(_ref2) {
+      var index = _ref2.index;
+
       return this._cellMetadata[index];
     }
 
@@ -3826,11 +6834,11 @@ var SectionManager = function () {
 
   }, {
     key: 'getSections',
-    value: function getSections(_ref2) {
-      var height = _ref2.height;
-      var width = _ref2.width;
-      var x = _ref2.x;
-      var y = _ref2.y;
+    value: function getSections(_ref3) {
+      var height = _ref3.height;
+      var width = _ref3.width;
+      var x = _ref3.x;
+      var y = _ref3.y;
 
       var sectionXStart = Math.floor(x / this._sectionSize);
       var sectionXStop = Math.floor((x + width - 1) / this._sectionSize);
@@ -3883,14 +6891,14 @@ var SectionManager = function () {
 
   }, {
     key: 'registerCell',
-    value: function registerCell(_ref3) {
-      var cellMetadatum = _ref3.cellMetadatum;
-      var index = _ref3.index;
+    value: function registerCell(_ref4) {
+      var cellMetadatum = _ref4.cellMetadatum;
+      var index = _ref4.index;
 
       this._cellMetadata[index] = cellMetadatum;
 
       this.getSections(cellMetadatum).forEach(function (section) {
-        return section.addCellIndex(index);
+        return section.addCellIndex({ index: index });
       });
     }
   }]);
@@ -3899,7 +6907,7 @@ var SectionManager = function () {
 }();
 
 exports.default = SectionManager;
-},{"./Section":41}],43:[function(require,module,exports){
+},{"./Section":55}],57:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3915,7 +6923,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _Collection3.default;
 exports.Collection = _Collection3.default;
-},{"./Collection":39}],44:[function(require,module,exports){
+},{"./Collection":53}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3940,7 +6948,7 @@ function calculateSizeAndPositionData(_ref) {
   var width = 0;
 
   for (var index = 0; index < cellCount; index++) {
-    var cellMetadatum = cellSizeAndPositionGetter(index);
+    var cellMetadatum = cellSizeAndPositionGetter({ index: index });
 
     if (cellMetadatum.height == null || isNaN(cellMetadatum.height) || cellMetadatum.width == null || isNaN(cellMetadatum.width) || cellMetadatum.x == null || isNaN(cellMetadatum.x) || cellMetadatum.y == null || isNaN(cellMetadatum.y)) {
       throw Error('Invalid metadata returned for cell ' + index + ':\n        x:' + cellMetadatum.x + ', y:' + cellMetadatum.y + ', width:' + cellMetadatum.width + ', height:' + cellMetadatum.height);
@@ -3963,7 +6971,7 @@ function calculateSizeAndPositionData(_ref) {
     width: width
   };
 }
-},{"../SectionManager":42}],45:[function(require,module,exports){
+},{"../SectionManager":56}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3993,14 +7001,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * High-order component that auto-calculates column-widths for `Grid` cells.
  */
-
 var ColumnSizer = function (_Component) {
   _inherits(ColumnSizer, _Component);
 
   function ColumnSizer(props, context) {
     _classCallCheck(this, ColumnSizer);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ColumnSizer).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (ColumnSizer.__proto__ || Object.getPrototypeOf(ColumnSizer)).call(this, props, context));
 
     _this._registerChild = _this._registerChild.bind(_this);
     return _this;
@@ -4012,11 +7019,11 @@ var ColumnSizer = function (_Component) {
       var _props = this.props;
       var columnMaxWidth = _props.columnMaxWidth;
       var columnMinWidth = _props.columnMinWidth;
-      var columnsCount = _props.columnsCount;
+      var columnCount = _props.columnCount;
       var width = _props.width;
 
 
-      if (columnMaxWidth !== prevProps.columnMaxWidth || columnMinWidth !== prevProps.columnMinWidth || columnsCount !== prevProps.columnsCount || width !== prevProps.width) {
+      if (columnMaxWidth !== prevProps.columnMaxWidth || columnMinWidth !== prevProps.columnMinWidth || columnCount !== prevProps.columnCount || width !== prevProps.width) {
         if (this._registeredChild) {
           this._registeredChild.recomputeGridSize();
         }
@@ -4029,7 +7036,7 @@ var ColumnSizer = function (_Component) {
       var children = _props2.children;
       var columnMaxWidth = _props2.columnMaxWidth;
       var columnMinWidth = _props2.columnMinWidth;
-      var columnsCount = _props2.columnsCount;
+      var columnCount = _props2.columnCount;
       var width = _props2.width;
 
 
@@ -4037,12 +7044,12 @@ var ColumnSizer = function (_Component) {
 
       var safeColumnMaxWidth = columnMaxWidth ? Math.min(columnMaxWidth, width) : width;
 
-      var columnWidth = width / columnsCount;
+      var columnWidth = width / columnCount;
       columnWidth = Math.max(safeColumnMinWidth, columnWidth);
       columnWidth = Math.min(safeColumnMaxWidth, columnWidth);
       columnWidth = Math.floor(columnWidth);
 
-      var adjustedWidth = Math.min(width, columnWidth * columnsCount);
+      var adjustedWidth = Math.min(width, columnWidth * columnCount);
 
       return children({
         adjustedWidth: adjustedWidth,
@@ -4094,13 +7101,13 @@ ColumnSizer.propTypes = {
   columnMinWidth: _react.PropTypes.number,
 
   /** Number of columns in Grid or FlexTable child */
-  columnsCount: _react.PropTypes.number.isRequired,
+  columnCount: _react.PropTypes.number.isRequired,
 
   /** Width of Grid or FlexTable child */
   width: _react.PropTypes.number.isRequired
 };
 exports.default = ColumnSizer;
-},{"../Grid":53,"react":undefined,"react-addons-shallow-compare":29}],46:[function(require,module,exports){
+},{"../Grid":72,"react":undefined,"react-addons-shallow-compare":30}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4116,23 +7123,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _ColumnSizer3.default;
 exports.ColumnSizer = _ColumnSizer3.default;
-},{"./ColumnSizer":45}],47:[function(require,module,exports){
+},{"./ColumnSizer":59}],61:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.defaultCellRenderer = defaultCellRenderer;
-exports.defaultCellDataGetter = defaultCellDataGetter;
-exports.defaultHeaderRenderer = defaultHeaderRenderer;
 
 var _react = require('react');
 
-var _react2 = _interopRequireDefault(_react);
+var _defaultHeaderRenderer = require('./defaultHeaderRenderer');
 
-var _SortIndicator = require('./SortIndicator');
+var _defaultHeaderRenderer2 = _interopRequireDefault(_defaultHeaderRenderer);
 
-var _SortIndicator2 = _interopRequireDefault(_SortIndicator);
+var _defaultCellRenderer = require('./defaultCellRenderer');
+
+var _defaultCellRenderer2 = _interopRequireDefault(_defaultCellRenderer);
+
+var _defaultCellDataGetter = require('./defaultCellDataGetter');
+
+var _defaultCellDataGetter2 = _interopRequireDefault(_defaultCellDataGetter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4143,103 +7153,46 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
- * Default cell renderer that displays an attribute as a simple string
- * You should override the column's cellRenderer if your data is some other type of object.
- */
-function defaultCellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData) {
-  if (cellData === null || cellData === undefined) {
-    return '';
-  } else {
-    return String(cellData);
-  }
-}
-
-/**
- * Default accessor for returning a cell value for a given attribute.
- * This function expects to operate on either a vanilla Object or an Immutable Map.
- * You should override the column's cellDataGetter if your data is some other type of object.
- */
-function defaultCellDataGetter(dataKey, rowData, columnData) {
-  if (rowData.get instanceof Function) {
-    return rowData.get(dataKey);
-  } else {
-    return rowData[dataKey];
-  }
-}
-
-/**
- * Default table header renderer.
- */
-function defaultHeaderRenderer(_ref) {
-  var columnData = _ref.columnData;
-  var dataKey = _ref.dataKey;
-  var disableSort = _ref.disableSort;
-  var label = _ref.label;
-  var sortBy = _ref.sortBy;
-  var sortDirection = _ref.sortDirection;
-
-  var showSortIndicator = sortBy === dataKey;
-  var children = [_react2.default.createElement(
-    'div',
-    {
-      className: 'FlexTable__headerTruncatedText',
-      key: 'label',
-      title: label
-    },
-    label
-  )];
-
-  if (showSortIndicator) {
-    children.push(_react2.default.createElement(_SortIndicator2.default, {
-      key: 'SortIndicator',
-      sortDirection: sortDirection
-    }));
-  }
-
-  return children;
-}
-
-/**
  * Describes the header and cell contents of a table column.
  */
-
 var Column = function (_Component) {
   _inherits(Column, _Component);
 
   function Column() {
     _classCallCheck(this, Column);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Column).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Column.__proto__ || Object.getPrototypeOf(Column)).apply(this, arguments));
   }
 
   return Column;
 }(_react.Component);
 
 Column.defaultProps = {
-  cellDataGetter: defaultCellDataGetter,
-  cellRenderer: defaultCellRenderer,
+  cellDataGetter: _defaultCellDataGetter2.default,
+  cellRenderer: _defaultCellRenderer2.default,
   flexGrow: 0,
   flexShrink: 1,
-  headerRenderer: defaultHeaderRenderer
+  headerRenderer: _defaultHeaderRenderer2.default,
+  style: {}
 };
 Column.propTypes = {
   /** Optional aria-label value to set on the column header */
   'aria-label': _react.PropTypes.string,
 
-  /** Optional CSS class to apply to cell */
-  cellClassName: _react.PropTypes.string,
-
   /**
    * Callback responsible for returning a cell's data, given its :dataKey
-   * (dataKey: string, rowData: any): any
+   * ({ columnData: any, dataKey: string, rowData: any }): any
    */
   cellDataGetter: _react.PropTypes.func,
 
   /**
    * Callback responsible for rendering a cell's contents.
-   * (cellData: any, cellDataKey: string, rowData: any, rowIndex: number, columnData: any): element
+   * ({ cellData: any, columnData: any, dataKey: string, rowData: any, rowIndex: number }): node
    */
   cellRenderer: _react.PropTypes.func,
+
+  /** Optional CSS class to apply to cell */
+  className: _react.PropTypes.string,
 
   /** Optional additional data passed to this column's :cellDataGetter */
   columnData: _react.PropTypes.object,
@@ -4274,11 +7227,14 @@ Column.propTypes = {
   /** Minimum width of column. */
   minWidth: _react.PropTypes.number,
 
+  /** Optional inline style to apply to cell */
+  style: _react.PropTypes.object,
+
   /** Flex basis (width) for this column; This value can grow or shrink based on :flexGrow and :flexShrink properties. */
   width: _react.PropTypes.number.isRequired
 };
 exports.default = Column;
-},{"./SortIndicator":50,"react":undefined}],48:[function(require,module,exports){
+},{"./defaultCellDataGetter":65,"./defaultCellRenderer":66,"./defaultHeaderRenderer":67,"react":undefined}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4311,6 +7267,10 @@ var _Grid = require('../Grid');
 
 var _Grid2 = _interopRequireDefault(_Grid);
 
+var _defaultRowRenderer = require('./defaultRowRenderer');
+
+var _defaultRowRenderer2 = _interopRequireDefault(_defaultRowRenderer);
+
 var _SortDirection = require('./SortDirection');
 
 var _SortDirection2 = _interopRequireDefault(_SortDirection);
@@ -4327,32 +7287,52 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Table component with fixed headers and virtualized rows for improved performance with large data sets.
  * This component expects explicit width, height, and padding parameters.
  */
-
 var FlexTable = function (_Component) {
   _inherits(FlexTable, _Component);
 
   function FlexTable(props) {
     _classCallCheck(this, FlexTable);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FlexTable).call(this, props));
+    var _this = _possibleConstructorReturn(this, (FlexTable.__proto__ || Object.getPrototypeOf(FlexTable)).call(this, props));
 
     _this.state = {
       scrollbarWidth: 0
     };
 
+    _this._cellClassName = _this._cellClassName.bind(_this);
+    _this._cellStyle = _this._cellStyle.bind(_this);
+    _this._createColumn = _this._createColumn.bind(_this);
     _this._createRow = _this._createRow.bind(_this);
+    _this._onScroll = _this._onScroll.bind(_this);
+    _this._onSectionRendered = _this._onSectionRendered.bind(_this);
     return _this;
   }
 
-  /**
-   * See Grid#recomputeGridSize
-   */
-
-
   _createClass(FlexTable, [{
+    key: 'forceUpdateGrid',
+    value: function forceUpdateGrid() {
+      this.Grid.forceUpdate();
+    }
+
+    /** See Grid#measureAllCells */
+
+  }, {
+    key: 'measureAllRows',
+    value: function measureAllRows() {
+      this.Grid.measureAllCells();
+    }
+
+    /** See Grid#recomputeGridSize */
+
+  }, {
     key: 'recomputeRowHeights',
     value: function recomputeRowHeights() {
-      this.refs.Grid.recomputeGridSize();
+      var index = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
+      this.Grid.recomputeGridSize({
+        rowIndex: index
+      });
+      this.forceUpdateGrid();
     }
   }, {
     key: 'componentDidMount',
@@ -4370,88 +7350,73 @@ var FlexTable = function (_Component) {
       var _this2 = this;
 
       var _props = this.props;
+      var children = _props.children;
       var className = _props.className;
       var disableHeader = _props.disableHeader;
+      var gridClassName = _props.gridClassName;
+      var gridStyle = _props.gridStyle;
       var headerHeight = _props.headerHeight;
       var height = _props.height;
       var noRowsRenderer = _props.noRowsRenderer;
-      var onRowsRendered = _props.onRowsRendered;
-      var _onScroll = _props.onScroll;
-      var overscanRowsCount = _props.overscanRowsCount;
       var rowClassName = _props.rowClassName;
-      var rowHeight = _props.rowHeight;
-      var rowsCount = _props.rowsCount;
+      var rowStyle = _props.rowStyle;
       var scrollToIndex = _props.scrollToIndex;
-      var scrollTop = _props.scrollTop;
+      var style = _props.style;
       var width = _props.width;
       var scrollbarWidth = this.state.scrollbarWidth;
 
 
       var availableRowsHeight = height - headerHeight;
 
-      // This row-renderer wrapper function is necessary in order to trigger re-render when the
-      // sort-by or sort-direction have changed (else Grid will not see any props changes)
-      var rowRenderer = function rowRenderer(index) {
-        return _this2._createRow(index);
-      };
+      var rowClass = rowClassName instanceof Function ? rowClassName({ index: -1 }) : rowClassName;
+      var rowStyleObject = rowStyle instanceof Function ? rowStyle({ index: -1 }) : rowStyle;
 
-      var rowClass = rowClassName instanceof Function ? rowClassName(-1) : rowClassName;
+      // Precompute and cache column styles before rendering rows and columns to speed things up
+      this._cachedColumnStyles = [];
+      _react2.default.Children.toArray(children).forEach(function (column, index) {
+        _this2._cachedColumnStyles[index] = _this2._getFlexStyleForColumn(column, column.props.style);
+      });
 
+      // Note that we specify :numChildren, :scrollbarWidth, :sortBy, and :sortDirection as properties on Grid even though these have nothing to do with Grid.
+      // This is done because Grid is a pure component and won't update unless its properties or state has changed.
+      // Any property that should trigger a re-render of Grid then is specified here to avoid a stale display.
       return _react2.default.createElement(
         'div',
         {
-          className: (0, _classnames2.default)('FlexTable', className)
+          className: (0, _classnames2.default)('FlexTable', className),
+          style: style
         },
         !disableHeader && _react2.default.createElement(
           'div',
           {
             className: (0, _classnames2.default)('FlexTable__headerRow', rowClass),
-            style: {
+            style: _extends({}, rowStyleObject, {
               height: headerHeight,
               paddingRight: scrollbarWidth,
               width: width
-            }
+            })
           },
           this._getRenderedHeaderRow()
         ),
-        _react2.default.createElement(_Grid2.default, {
-          'aria-label': this.props['aria-label'],
-          ref: 'Grid',
-          className: 'FlexTable__Grid',
+        _react2.default.createElement(_Grid2.default, _extends({}, this.props, {
+          autoContainerWidth: true,
+          className: (0, _classnames2.default)('FlexTable__Grid', gridClassName),
+          cellClassName: this._cellClassName,
+          cellRenderer: this._createRow,
+          cellStyle: this._cellStyle,
           columnWidth: width,
-          columnsCount: 1,
+          columnCount: 1,
           height: availableRowsHeight,
           noContentRenderer: noRowsRenderer,
-          onScroll: function onScroll(_ref) {
-            var clientHeight = _ref.clientHeight;
-            var scrollHeight = _ref.scrollHeight;
-            var scrollTop = _ref.scrollTop;
-            return _onScroll({ clientHeight: clientHeight, scrollHeight: scrollHeight, scrollTop: scrollTop });
+          onScroll: this._onScroll,
+          onSectionRendered: this._onSectionRendered,
+          ref: function ref(_ref) {
+            _this2.Grid = _ref;
           },
-          onSectionRendered: function onSectionRendered(_ref2) {
-            var rowOverscanStartIndex = _ref2.rowOverscanStartIndex;
-            var rowOverscanStopIndex = _ref2.rowOverscanStopIndex;
-            var rowStartIndex = _ref2.rowStartIndex;
-            var rowStopIndex = _ref2.rowStopIndex;
-            return onRowsRendered({
-              overscanStartIndex: rowOverscanStartIndex,
-              overscanStopIndex: rowOverscanStopIndex,
-              startIndex: rowStartIndex,
-              stopIndex: rowStopIndex
-            });
-          },
-          overscanRowsCount: overscanRowsCount,
-          renderCell: function renderCell(_ref3) {
-            var columnIndex = _ref3.columnIndex;
-            var rowIndex = _ref3.rowIndex;
-            return rowRenderer(rowIndex);
-          },
-          rowHeight: rowHeight,
-          rowsCount: rowsCount,
+          scrollbarWidth: scrollbarWidth,
           scrollToRow: scrollToIndex,
-          scrollTop: scrollTop,
-          width: width
-        })
+          style: gridStyle
+        }))
       );
     }
   }, {
@@ -4460,19 +7425,43 @@ var FlexTable = function (_Component) {
       return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
     }
   }, {
+    key: '_cellClassName',
+    value: function _cellClassName(_ref2) {
+      var rowIndex = _ref2.rowIndex;
+      var rowWrapperClassName = this.props.rowWrapperClassName;
+
+
+      return rowWrapperClassName instanceof Function ? rowWrapperClassName({ index: rowIndex - 1 }) : rowWrapperClassName;
+    }
+  }, {
+    key: '_cellStyle',
+    value: function _cellStyle(_ref3) {
+      var rowIndex = _ref3.rowIndex;
+      var rowWrapperStyle = this.props.rowWrapperStyle;
+
+
+      return rowWrapperStyle instanceof Function ? rowWrapperStyle({ index: rowIndex - 1 }) : rowWrapperStyle;
+    }
+  }, {
     key: '_createColumn',
-    value: function _createColumn(column, columnIndex, rowData, rowIndex) {
+    value: function _createColumn(_ref4) {
+      var column = _ref4.column;
+      var columnIndex = _ref4.columnIndex;
+      var isScrolling = _ref4.isScrolling;
+      var rowData = _ref4.rowData;
+      var rowIndex = _ref4.rowIndex;
       var _column$props = column.props;
-      var cellClassName = _column$props.cellClassName;
       var cellDataGetter = _column$props.cellDataGetter;
+      var cellRenderer = _column$props.cellRenderer;
+      var className = _column$props.className;
       var columnData = _column$props.columnData;
       var dataKey = _column$props.dataKey;
-      var cellRenderer = _column$props.cellRenderer;
 
-      var cellData = cellDataGetter(dataKey, rowData, columnData);
-      var renderedCell = cellRenderer(cellData, dataKey, rowData, rowIndex, columnData);
 
-      var style = this._getFlexStyleForColumn(column);
+      var cellData = cellDataGetter({ columnData: columnData, dataKey: dataKey, rowData: rowData });
+      var renderedCell = cellRenderer({ cellData: cellData, columnData: columnData, dataKey: dataKey, isScrolling: isScrolling, rowData: rowData, rowIndex: rowIndex });
+
+      var style = this._cachedColumnStyles[columnIndex];
 
       var title = typeof renderedCell === 'string' ? renderedCell : null;
 
@@ -4480,24 +7469,21 @@ var FlexTable = function (_Component) {
         'div',
         {
           key: 'Row' + rowIndex + '-Col' + columnIndex,
-          className: (0, _classnames2.default)('FlexTable__rowColumn', cellClassName),
-          style: style
+          className: (0, _classnames2.default)('FlexTable__rowColumn', className),
+          style: style,
+          title: title
         },
-        _react2.default.createElement(
-          'div',
-          {
-            className: 'FlexTable__truncatedColumnText',
-            title: title
-          },
-          renderedCell
-        )
+        renderedCell
       );
     }
   }, {
     key: '_createHeader',
-    value: function _createHeader(column, columnIndex) {
+    value: function _createHeader(_ref5) {
+      var column = _ref5.column;
+      var index = _ref5.index;
       var _props2 = this.props;
       var headerClassName = _props2.headerClassName;
+      var headerStyle = _props2.headerStyle;
       var onHeaderClick = _props2.onHeaderClick;
       var sort = _props2.sort;
       var sortBy = _props2.sortBy;
@@ -4514,7 +7500,7 @@ var FlexTable = function (_Component) {
       var classNames = (0, _classnames2.default)('FlexTable__headerColumn', headerClassName, column.props.headerClassName, {
         'FlexTable__sortableHeaderColumn': sortEnabled
       });
-      var style = this._getFlexStyleForColumn(column);
+      var style = this._getFlexStyleForColumn(column, headerStyle);
 
       var renderedHeader = headerRenderer({
         columnData: columnData,
@@ -4533,8 +7519,11 @@ var FlexTable = function (_Component) {
           var newSortDirection = sortBy !== dataKey || sortDirection === _SortDirection2.default.DESC ? _SortDirection2.default.ASC : _SortDirection2.default.DESC;
 
           var onClick = function onClick() {
-            sortEnabled && sort(dataKey, newSortDirection);
-            onHeaderClick && onHeaderClick(dataKey, columnData);
+            sortEnabled && sort({
+              sortBy: dataKey,
+              sortDirection: newSortDirection
+            });
+            onHeaderClick && onHeaderClick({ columnData: columnData, dataKey: dataKey });
           };
 
           var onKeyDown = function onKeyDown(event) {
@@ -4554,7 +7543,7 @@ var FlexTable = function (_Component) {
       return _react2.default.createElement(
         'div',
         _extends({}, a11yProps, {
-          key: 'Header-Col' + columnIndex,
+          key: 'Header-Col' + index,
           className: classNames,
           style: style
         }),
@@ -4563,47 +7552,57 @@ var FlexTable = function (_Component) {
     }
   }, {
     key: '_createRow',
-    value: function _createRow(rowIndex) {
+    value: function _createRow(_ref6) {
       var _this3 = this;
 
+      var index = _ref6.rowIndex;
+      var isScrolling = _ref6.isScrolling;
       var _props3 = this.props;
       var children = _props3.children;
       var onRowClick = _props3.onRowClick;
+      var onRowDoubleClick = _props3.onRowDoubleClick;
+      var onRowMouseOver = _props3.onRowMouseOver;
+      var onRowMouseOut = _props3.onRowMouseOut;
       var rowClassName = _props3.rowClassName;
       var rowGetter = _props3.rowGetter;
+      var rowRenderer = _props3.rowRenderer;
+      var rowStyle = _props3.rowStyle;
       var scrollbarWidth = this.state.scrollbarWidth;
 
 
-      var rowClass = rowClassName instanceof Function ? rowClassName(rowIndex) : rowClassName;
-      var rowData = rowGetter(rowIndex);
+      var rowClass = rowClassName instanceof Function ? rowClassName({ index: index }) : rowClassName;
+      var rowStyleObject = rowStyle instanceof Function ? rowStyle({ index: index }) : rowStyle;
+      var rowData = rowGetter({ index: index });
 
-      var renderedRow = _react2.default.Children.toArray(children).map(function (column, columnIndex) {
-        return _this3._createColumn(column, columnIndex, rowData, rowIndex);
+      var columns = _react2.default.Children.toArray(children).map(function (column, columnIndex) {
+        return _this3._createColumn({
+          column: column,
+          columnIndex: columnIndex,
+          isScrolling: isScrolling,
+          rowData: rowData,
+          rowIndex: index,
+          scrollbarWidth: scrollbarWidth
+        });
       });
 
-      var a11yProps = {};
+      var className = (0, _classnames2.default)('FlexTable__row', rowClass);
+      var style = _extends({}, rowStyleObject, {
+        height: this._getRowHeight(index),
+        paddingRight: scrollbarWidth
+      });
 
-      if (onRowClick) {
-        a11yProps['aria-label'] = 'row';
-        a11yProps.role = 'row';
-        a11yProps.tabIndex = 0;
-        a11yProps.onClick = function () {
-          return onRowClick(rowIndex);
-        };
-      }
-
-      return _react2.default.createElement(
-        'div',
-        _extends({}, a11yProps, {
-          key: rowIndex,
-          className: (0, _classnames2.default)('FlexTable__row', rowClass),
-          style: {
-            height: this._getRowHeight(rowIndex),
-            paddingRight: scrollbarWidth
-          }
-        }),
-        renderedRow
-      );
+      return rowRenderer({
+        className: className,
+        columns: columns,
+        index: index,
+        isScrolling: isScrolling,
+        onRowClick: onRowClick,
+        onRowDoubleClick: onRowDoubleClick,
+        onRowMouseOver: onRowMouseOver,
+        onRowMouseOut: onRowMouseOut,
+        rowData: rowData,
+        style: style
+      });
     }
 
     /**
@@ -4613,13 +7612,15 @@ var FlexTable = function (_Component) {
   }, {
     key: '_getFlexStyleForColumn',
     value: function _getFlexStyleForColumn(column) {
+      var customStyle = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
       var flexValue = column.props.flexGrow + ' ' + column.props.flexShrink + ' ' + column.props.width + 'px';
 
-      var style = {
+      var style = _extends({}, customStyle, {
         flex: flexValue,
         msFlex: flexValue,
         WebkitFlex: flexValue
-      };
+      });
 
       if (column.props.maxWidth) {
         style.maxWidth = column.props.maxWidth;
@@ -4643,7 +7644,7 @@ var FlexTable = function (_Component) {
       var items = disableHeader ? [] : _react2.default.Children.toArray(children);
 
       return items.map(function (column, index) {
-        return _this4._createHeader(column, index);
+        return _this4._createHeader({ column: column, index: index });
       });
     }
   }, {
@@ -4652,12 +7653,40 @@ var FlexTable = function (_Component) {
       var rowHeight = this.props.rowHeight;
 
 
-      return rowHeight instanceof Function ? rowHeight(rowIndex) : rowHeight;
+      return rowHeight instanceof Function ? rowHeight({ index: rowIndex }) : rowHeight;
+    }
+  }, {
+    key: '_onScroll',
+    value: function _onScroll(_ref7) {
+      var clientHeight = _ref7.clientHeight;
+      var scrollHeight = _ref7.scrollHeight;
+      var scrollTop = _ref7.scrollTop;
+      var onScroll = this.props.onScroll;
+
+
+      onScroll({ clientHeight: clientHeight, scrollHeight: scrollHeight, scrollTop: scrollTop });
+    }
+  }, {
+    key: '_onSectionRendered',
+    value: function _onSectionRendered(_ref8) {
+      var rowOverscanStartIndex = _ref8.rowOverscanStartIndex;
+      var rowOverscanStopIndex = _ref8.rowOverscanStopIndex;
+      var rowStartIndex = _ref8.rowStartIndex;
+      var rowStopIndex = _ref8.rowStopIndex;
+      var onRowsRendered = this.props.onRowsRendered;
+
+
+      onRowsRendered({
+        overscanStartIndex: rowOverscanStartIndex,
+        overscanStopIndex: rowOverscanStopIndex,
+        startIndex: rowStartIndex,
+        stopIndex: rowStopIndex
+      });
     }
   }, {
     key: '_setScrollbarWidth',
     value: function _setScrollbarWidth() {
-      var Grid = (0, _reactDom.findDOMNode)(this.refs.Grid);
+      var Grid = (0, _reactDom.findDOMNode)(this.Grid);
       var clientWidth = Grid.clientWidth || 0;
       var offsetWidth = Grid.offsetWidth || 0;
       var scrollbarWidth = offsetWidth - clientWidth;
@@ -4671,6 +7700,12 @@ var FlexTable = function (_Component) {
 
 FlexTable.propTypes = {
   'aria-label': _react.PropTypes.string,
+
+  /**
+   * Removes fixed height from the scrollingContainer so that the total height
+   * of rows can stretch the window. Intended for use with WindowScroller
+   */
+  autoHeight: _react.PropTypes.bool,
 
   /** One or more FlexColumns describing the data displayed in this row */
   children: function children(props, propName, componentName) {
@@ -4688,6 +7723,18 @@ FlexTable.propTypes = {
   /** Disable rendering the header at all */
   disableHeader: _react.PropTypes.bool,
 
+  /**
+   * Used to estimate the total height of a FlexTable before all of its rows have actually been measured.
+   * The estimated total height is adjusted as rows are rendered.
+   */
+  estimatedRowSize: _react.PropTypes.number.isRequired,
+
+  /** Optional custom CSS class name to attach to inner Grid element. */
+  gridClassName: _react.PropTypes.string,
+
+  /** Optional inline style to attach to inner Grid element. */
+  gridStyle: _react.PropTypes.object,
+
   /** Optional CSS class to apply to all column headers */
   headerClassName: _react.PropTypes.string,
 
@@ -4697,20 +7744,41 @@ FlexTable.propTypes = {
   /** Fixed/available height for out DOM element */
   height: _react.PropTypes.number.isRequired,
 
-  /** Optional renderer to be used in place of table body rows when rowsCount is 0 */
+  /** Optional renderer to be used in place of table body rows when rowCount is 0 */
   noRowsRenderer: _react.PropTypes.func,
 
   /**
   * Optional callback when a column's header is clicked.
-  * (dataKey: string): void
+  * ({ columnData: any, dataKey: string }): void
   */
   onHeaderClick: _react.PropTypes.func,
 
+  /** Optional custom inline style to attach to table header columns. */
+  headerStyle: _react.PropTypes.object,
+
   /**
    * Callback invoked when a user clicks on a table row.
-   * (rowIndex: number): void
+   * ({ index: number }): void
    */
   onRowClick: _react.PropTypes.func,
+
+  /**
+   * Callback invoked when a user double-clicks on a table row.
+   * ({ index: number }): void
+   */
+  onRowDoubleClick: _react.PropTypes.func,
+
+  /**
+   * Callback invoked when the mouse leaves a table row.
+   * ({ index: number }): void
+   */
+  onRowMouseOut: _react.PropTypes.func,
+
+  /**
+   * Callback invoked when a user moves the mouse over a table row.
+   * ({ index: number }): void
+   */
+  onRowMouseOver: _react.PropTypes.func,
 
   /**
    * Callback invoked with information about the slice of rows that were just rendered.
@@ -4729,29 +7797,58 @@ FlexTable.propTypes = {
    * Number of rows to render above/below the visible bounds of the list.
    * These rows can help for smoother scrolling on touch devices.
    */
-  overscanRowsCount: _react.PropTypes.number.isRequired,
+  overscanRowCount: _react.PropTypes.number.isRequired,
 
   /**
    * Optional CSS class to apply to all table rows (including the header row).
    * This property can be a CSS class name (string) or a function that returns a class name.
-   * If a function is provided its signature should be: (rowIndex: number): string
+   * If a function is provided its signature should be: ({ index: number }): string
    */
   rowClassName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
 
   /**
    * Callback responsible for returning a data row given an index.
-   * (index: number): any
+   * ({ index: number }): any
    */
   rowGetter: _react.PropTypes.func.isRequired,
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
-   * (index: number): number
+   * ({ index: number }): number
    */
   rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 
   /** Number of rows in table. */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowCount: _react.PropTypes.number.isRequired,
+
+  /**
+   * Responsible for rendering a table row given an array of columns:
+   * Should implement the following interface: ({
+   *   className: string,
+   *   columns: Array,
+   *   index: number,
+   *   isScrolling: boolean,
+   *   onRowClick: ?Function,
+   *   onRowDoubleClick: ?Function,
+   *   onRowMouseOver: ?Function,
+   *   onRowMouseOut: ?Function,
+   *   rowData: any,
+   *   style: any
+   * }): PropTypes.node
+   */
+  rowRenderer: _react.PropTypes.func,
+
+  /** Optional custom inline style to attach to table rows. */
+  rowStyle: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]).isRequired,
+
+  /** Optional custom CSS class for individual rows */
+  rowWrapperClassName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
+
+  /** Optional custom CSS class for individual rows */
+  rowWrapperStyle: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
+
+  /** See Grid#scrollToAlignment */
+  scrollToAlignment: _react.PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
   scrollToIndex: _react.PropTypes.number,
@@ -4761,7 +7858,7 @@ FlexTable.propTypes = {
 
   /**
    * Sort function to be called if a sortable header is clicked.
-   * (dataKey: string, sortDirection: SortDirection): void
+   * ({ sortBy: string, sortDirection: SortDirection }): void
    */
   sort: _react.PropTypes.func,
 
@@ -4771,12 +7868,20 @@ FlexTable.propTypes = {
   /** FlexTable data is currently sorted in this direction (if it is sorted at all) */
   sortDirection: _react.PropTypes.oneOf([_SortDirection2.default.ASC, _SortDirection2.default.DESC]),
 
+  /** Optional inline style */
+  style: _react.PropTypes.object,
+
+  /** Tab index for focus */
+  tabIndex: _react.PropTypes.number,
+
   /** Width of list */
   width: _react.PropTypes.number.isRequired
 };
 FlexTable.defaultProps = {
   disableHeader: false,
+  estimatedRowSize: 30,
   headerHeight: 0,
+  headerStyle: {},
   noRowsRenderer: function noRowsRenderer() {
     return null;
   },
@@ -4786,10 +7891,14 @@ FlexTable.defaultProps = {
   onScroll: function onScroll() {
     return null;
   },
-  overscanRowsCount: 10
+  overscanRowCount: 10,
+  rowRenderer: _defaultRowRenderer2.default,
+  rowStyle: {},
+  scrollToAlignment: 'auto',
+  style: {}
 };
 exports.default = FlexTable;
-},{"../Grid":53,"./FlexColumn":47,"./SortDirection":49,"classnames":undefined,"react":undefined,"react-addons-shallow-compare":29,"react-dom":undefined}],49:[function(require,module,exports){
+},{"../Grid":72,"./FlexColumn":61,"./SortDirection":63,"./defaultRowRenderer":68,"classnames":undefined,"react":undefined,"react-addons-shallow-compare":30,"react-dom":undefined}],63:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4810,7 +7919,7 @@ var SortDirection = {
 };
 
 exports.default = SortDirection;
-},{}],50:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4849,8 +7958,7 @@ function SortIndicator(_ref) {
       className: classNames,
       width: 18,
       height: 18,
-      viewBox: '0 0 24 24',
-      xmlns: 'http://www.w3.org/2000/svg'
+      viewBox: '0 0 24 24'
     },
     sortDirection === _SortDirection2.default.ASC ? _react2.default.createElement('path', { d: 'M7 14l5-5 5 5z' }) : _react2.default.createElement('path', { d: 'M7 10l5 5 5-5z' }),
     _react2.default.createElement('path', { d: 'M0 0h24v24H0z', fill: 'none' })
@@ -4859,17 +7967,203 @@ function SortIndicator(_ref) {
 SortIndicator.propTypes = {
   sortDirection: _react.PropTypes.oneOf([_SortDirection2.default.ASC, _SortDirection2.default.DESC])
 };
-},{"./SortDirection":49,"classnames":undefined,"react":undefined}],51:[function(require,module,exports){
+},{"./SortDirection":63,"classnames":undefined,"react":undefined}],65:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports.default = undefined;
+exports.default = defaultCellDataGetter;
+
+
+/**
+ * Default accessor for returning a cell value for a given attribute.
+ * This function expects to operate on either a vanilla Object or an Immutable Map.
+ * You should override the column's cellDataGetter if your data is some other type of object.
+ */
+function defaultCellDataGetter(_ref) {
+  var columnData = _ref.columnData;
+  var dataKey = _ref.dataKey;
+  var rowData = _ref.rowData;
+
+  if (rowData.get instanceof Function) {
+    return rowData.get(dataKey);
+  } else {
+    return rowData[dataKey];
+  }
+}
+},{}],66:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = defaultCellRenderer;
+
+
+/**
+ * Default cell renderer that displays an attribute as a simple string
+ * You should override the column's cellRenderer if your data is some other type of object.
+ */
+function defaultCellRenderer(_ref) {
+  var cellData = _ref.cellData;
+  var cellDataKey = _ref.cellDataKey;
+  var columnData = _ref.columnData;
+  var rowData = _ref.rowData;
+  var rowIndex = _ref.rowIndex;
+
+  if (cellData == null) {
+    return '';
+  } else {
+    return String(cellData);
+  }
+}
+},{}],67:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = defaultHeaderRenderer;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _SortIndicator = require('./SortIndicator');
+
+var _SortIndicator2 = _interopRequireDefault(_SortIndicator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default table header renderer.
+ */
+function defaultHeaderRenderer(_ref) {
+  var columnData = _ref.columnData;
+  var dataKey = _ref.dataKey;
+  var disableSort = _ref.disableSort;
+  var label = _ref.label;
+  var sortBy = _ref.sortBy;
+  var sortDirection = _ref.sortDirection;
+
+  var showSortIndicator = sortBy === dataKey;
+  var children = [_react2.default.createElement(
+    'span',
+    {
+      className: 'FlexTable__headerTruncatedText',
+      key: 'label',
+      title: label
+    },
+    label
+  )];
+
+  if (showSortIndicator) {
+    children.push(_react2.default.createElement(_SortIndicator2.default, {
+      key: 'SortIndicator',
+      sortDirection: sortDirection
+    }));
+  }
+
+  return children;
+}
+},{"./SortIndicator":64,"react":undefined}],68:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.default = defaultRowRenderer;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default row renderer for FlexTable.
+ */
+function defaultRowRenderer(_ref) {
+  var className = _ref.className;
+  var columns = _ref.columns;
+  var index = _ref.index;
+  var isScrolling = _ref.isScrolling;
+  var onRowClick = _ref.onRowClick;
+  var onRowDoubleClick = _ref.onRowDoubleClick;
+  var onRowMouseOver = _ref.onRowMouseOver;
+  var onRowMouseOut = _ref.onRowMouseOut;
+  var rowData = _ref.rowData;
+  var style = _ref.style;
+
+  var a11yProps = {};
+
+  if (onRowClick || onRowDoubleClick || onRowMouseOver || onRowMouseOut) {
+    a11yProps['aria-label'] = 'row';
+    a11yProps.role = 'row';
+    a11yProps.tabIndex = 0;
+
+    if (onRowClick) {
+      a11yProps.onClick = function () {
+        return onRowClick({ index: index });
+      };
+    }
+    if (onRowDoubleClick) {
+      a11yProps.onDoubleClick = function () {
+        return onRowDoubleClick({ index: index });
+      };
+    }
+    if (onRowMouseOut) {
+      a11yProps.onMouseOut = function () {
+        return onRowMouseOut({ index: index });
+      };
+    }
+    if (onRowMouseOver) {
+      a11yProps.onMouseOver = function () {
+        return onRowMouseOver({ index: index });
+      };
+    }
+  }
+
+  return _react2.default.createElement(
+    'div',
+    _extends({}, a11yProps, {
+      className: className,
+      style: style
+    }),
+    columns
+  );
+}
+},{"react":undefined}],69:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.SortIndicator = exports.SortDirection = exports.FlexColumn = exports.FlexTable = exports.defaultRowRenderer = exports.defaultHeaderRenderer = exports.defaultCellRenderer = exports.defaultCellDataGetter = exports.default = undefined;
 
 var _FlexTable2 = require('./FlexTable');
 
 var _FlexTable3 = _interopRequireDefault(_FlexTable2);
+
+var _defaultCellDataGetter2 = require('./defaultCellDataGetter');
+
+var _defaultCellDataGetter3 = _interopRequireDefault(_defaultCellDataGetter2);
+
+var _defaultCellRenderer2 = require('./defaultCellRenderer');
+
+var _defaultCellRenderer3 = _interopRequireDefault(_defaultCellRenderer2);
+
+var _defaultHeaderRenderer2 = require('./defaultHeaderRenderer');
+
+var _defaultHeaderRenderer3 = _interopRequireDefault(_defaultHeaderRenderer2);
+
+var _defaultRowRenderer2 = require('./defaultRowRenderer');
+
+var _defaultRowRenderer3 = _interopRequireDefault(_defaultRowRenderer2);
 
 var _FlexColumn2 = require('./FlexColumn');
 
@@ -4886,16 +8180,21 @@ var _SortIndicator3 = _interopRequireDefault(_SortIndicator2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _FlexTable3.default;
+exports.defaultCellDataGetter = _defaultCellDataGetter3.default;
+exports.defaultCellRenderer = _defaultCellRenderer3.default;
+exports.defaultHeaderRenderer = _defaultHeaderRenderer3.default;
+exports.defaultRowRenderer = _defaultRowRenderer3.default;
 exports.FlexTable = _FlexTable3.default;
 exports.FlexColumn = _FlexColumn3.default;
 exports.SortDirection = _SortDirection3.default;
 exports.SortIndicator = _SortIndicator3.default;
-},{"./FlexColumn":47,"./FlexTable":48,"./SortDirection":49,"./SortIndicator":50}],52:[function(require,module,exports){
+},{"./FlexColumn":61,"./FlexTable":62,"./SortDirection":63,"./SortIndicator":64,"./defaultCellDataGetter":65,"./defaultCellRenderer":66,"./defaultHeaderRenderer":67,"./defaultRowRenderer":68}],70:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.DEFAULT_SCROLLING_RESET_TIME_INTERVAL = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -4913,13 +8212,13 @@ var _calculateSizeAndPositionDataAndUpdateScrollOffset = require('./utils/calcul
 
 var _calculateSizeAndPositionDataAndUpdateScrollOffset2 = _interopRequireDefault(_calculateSizeAndPositionDataAndUpdateScrollOffset);
 
+var _ScalingCellSizeAndPositionManager = require('./utils/ScalingCellSizeAndPositionManager');
+
+var _ScalingCellSizeAndPositionManager2 = _interopRequireDefault(_ScalingCellSizeAndPositionManager);
+
 var _createCallbackMemoizer = require('../utils/createCallbackMemoizer');
 
 var _createCallbackMemoizer2 = _interopRequireDefault(_createCallbackMemoizer);
-
-var _getNearestIndex = require('./utils/getNearestIndex');
-
-var _getNearestIndex2 = _interopRequireDefault(_getNearestIndex);
 
 var _getOverscanIndices = require('./utils/getOverscanIndices');
 
@@ -4928,18 +8227,6 @@ var _getOverscanIndices2 = _interopRequireDefault(_getOverscanIndices);
 var _scrollbarSize = require('dom-helpers/util/scrollbarSize');
 
 var _scrollbarSize2 = _interopRequireDefault(_scrollbarSize);
-
-var _getUpdatedOffsetForIndex = require('../utils/getUpdatedOffsetForIndex');
-
-var _getUpdatedOffsetForIndex2 = _interopRequireDefault(_getUpdatedOffsetForIndex);
-
-var _getVisibleCellIndices = require('./utils/getVisibleCellIndices');
-
-var _getVisibleCellIndices2 = _interopRequireDefault(_getVisibleCellIndices);
-
-var _initCellMetadata = require('../utils/initCellMetadata');
-
-var _initCellMetadata2 = _interopRequireDefault(_initCellMetadata);
 
 var _raf = require('raf');
 
@@ -4953,6 +8240,10 @@ var _updateScrollIndexHelper = require('./utils/updateScrollIndexHelper');
 
 var _updateScrollIndexHelper2 = _interopRequireDefault(_updateScrollIndexHelper);
 
+var _defaultCellRangeRenderer = require('./defaultCellRangeRenderer');
+
+var _defaultCellRangeRenderer2 = _interopRequireDefault(_defaultCellRangeRenderer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4965,7 +8256,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
  * This improves performance and makes scrolling smoother.
  */
-var IS_SCROLLING_TIMEOUT = 150;
+var DEFAULT_SCROLLING_RESET_TIME_INTERVAL = exports.DEFAULT_SCROLLING_RESET_TIME_INTERVAL = 150;
 
 /**
  * Controls whether the Grid updates the DOM element's scrollLeft/scrollTop based on the current state or just observes it.
@@ -4987,11 +8278,12 @@ var Grid = function (_Component) {
   function Grid(props, context) {
     _classCallCheck(this, Grid);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Grid).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (Grid.__proto__ || Object.getPrototypeOf(Grid)).call(this, props, context));
 
     _this.state = {
-      computeGridMetadataOnNextUpdate: false,
       isScrolling: false,
+      scrollDirectionHorizontal: _getOverscanIndices.SCROLL_DIRECTION_FIXED,
+      scrollDirectionVertical: _getOverscanIndices.SCROLL_DIRECTION_FIXED,
       scrollLeft: 0,
       scrollTop: 0
     };
@@ -5001,40 +8293,97 @@ var Grid = function (_Component) {
     _this._onScrollMemoizer = (0, _createCallbackMemoizer2.default)(false);
 
     // Bind functions to instance so they don't lose context when passed around
-    _this._computeColumnMetadata = _this._computeColumnMetadata.bind(_this);
-    _this._computeRowMetadata = _this._computeRowMetadata.bind(_this);
+    _this._enablePointerEventsAfterDelayCallback = _this._enablePointerEventsAfterDelayCallback.bind(_this);
     _this._invokeOnGridRenderedHelper = _this._invokeOnGridRenderedHelper.bind(_this);
     _this._onScroll = _this._onScroll.bind(_this);
+    _this._setNextStateCallback = _this._setNextStateCallback.bind(_this);
     _this._updateScrollLeftForScrollToColumn = _this._updateScrollLeftForScrollToColumn.bind(_this);
     _this._updateScrollTopForScrollToRow = _this._updateScrollTopForScrollToRow.bind(_this);
+
+    _this._columnWidthGetter = _this._wrapSizeGetter(props.columnWidth);
+    _this._rowHeightGetter = _this._wrapSizeGetter(props.rowHeight);
+
+    _this._columnSizeAndPositionManager = new _ScalingCellSizeAndPositionManager2.default({
+      cellCount: props.columnCount,
+      cellSizeGetter: function cellSizeGetter(index) {
+        return _this._columnWidthGetter(index);
+      },
+      estimatedCellSize: _this._getEstimatedColumnSize(props)
+    });
+    _this._rowSizeAndPositionManager = new _ScalingCellSizeAndPositionManager2.default({
+      cellCount: props.rowCount,
+      cellSizeGetter: function cellSizeGetter(index) {
+        return _this._rowHeightGetter(index);
+      },
+      estimatedCellSize: _this._getEstimatedRowSize(props)
+    });
+
+    // See defaultCellRangeRenderer() for more information on the usage of this cache
+    _this._cellCache = {};
     return _this;
   }
 
   /**
-   * Forced recompute of row heights and column widths.
-   * This function should be called if dynamic column or row sizes have changed but nothing else has.
-   * Since Grid only receives :columnsCount and :rowsCount it has no way of detecting when the underlying data changes.
+   * Pre-measure all columns and rows in a Grid.
+   * Typically cells are only measured as needed and estimated sizes are used for cells that have not yet been measured.
+   * This method ensures that the next call to getTotalSize() returns an exact size (as opposed to just an estimated one).
    */
 
 
   _createClass(Grid, [{
+    key: 'measureAllCells',
+    value: function measureAllCells() {
+      var _props = this.props;
+      var columnCount = _props.columnCount;
+      var rowCount = _props.rowCount;
+
+
+      this._columnSizeAndPositionManager.getSizeAndPositionOfCell(columnCount - 1);
+      this._rowSizeAndPositionManager.getSizeAndPositionOfCell(rowCount - 1);
+    }
+
+    /**
+     * Forced recompute of row heights and column widths.
+     * This function should be called if dynamic column or row sizes have changed but nothing else has.
+     * Since Grid only receives :columnCount and :rowCount it has no way of detecting when the underlying data changes.
+     */
+
+  }, {
     key: 'recomputeGridSize',
     value: function recomputeGridSize() {
-      this.setState({
-        computeGridMetadataOnNextUpdate: true
-      });
+      var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+      var _ref$columnIndex = _ref.columnIndex;
+      var columnIndex = _ref$columnIndex === undefined ? 0 : _ref$columnIndex;
+      var _ref$rowIndex = _ref.rowIndex;
+      var rowIndex = _ref$rowIndex === undefined ? 0 : _ref$rowIndex;
+
+      this._columnSizeAndPositionManager.resetCell(columnIndex);
+      this._rowSizeAndPositionManager.resetCell(rowIndex);
+
+      // Clear cell cache in case we are scrolling;
+      // Invalid row heights likely mean invalid cached content as well.
+      this._cellCache = {};
+
+      this.forceUpdate();
     }
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _props = this.props;
-      var scrollLeft = _props.scrollLeft;
-      var scrollToColumn = _props.scrollToColumn;
-      var scrollTop = _props.scrollTop;
-      var scrollToRow = _props.scrollToRow;
+      var _props2 = this.props;
+      var scrollLeft = _props2.scrollLeft;
+      var scrollToColumn = _props2.scrollToColumn;
+      var scrollTop = _props2.scrollTop;
+      var scrollToRow = _props2.scrollToRow;
 
+      // If this component was first rendered server-side, scrollbar size will be undefined.
+      // In that event we need to remeasure.
 
-      this._scrollbarSize = (0, _scrollbarSize2.default)();
+      if (!this._scrollbarSizeMeasured) {
+        this._scrollbarSize = (0, _scrollbarSize2.default)();
+        this._scrollbarSizeMeasured = true;
+        this.setState({});
+      }
 
       if (scrollLeft >= 0 || scrollTop >= 0) {
         this._setScrollPosition({ scrollLeft: scrollLeft, scrollTop: scrollTop });
@@ -5052,8 +8401,8 @@ var Grid = function (_Component) {
       this._invokeOnScrollMemoizer({
         scrollLeft: scrollLeft || 0,
         scrollTop: scrollTop || 0,
-        totalColumnsWidth: this._getTotalColumnsWidth(),
-        totalRowsHeight: this._getTotalRowsHeight()
+        totalColumnsWidth: this._columnSizeAndPositionManager.getTotalSize(),
+        totalRowsHeight: this._rowSizeAndPositionManager.getTotalSize()
       });
     }
 
@@ -5068,46 +8417,54 @@ var Grid = function (_Component) {
     value: function componentDidUpdate(prevProps, prevState) {
       var _this2 = this;
 
-      var _props2 = this.props;
-      var columnsCount = _props2.columnsCount;
-      var columnWidth = _props2.columnWidth;
-      var height = _props2.height;
-      var rowHeight = _props2.rowHeight;
-      var rowsCount = _props2.rowsCount;
-      var scrollToColumn = _props2.scrollToColumn;
-      var scrollToRow = _props2.scrollToRow;
-      var width = _props2.width;
+      var _props3 = this.props;
+      var autoHeight = _props3.autoHeight;
+      var columnCount = _props3.columnCount;
+      var height = _props3.height;
+      var rowCount = _props3.rowCount;
+      var scrollToAlignment = _props3.scrollToAlignment;
+      var scrollToColumn = _props3.scrollToColumn;
+      var scrollToRow = _props3.scrollToRow;
+      var width = _props3.width;
       var _state = this.state;
       var scrollLeft = _state.scrollLeft;
       var scrollPositionChangeReason = _state.scrollPositionChangeReason;
       var scrollTop = _state.scrollTop;
+
+      // Handle edge case where column or row count has only just increased over 0.
+      // In this case we may have to restore a previously-specified scroll offset.
+      // For more info see bvaughn/react-virtualized/issues/218
+
+      var columnOrRowCountJustIncreasedFromZero = columnCount > 0 && prevProps.columnCount === 0 || rowCount > 0 && prevProps.rowCount === 0;
 
       // Make sure requested changes to :scrollLeft or :scrollTop get applied.
       // Assigning to scrollLeft/scrollTop tells the browser to interrupt any running scroll animations,
       // And to discard any pending async changes to the scroll position that may have happened in the meantime (e.g. on a separate scrolling thread).
       // So we only set these when we require an adjustment of the scroll position.
       // See issue #2 for more information.
-
       if (scrollPositionChangeReason === SCROLL_POSITION_CHANGE_REASONS.REQUESTED) {
-        if (scrollLeft >= 0 && scrollLeft !== prevState.scrollLeft && scrollLeft !== this.refs.scrollingContainer.scrollLeft) {
-          this.refs.scrollingContainer.scrollLeft = scrollLeft;
+        if (scrollLeft >= 0 && (scrollLeft !== prevState.scrollLeft && scrollLeft !== this._scrollingContainer.scrollLeft || columnOrRowCountJustIncreasedFromZero)) {
+          this._scrollingContainer.scrollLeft = scrollLeft;
         }
-        if (scrollTop >= 0 && scrollTop !== prevState.scrollTop && scrollTop !== this.refs.scrollingContainer.scrollTop) {
-          this.refs.scrollingContainer.scrollTop = scrollTop;
+
+        // @TRICKY :autoHeight property instructs Grid to leave :scrollTop management to an external HOC (eg WindowScroller).
+        // In this case we should avoid checking scrollingContainer.scrollTop since it forces layout/flow.
+        if (!autoHeight && scrollTop >= 0 && (scrollTop !== prevState.scrollTop && scrollTop !== this._scrollingContainer.scrollTop || columnOrRowCountJustIncreasedFromZero)) {
+          this._scrollingContainer.scrollTop = scrollTop;
         }
       }
 
       // Update scroll offsets if the current :scrollToColumn or :scrollToRow values requires it
       // @TODO Do we also need this check or can the one in componentWillUpdate() suffice?
       (0, _updateScrollIndexHelper2.default)({
-        cellCount: columnsCount,
-        cellMetadata: this._columnMetadata,
-        cellSize: columnWidth,
-        previousCellsCount: prevProps.columnsCount,
+        cellSizeAndPositionManager: this._columnSizeAndPositionManager,
+        previousCellsCount: prevProps.columnCount,
         previousCellSize: prevProps.columnWidth,
+        previousScrollToAlignment: prevProps.scrollToAlignment,
         previousScrollToIndex: prevProps.scrollToColumn,
         previousSize: prevProps.width,
         scrollOffset: scrollLeft,
+        scrollToAlignment: scrollToAlignment,
         scrollToIndex: scrollToColumn,
         size: width,
         updateScrollIndexCallback: function updateScrollIndexCallback(scrollToColumn) {
@@ -5115,14 +8472,14 @@ var Grid = function (_Component) {
         }
       });
       (0, _updateScrollIndexHelper2.default)({
-        cellCount: rowsCount,
-        cellMetadata: this._rowMetadata,
-        cellSize: rowHeight,
-        previousCellsCount: prevProps.rowsCount,
+        cellSizeAndPositionManager: this._rowSizeAndPositionManager,
+        previousCellsCount: prevProps.rowCount,
         previousCellSize: prevProps.rowHeight,
+        previousScrollToAlignment: prevProps.scrollToAlignment,
         previousScrollToIndex: prevProps.scrollToRow,
         previousSize: prevProps.height,
         scrollOffset: scrollTop,
+        scrollToAlignment: scrollToAlignment,
         scrollToIndex: scrollToRow,
         size: height,
         updateScrollIndexCallback: function updateScrollIndexCallback(scrollToRow) {
@@ -5136,8 +8493,17 @@ var Grid = function (_Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      this._computeColumnMetadata(this.props);
-      this._computeRowMetadata(this.props);
+      // If this component is being rendered server-side, getScrollbarSize() will return undefined.
+      // We handle this case in componentDidMount()
+      this._scrollbarSize = (0, _scrollbarSize2.default)();
+      if (this._scrollbarSize === undefined) {
+        this._scrollbarSizeMeasured = false;
+        this._scrollbarSize = 0;
+      } else {
+        this._scrollbarSizeMeasured = true;
+      }
+
+      this._calculateChildrenToRender();
     }
   }, {
     key: 'componentWillUnmount',
@@ -5164,7 +8530,7 @@ var Grid = function (_Component) {
     value: function componentWillUpdate(nextProps, nextState) {
       var _this3 = this;
 
-      if (nextProps.columnsCount === 0 && nextState.scrollLeft !== 0 || nextProps.rowsCount === 0 && nextState.scrollTop !== 0) {
+      if (nextProps.columnCount === 0 && nextState.scrollLeft !== 0 || nextProps.rowCount === 0 && nextState.scrollTop !== 0) {
         this._setScrollPosition({
           scrollLeft: 0,
           scrollTop: 0
@@ -5176,14 +8542,27 @@ var Grid = function (_Component) {
         });
       }
 
+      this._columnWidthGetter = this._wrapSizeGetter(nextProps.columnWidth);
+      this._rowHeightGetter = this._wrapSizeGetter(nextProps.rowHeight);
+
+      this._columnSizeAndPositionManager.configure({
+        cellCount: nextProps.columnCount,
+        estimatedCellSize: this._getEstimatedColumnSize(nextProps)
+      });
+      this._rowSizeAndPositionManager.configure({
+        cellCount: nextProps.rowCount,
+        estimatedCellSize: this._getEstimatedRowSize(nextProps)
+      });
+
       // Update scroll offsets if the size or number of cells have changed, invalidating the previous value
       (0, _calculateSizeAndPositionDataAndUpdateScrollOffset2.default)({
-        cellCount: this.props.columnsCount,
+        cellCount: this.props.columnCount,
         cellSize: this.props.columnWidth,
-        computeMetadataCallback: this._computeColumnMetadata,
+        computeMetadataCallback: function computeMetadataCallback() {
+          return _this3._columnSizeAndPositionManager.resetCell(0);
+        },
         computeMetadataCallbackProps: nextProps,
-        computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
-        nextCellsCount: nextProps.columnsCount,
+        nextCellsCount: nextProps.columnCount,
         nextCellSize: nextProps.columnWidth,
         nextScrollToIndex: nextProps.scrollToColumn,
         scrollToIndex: this.props.scrollToColumn,
@@ -5192,12 +8571,13 @@ var Grid = function (_Component) {
         }
       });
       (0, _calculateSizeAndPositionDataAndUpdateScrollOffset2.default)({
-        cellCount: this.props.rowsCount,
+        cellCount: this.props.rowCount,
         cellSize: this.props.rowHeight,
-        computeMetadataCallback: this._computeRowMetadata,
+        computeMetadataCallback: function computeMetadataCallback() {
+          return _this3._rowSizeAndPositionManager.resetCell(0);
+        },
         computeMetadataCallbackProps: nextProps,
-        computeMetadataOnNextUpdate: nextState.computeGridMetadataOnNextUpdate,
-        nextCellsCount: nextProps.rowsCount,
+        nextCellsCount: nextProps.rowCount,
         nextCellSize: nextProps.rowHeight,
         nextScrollToIndex: nextProps.scrollToRow,
         scrollToIndex: this.props.scrollToRow,
@@ -5206,128 +8586,79 @@ var Grid = function (_Component) {
         }
       });
 
-      this.setState({
-        computeGridMetadataOnNextUpdate: false
-      });
+      this._calculateChildrenToRender(nextProps, nextState);
     }
   }, {
     key: 'render',
     value: function render() {
-      var _props3 = this.props;
-      var className = _props3.className;
-      var columnsCount = _props3.columnsCount;
-      var height = _props3.height;
-      var noContentRenderer = _props3.noContentRenderer;
-      var overscanColumnsCount = _props3.overscanColumnsCount;
-      var overscanRowsCount = _props3.overscanRowsCount;
-      var renderCell = _props3.renderCell;
-      var renderCellRanges = _props3.renderCellRanges;
-      var rowsCount = _props3.rowsCount;
-      var width = _props3.width;
-      var _state2 = this.state;
-      var isScrolling = _state2.isScrolling;
-      var scrollLeft = _state2.scrollLeft;
-      var scrollTop = _state2.scrollTop;
+      var _this4 = this;
 
+      var _props4 = this.props;
+      var autoContainerWidth = _props4.autoContainerWidth;
+      var autoHeight = _props4.autoHeight;
+      var className = _props4.className;
+      var height = _props4.height;
+      var noContentRenderer = _props4.noContentRenderer;
+      var style = _props4.style;
+      var tabIndex = _props4.tabIndex;
+      var width = _props4.width;
+      var isScrolling = this.state.isScrolling;
 
-      var childrenToDisplay = [];
-
-      // Render only enough columns and rows to cover the visible area of the grid.
-      if (height > 0 && width > 0) {
-        var visibleColumnIndices = (0, _getVisibleCellIndices2.default)({
-          cellMetadata: this._columnMetadata,
-          containerSize: width,
-          currentOffset: scrollLeft
-        });
-
-        var visibleRowIndices = (0, _getVisibleCellIndices2.default)({
-          cellMetadata: this._rowMetadata,
-          containerSize: height,
-          currentOffset: scrollTop
-        });
-
-        // Store for _invokeOnGridRenderedHelper()
-        this._renderedColumnStartIndex = visibleColumnIndices.start;
-        this._renderedColumnStopIndex = visibleColumnIndices.stop;
-        this._renderedRowStartIndex = visibleRowIndices.start;
-        this._renderedRowStopIndex = visibleRowIndices.stop;
-
-        var overscanColumnIndices = (0, _getOverscanIndices2.default)({
-          cellCount: columnsCount,
-          overscanCellsCount: overscanColumnsCount,
-          startIndex: this._renderedColumnStartIndex,
-          stopIndex: this._renderedColumnStopIndex
-        });
-
-        var overscanRowIndices = (0, _getOverscanIndices2.default)({
-          cellCount: rowsCount,
-          overscanCellsCount: overscanRowsCount,
-          startIndex: this._renderedRowStartIndex,
-          stopIndex: this._renderedRowStopIndex
-        });
-
-        // Store for _invokeOnGridRenderedHelper()
-        this._columnStartIndex = overscanColumnIndices.overscanStartIndex;
-        this._columnStopIndex = overscanColumnIndices.overscanStopIndex;
-        this._rowStartIndex = overscanRowIndices.overscanStartIndex;
-        this._rowStopIndex = overscanRowIndices.overscanStopIndex;
-
-        childrenToDisplay = renderCellRanges({
-          columnMetadata: this._columnMetadata,
-          columnStartIndex: this._columnStartIndex,
-          columnStopIndex: this._columnStopIndex,
-          renderCell: renderCell,
-          rowMetadata: this._rowMetadata,
-          rowStartIndex: this._rowStartIndex,
-          rowStopIndex: this._rowStopIndex
-        });
-      }
 
       var gridStyle = {
-        height: height,
+        height: autoHeight ? 'auto' : height,
         width: width
       };
 
-      var totalColumnsWidth = this._getTotalColumnsWidth();
-      var totalRowsHeight = this._getTotalRowsHeight();
+      var totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize();
+      var totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize();
 
       // Force browser to hide scrollbars when we know they aren't necessary.
       // Otherwise once scrollbars appear they may not disappear again.
       // For more info see issue #116
-      if (totalColumnsWidth <= width) {
-        gridStyle.overflowX = 'hidden';
-      }
+      var verticalScrollBarSize = totalRowsHeight > height ? this._scrollbarSize : 0;
+      var horizontalScrollBarSize = totalColumnsWidth > width ? this._scrollbarSize : 0;
 
-      if (totalRowsHeight <= height) {
-        gridStyle.overflowY = 'hidden';
-      }
+      // Also explicitly init styles to 'auto' if scrollbars are required.
+      // This works around an obscure edge case where external CSS styles have not yet been loaded,
+      // But an initial scroll index of offset is set as an external prop.
+      // Without this style, Grid would render the correct range of cells but would NOT update its internal offset.
+      // This was originally reported via clauderic/react-infinite-calendar/issues/23
+      gridStyle.overflowX = totalColumnsWidth + verticalScrollBarSize <= width ? 'hidden' : 'auto';
+      gridStyle.overflowY = totalRowsHeight + horizontalScrollBarSize <= height ? 'hidden' : 'auto';
+
+      var childrenToDisplay = this._childrenToDisplay;
+
+      var showNoContentRenderer = childrenToDisplay.length === 0 && height > 0 && width > 0;
 
       return _react2.default.createElement(
         'div',
         {
-          ref: 'scrollingContainer',
+          ref: function ref(_ref2) {
+            _this4._scrollingContainer = _ref2;
+          },
           'aria-label': this.props['aria-label'],
           className: (0, _classnames2.default)('Grid', className),
           onScroll: this._onScroll,
           role: 'grid',
-          style: gridStyle,
-          tabIndex: 0
+          style: _extends({}, gridStyle, style),
+          tabIndex: tabIndex
         },
         childrenToDisplay.length > 0 && _react2.default.createElement(
           'div',
           {
             className: 'Grid__innerScrollContainer',
             style: {
-              width: totalColumnsWidth,
+              width: autoContainerWidth ? 'auto' : totalColumnsWidth,
               height: totalRowsHeight,
               maxWidth: totalColumnsWidth,
               maxHeight: totalRowsHeight,
-              pointerEvents: isScrolling ? 'none' : 'auto'
+              pointerEvents: isScrolling ? 'none' : ''
             }
           },
           childrenToDisplay
         ),
-        childrenToDisplay.length === 0 && noContentRenderer()
+        showNoContentRenderer && noContentRenderer()
       );
     }
   }, {
@@ -5339,28 +8670,95 @@ var Grid = function (_Component) {
     /* ---------------------------- Helper methods ---------------------------- */
 
   }, {
-    key: '_computeColumnMetadata',
-    value: function _computeColumnMetadata(props) {
-      var columnsCount = props.columnsCount;
-      var columnWidth = props.columnWidth;
+    key: '_calculateChildrenToRender',
+    value: function _calculateChildrenToRender() {
+      var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+      var state = arguments.length <= 1 || arguments[1] === undefined ? this.state : arguments[1];
+      var cellClassName = props.cellClassName;
+      var cellRenderer = props.cellRenderer;
+      var cellRangeRenderer = props.cellRangeRenderer;
+      var cellStyle = props.cellStyle;
+      var columnCount = props.columnCount;
+      var height = props.height;
+      var overscanColumnCount = props.overscanColumnCount;
+      var overscanRowCount = props.overscanRowCount;
+      var rowCount = props.rowCount;
+      var width = props.width;
+      var isScrolling = state.isScrolling;
+      var scrollDirectionHorizontal = state.scrollDirectionHorizontal;
+      var scrollDirectionVertical = state.scrollDirectionVertical;
+      var scrollLeft = state.scrollLeft;
+      var scrollTop = state.scrollTop;
 
 
-      this._columnMetadata = (0, _initCellMetadata2.default)({
-        cellCount: columnsCount,
-        size: columnWidth
-      });
-    }
-  }, {
-    key: '_computeRowMetadata',
-    value: function _computeRowMetadata(props) {
-      var rowHeight = props.rowHeight;
-      var rowsCount = props.rowsCount;
+      this._childrenToDisplay = [];
 
+      // Render only enough columns and rows to cover the visible area of the grid.
+      if (height > 0 && width > 0) {
+        var visibleColumnIndices = this._columnSizeAndPositionManager.getVisibleCellRange({
+          containerSize: width,
+          offset: scrollLeft
+        });
+        var visibleRowIndices = this._rowSizeAndPositionManager.getVisibleCellRange({
+          containerSize: height,
+          offset: scrollTop
+        });
 
-      this._rowMetadata = (0, _initCellMetadata2.default)({
-        cellCount: rowsCount,
-        size: rowHeight
-      });
+        var horizontalOffsetAdjustment = this._columnSizeAndPositionManager.getOffsetAdjustment({
+          containerSize: width,
+          offset: scrollLeft
+        });
+        var verticalOffsetAdjustment = this._rowSizeAndPositionManager.getOffsetAdjustment({
+          containerSize: height,
+          offset: scrollTop
+        });
+
+        // Store for _invokeOnGridRenderedHelper()
+        this._renderedColumnStartIndex = visibleColumnIndices.start;
+        this._renderedColumnStopIndex = visibleColumnIndices.stop;
+        this._renderedRowStartIndex = visibleRowIndices.start;
+        this._renderedRowStopIndex = visibleRowIndices.stop;
+
+        var overscanColumnIndices = (0, _getOverscanIndices2.default)({
+          cellCount: columnCount,
+          overscanCellsCount: overscanColumnCount,
+          scrollDirection: scrollDirectionHorizontal,
+          startIndex: this._renderedColumnStartIndex,
+          stopIndex: this._renderedColumnStopIndex
+        });
+
+        var overscanRowIndices = (0, _getOverscanIndices2.default)({
+          cellCount: rowCount,
+          overscanCellsCount: overscanRowCount,
+          scrollDirection: scrollDirectionVertical,
+          startIndex: this._renderedRowStartIndex,
+          stopIndex: this._renderedRowStopIndex
+        });
+
+        // Store for _invokeOnGridRenderedHelper()
+        this._columnStartIndex = overscanColumnIndices.overscanStartIndex;
+        this._columnStopIndex = overscanColumnIndices.overscanStopIndex;
+        this._rowStartIndex = overscanRowIndices.overscanStartIndex;
+        this._rowStopIndex = overscanRowIndices.overscanStopIndex;
+
+        this._childrenToDisplay = cellRangeRenderer({
+          cellCache: this._cellCache,
+          cellClassName: this._wrapCellClassNameGetter(cellClassName),
+          cellRenderer: cellRenderer,
+          cellStyle: this._wrapCellStyleGetter(cellStyle),
+          columnSizeAndPositionManager: this._columnSizeAndPositionManager,
+          columnStartIndex: this._columnStartIndex,
+          columnStopIndex: this._columnStopIndex,
+          horizontalOffsetAdjustment: horizontalOffsetAdjustment,
+          isScrolling: isScrolling,
+          rowSizeAndPositionManager: this._rowSizeAndPositionManager,
+          rowStartIndex: this._rowStartIndex,
+          rowStopIndex: this._rowStopIndex,
+          scrollLeft: scrollLeft,
+          scrollTop: scrollTop,
+          verticalOffsetAdjustment: verticalOffsetAdjustment
+        });
+      }
     }
 
     /**
@@ -5372,38 +8770,38 @@ var Grid = function (_Component) {
   }, {
     key: '_enablePointerEventsAfterDelay',
     value: function _enablePointerEventsAfterDelay() {
-      var _this4 = this;
+      var scrollingResetTimeInterval = this.props.scrollingResetTimeInterval;
+
 
       if (this._disablePointerEventsTimeoutId) {
         clearTimeout(this._disablePointerEventsTimeoutId);
       }
 
-      this._disablePointerEventsTimeoutId = setTimeout(function () {
-        _this4._disablePointerEventsTimeoutId = null;
-        _this4.setState({
-          isScrolling: false
-        });
-      }, IS_SCROLLING_TIMEOUT);
+      this._disablePointerEventsTimeoutId = setTimeout(this._enablePointerEventsAfterDelayCallback, scrollingResetTimeInterval);
     }
   }, {
-    key: '_getTotalColumnsWidth',
-    value: function _getTotalColumnsWidth() {
-      if (this._columnMetadata.length === 0) {
-        return 0;
-      }
+    key: '_enablePointerEventsAfterDelayCallback',
+    value: function _enablePointerEventsAfterDelayCallback() {
+      this._disablePointerEventsTimeoutId = null;
 
-      var datum = this._columnMetadata[this._columnMetadata.length - 1];
-      return datum.offset + datum.size;
+      // Throw away cell cache once scrolling is complete
+      this._cellCache = {};
+
+      this.setState({
+        isScrolling: false,
+        scrollDirectionHorizontal: _getOverscanIndices.SCROLL_DIRECTION_FIXED,
+        scrollDirectionVertical: _getOverscanIndices.SCROLL_DIRECTION_FIXED
+      });
     }
   }, {
-    key: '_getTotalRowsHeight',
-    value: function _getTotalRowsHeight() {
-      if (this._rowMetadata.length === 0) {
-        return 0;
-      }
-
-      var datum = this._rowMetadata[this._rowMetadata.length - 1];
-      return datum.offset + datum.size;
+    key: '_getEstimatedColumnSize',
+    value: function _getEstimatedColumnSize(props) {
+      return typeof props.columnWidth === 'number' ? props.columnWidth : props.estimatedColumnSize;
+    }
+  }, {
+    key: '_getEstimatedRowSize',
+    value: function _getEstimatedRowSize(props) {
+      return typeof props.rowHeight === 'number' ? props.rowHeight : props.estimatedRowSize;
     }
   }, {
     key: '_invokeOnGridRenderedHelper',
@@ -5427,22 +8825,22 @@ var Grid = function (_Component) {
     }
   }, {
     key: '_invokeOnScrollMemoizer',
-    value: function _invokeOnScrollMemoizer(_ref) {
+    value: function _invokeOnScrollMemoizer(_ref3) {
       var _this5 = this;
 
-      var scrollLeft = _ref.scrollLeft;
-      var scrollTop = _ref.scrollTop;
-      var totalColumnsWidth = _ref.totalColumnsWidth;
-      var totalRowsHeight = _ref.totalRowsHeight;
+      var scrollLeft = _ref3.scrollLeft;
+      var scrollTop = _ref3.scrollTop;
+      var totalColumnsWidth = _ref3.totalColumnsWidth;
+      var totalRowsHeight = _ref3.totalRowsHeight;
 
       this._onScrollMemoizer({
-        callback: function callback(_ref2) {
-          var scrollLeft = _ref2.scrollLeft;
-          var scrollTop = _ref2.scrollTop;
-          var _props4 = _this5.props;
-          var height = _props4.height;
-          var onScroll = _props4.onScroll;
-          var width = _props4.width;
+        callback: function callback(_ref4) {
+          var scrollLeft = _ref4.scrollLeft;
+          var scrollTop = _ref4.scrollTop;
+          var _props5 = _this5.props;
+          var height = _props5.height;
+          var onScroll = _props5.onScroll;
+          var width = _props5.width;
 
 
           onScroll({
@@ -5470,22 +8868,27 @@ var Grid = function (_Component) {
   }, {
     key: '_setNextState',
     value: function _setNextState(state) {
-      var _this6 = this;
+      this._nextState = state;
 
-      if (this._setNextStateAnimationFrameId) {
-        _raf2.default.cancel(this._setNextStateAnimationFrameId);
+      if (!this._setNextStateAnimationFrameId) {
+        this._setNextStateAnimationFrameId = (0, _raf2.default)(this._setNextStateCallback);
       }
+    }
+  }, {
+    key: '_setNextStateCallback',
+    value: function _setNextStateCallback() {
+      var state = this._nextState;
 
-      this._setNextStateAnimationFrameId = (0, _raf2.default)(function () {
-        _this6._setNextStateAnimationFrameId = null;
-        _this6.setState(state);
-      });
+      this._setNextStateAnimationFrameId = null;
+      this._nextState = null;
+
+      this.setState(state);
     }
   }, {
     key: '_setScrollPosition',
-    value: function _setScrollPosition(_ref3) {
-      var scrollLeft = _ref3.scrollLeft;
-      var scrollTop = _ref3.scrollTop;
+    value: function _setScrollPosition(_ref5) {
+      var scrollLeft = _ref5.scrollLeft;
+      var scrollTop = _ref5.scrollTop;
 
       var newState = {
         scrollPositionChangeReason: SCROLL_POSITION_CHANGE_REASONS.REQUESTED
@@ -5504,36 +8907,47 @@ var Grid = function (_Component) {
       }
     }
   }, {
+    key: '_wrapCellClassNameGetter',
+    value: function _wrapCellClassNameGetter(className) {
+      return this._wrapPropertyGetter(className);
+    }
+  }, {
+    key: '_wrapCellStyleGetter',
+    value: function _wrapCellStyleGetter(style) {
+      return this._wrapPropertyGetter(style);
+    }
+  }, {
+    key: '_wrapPropertyGetter',
+    value: function _wrapPropertyGetter(value) {
+      return value instanceof Function ? value : function () {
+        return value;
+      };
+    }
+  }, {
+    key: '_wrapSizeGetter',
+    value: function _wrapSizeGetter(size) {
+      return this._wrapPropertyGetter(size);
+    }
+  }, {
     key: '_updateScrollLeftForScrollToColumn',
     value: function _updateScrollLeftForScrollToColumn() {
-      var props = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-      var state = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-      var _ref4 = props || this.props;
-
-      var columnsCount = _ref4.columnsCount;
-      var scrollToColumn = _ref4.scrollToColumn;
-      var width = _ref4.width;
-
-      var _ref5 = state || this.state;
-
-      var scrollLeft = _ref5.scrollLeft;
+      var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+      var state = arguments.length <= 1 || arguments[1] === undefined ? this.state : arguments[1];
+      var columnCount = props.columnCount;
+      var scrollToAlignment = props.scrollToAlignment;
+      var scrollToColumn = props.scrollToColumn;
+      var width = props.width;
+      var scrollLeft = state.scrollLeft;
 
 
-      if (scrollToColumn >= 0 && columnsCount > 0) {
-        var targetIndex = (0, _getNearestIndex2.default)({
-          cellCount: this._columnMetadata.length,
-          targetIndex: scrollToColumn
-        });
+      if (scrollToColumn >= 0 && columnCount > 0) {
+        var targetIndex = Math.max(0, Math.min(columnCount - 1, scrollToColumn));
 
-        var columnMetadata = this._columnMetadata[targetIndex];
-
-        var calculatedScrollLeft = (0, _getUpdatedOffsetForIndex2.default)({
-          cellOffset: columnMetadata.offset,
-          cellSize: columnMetadata.size,
+        var calculatedScrollLeft = this._columnSizeAndPositionManager.getUpdatedOffsetForIndex({
+          align: scrollToAlignment,
           containerSize: width,
           currentOffset: scrollLeft,
-          targetIndex: scrollToColumn
+          targetIndex: targetIndex
         });
 
         if (scrollLeft !== calculatedScrollLeft) {
@@ -5546,34 +8960,23 @@ var Grid = function (_Component) {
   }, {
     key: '_updateScrollTopForScrollToRow',
     value: function _updateScrollTopForScrollToRow() {
-      var props = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-      var state = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-      var _ref6 = props || this.props;
-
-      var height = _ref6.height;
-      var rowsCount = _ref6.rowsCount;
-      var scrollToRow = _ref6.scrollToRow;
-
-      var _ref7 = state || this.state;
-
-      var scrollTop = _ref7.scrollTop;
+      var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+      var state = arguments.length <= 1 || arguments[1] === undefined ? this.state : arguments[1];
+      var height = props.height;
+      var rowCount = props.rowCount;
+      var scrollToAlignment = props.scrollToAlignment;
+      var scrollToRow = props.scrollToRow;
+      var scrollTop = state.scrollTop;
 
 
-      if (scrollToRow >= 0 && rowsCount > 0) {
-        var targetIndex = (0, _getNearestIndex2.default)({
-          cellCount: this._rowMetadata.length,
-          targetIndex: scrollToRow
-        });
+      if (scrollToRow >= 0 && rowCount > 0) {
+        var targetIndex = Math.max(0, Math.min(rowCount - 1, scrollToRow));
 
-        var rowMetadata = this._rowMetadata[targetIndex];
-
-        var calculatedScrollTop = (0, _getUpdatedOffsetForIndex2.default)({
-          cellOffset: rowMetadata.offset,
-          cellSize: rowMetadata.size,
+        var calculatedScrollTop = this._rowSizeAndPositionManager.getUpdatedOffsetForIndex({
+          align: scrollToAlignment,
           containerSize: height,
           currentOffset: scrollTop,
-          targetIndex: scrollToRow
+          targetIndex: targetIndex
         });
 
         if (scrollTop !== calculatedScrollTop) {
@@ -5589,7 +8992,7 @@ var Grid = function (_Component) {
       // In certain edge-cases React dispatches an onScroll event with an invalid target.scrollLeft / target.scrollTop.
       // This invalid event can be detected by comparing event.target to this component's scrollable DOM element.
       // See issue #404 for more information.
-      if (event.target !== this.refs.scrollingContainer) {
+      if (event.target !== this._scrollingContainer) {
         return;
       }
 
@@ -5600,15 +9003,15 @@ var Grid = function (_Component) {
       // Gradually converging on a scrollTop that is within the bounds of the new, smaller height.
       // This causes a series of rapid renders that is slow for long lists.
       // We can avoid that by doing some simple bounds checking to ensure that scrollTop never exceeds the total height.
-      var _props5 = this.props;
-      var height = _props5.height;
-      var width = _props5.width;
+      var _props6 = this.props;
+      var height = _props6.height;
+      var width = _props6.width;
 
       var scrollbarSize = this._scrollbarSize;
-      var totalRowsHeight = this._getTotalRowsHeight();
-      var totalColumnsWidth = this._getTotalColumnsWidth();
-      var scrollLeft = Math.min(totalColumnsWidth - width + scrollbarSize, event.target.scrollLeft);
-      var scrollTop = Math.min(totalRowsHeight - height + scrollbarSize, event.target.scrollTop);
+      var totalRowsHeight = this._rowSizeAndPositionManager.getTotalSize();
+      var totalColumnsWidth = this._columnSizeAndPositionManager.getTotalSize();
+      var scrollLeft = Math.min(Math.max(0, totalColumnsWidth - width + scrollbarSize), event.target.scrollLeft);
+      var scrollTop = Math.min(Math.max(0, totalRowsHeight - height + scrollbarSize), event.target.scrollTop);
 
       // Certain devices (like Apple touchpad) rapid-fire duplicate events.
       // Don't force a re-render if this is the case.
@@ -5621,6 +9024,10 @@ var Grid = function (_Component) {
         // For more information see https://github.com/bvaughn/react-virtualized/pull/124
         var scrollPositionChangeReason = event.cancelable ? SCROLL_POSITION_CHANGE_REASONS.OBSERVED : SCROLL_POSITION_CHANGE_REASONS.REQUESTED;
 
+        // Track scrolling direction so we can more efficiently overscan rows to reduce empty space around the edges while scrolling.
+        var scrollDirectionVertical = scrollTop > this.state.scrollTop ? _getOverscanIndices.SCROLL_DIRECTION_FORWARD : _getOverscanIndices.SCROLL_DIRECTION_BACKWARD;
+        var scrollDirectionHorizontal = scrollLeft > this.state.scrollLeft ? _getOverscanIndices.SCROLL_DIRECTION_FORWARD : _getOverscanIndices.SCROLL_DIRECTION_BACKWARD;
+
         if (!this.state.isScrolling) {
           this.setState({
             isScrolling: true
@@ -5629,6 +9036,8 @@ var Grid = function (_Component) {
 
         this._setNextState({
           isScrolling: true,
+          scrollDirectionHorizontal: scrollDirectionHorizontal,
+          scrollDirectionVertical: scrollDirectionVertical,
           scrollLeft: scrollLeft,
           scrollPositionChangeReason: scrollPositionChangeReason,
           scrollTop: scrollTop
@@ -5646,6 +9055,48 @@ Grid.propTypes = {
   'aria-label': _react.PropTypes.string,
 
   /**
+   * Set the width of the inner scrollable container to 'auto'.
+   * This is useful for single-column Grids to ensure that the column doesn't extend below a vertical scrollbar.
+   */
+  autoContainerWidth: _react.PropTypes.bool,
+
+  /**
+   * Removes fixed height from the scrollingContainer so that the total height
+   * of rows can stretch the window. Intended for use with WindowScroller
+   */
+  autoHeight: _react.PropTypes.bool,
+
+  /** Optional custom CSS class for individual cells */
+  cellClassName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
+
+  /** Optional custom styles for individual cells */
+  cellStyle: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
+
+  /**
+   * Responsible for rendering a cell given an row and column index.
+   * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
+   */
+  cellRenderer: _react.PropTypes.func.isRequired,
+
+  /**
+   * Responsible for rendering a group of cells given their index ranges.
+   * Should implement the following interface: ({
+   *   cellCache: Map,
+   *   cellRenderer: Function,
+   *   columnSizeAndPositionManager: CellSizeAndPositionManager,
+   *   columnStartIndex: number,
+   *   columnStopIndex: number,
+   *   isScrolling: boolean,
+   *   rowSizeAndPositionManager: CellSizeAndPositionManager,
+   *   rowStartIndex: number,
+   *   rowStopIndex: number,
+   *   scrollLeft: number,
+   *   scrollTop: number
+   * }): Array<PropTypes.node>
+   */
+  cellRangeRenderer: _react.PropTypes.func.isRequired,
+
+  /**
    * Optional custom CSS class name to attach to root Grid element.
    */
   className: _react.PropTypes.string,
@@ -5653,7 +9104,7 @@ Grid.propTypes = {
   /**
    * Number of columns in grid.
    */
-  columnsCount: _react.PropTypes.number.isRequired,
+  columnCount: _react.PropTypes.number.isRequired,
 
   /**
    * Either a fixed column width (number) or a function that returns the width of a column given its index.
@@ -5662,12 +9113,24 @@ Grid.propTypes = {
   columnWidth: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 
   /**
+   * Used to estimate the total width of a Grid before all of its columns have actually been measured.
+   * The estimated total width is adjusted as columns are rendered.
+   */
+  estimatedColumnSize: _react.PropTypes.number.isRequired,
+
+  /**
+   * Used to estimate the total height of a Grid before all of its rows have actually been measured.
+   * The estimated total height is adjusted as rows are rendered.
+   */
+  estimatedRowSize: _react.PropTypes.number.isRequired,
+
+  /**
    * Height of Grid; this property determines the number of visible (vs virtualized) rows.
    */
   height: _react.PropTypes.number.isRequired,
 
   /**
-   * Optional renderer to be used in place of rows when either :rowsCount or :columnsCount is 0.
+   * Optional renderer to be used in place of rows when either :rowCount or :columnCount is 0.
    */
   noContentRenderer: _react.PropTypes.func.isRequired,
 
@@ -5688,47 +9151,37 @@ Grid.propTypes = {
    * Number of columns to render before/after the visible section of the grid.
    * These columns can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
-  overscanColumnsCount: _react.PropTypes.number.isRequired,
+  overscanColumnCount: _react.PropTypes.number.isRequired,
 
   /**
    * Number of rows to render above/below the visible section of the grid.
    * These rows can help for smoother scrolling on touch devices or browsers that send scroll events infrequently.
    */
-  overscanRowsCount: _react.PropTypes.number.isRequired,
-
-  /**
-   * Responsible for rendering a cell given an row and column index.
-   * Should implement the following interface: ({ columnIndex: number, rowIndex: number }): PropTypes.node
-   */
-  renderCell: _react.PropTypes.func.isRequired,
-
-  /**
-   * Responsible for rendering a group of cells given their index ranges.
-   * Should implement the following interface: ({
-   *   columnMetadata:Array<Object>,
-   *   columnStartIndex: number,
-   *   columnStopIndex: number,
-   *   renderCell: Function,
-   *   rowMetadata:Array<Object>,
-   *   rowStartIndex: number,
-   *   rowStopIndex: number
-   * }): Array<PropTypes.node>
-   */
-  renderCellRanges: _react.PropTypes.func.isRequired,
+  overscanRowCount: _react.PropTypes.number.isRequired,
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
-   * Should implement the following interface: (index: number): number
+   * Should implement the following interface: ({ index: number }): number
    */
   rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 
   /**
    * Number of rows in grid.
    */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowCount: _react.PropTypes.number.isRequired,
+
+  /** Wait this amount of time after the last scroll event before resetting Grid `pointer-events`. */
+  scrollingResetTimeInterval: _react.PropTypes.number,
 
   /** Horizontal offset. */
   scrollLeft: _react.PropTypes.number,
+
+  /**
+   * Controls scroll-to-cell behavior of the Grid.
+   * The default ("auto") scrolls the least amount possible to ensure that the specified cell is fully visible.
+   * Use "start" to align cells to the top/left of the Grid and "end" to align bottom/right.
+   */
+  scrollToAlignment: _react.PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
   /**
    * Column index to ensure visible (by forcefully scrolling if necessary)
@@ -5743,6 +9196,12 @@ Grid.propTypes = {
    */
   scrollToRow: _react.PropTypes.number,
 
+  /** Optional inline style */
+  style: _react.PropTypes.object,
+
+  /** Tab index for focus */
+  tabIndex: _react.PropTypes.number,
+
   /**
    * Width of Grid; this property determines the number of visible (vs virtualized) columns.
    */
@@ -5750,6 +9209,10 @@ Grid.propTypes = {
 };
 Grid.defaultProps = {
   'aria-label': 'grid',
+  cellStyle: {},
+  cellRangeRenderer: _defaultCellRangeRenderer2.default,
+  estimatedColumnSize: 100,
+  estimatedRowSize: 30,
   noContentRenderer: function noContentRenderer() {
     return null;
   },
@@ -5759,47 +9222,107 @@ Grid.defaultProps = {
   onSectionRendered: function onSectionRendered() {
     return null;
   },
-  overscanColumnsCount: 0,
-  overscanRowsCount: 10,
-  renderCellRanges: defaultRenderCellRanges
+  overscanColumnCount: 0,
+  overscanRowCount: 10,
+  scrollingResetTimeInterval: DEFAULT_SCROLLING_RESET_TIME_INTERVAL,
+  scrollToAlignment: 'auto',
+  style: {},
+  tabIndex: 0
 };
 exports.default = Grid;
+},{"../utils/createCallbackMemoizer":88,"./defaultCellRangeRenderer":71,"./utils/ScalingCellSizeAndPositionManager":74,"./utils/calculateSizeAndPositionDataAndUpdateScrollOffset":75,"./utils/getOverscanIndices":76,"./utils/updateScrollIndexHelper":77,"classnames":undefined,"dom-helpers/util/scrollbarSize":19,"raf":29,"react":undefined,"react-addons-shallow-compare":30}],71:[function(require,module,exports){
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-function defaultRenderCellRanges(_ref8) {
-  var columnMetadata = _ref8.columnMetadata;
-  var columnStartIndex = _ref8.columnStartIndex;
-  var columnStopIndex = _ref8.columnStopIndex;
-  var renderCell = _ref8.renderCell;
-  var rowMetadata = _ref8.rowMetadata;
-  var rowStartIndex = _ref8.rowStartIndex;
-  var rowStopIndex = _ref8.rowStopIndex;
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.default = defaultCellRangeRenderer;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Default implementation of cellRangeRenderer used by Grid.
+ * This renderer supports cell-caching while the user is scrolling.
+ */
+function defaultCellRangeRenderer(_ref) {
+  var cellCache = _ref.cellCache;
+  var cellClassName = _ref.cellClassName;
+  var cellRenderer = _ref.cellRenderer;
+  var cellStyle = _ref.cellStyle;
+  var columnSizeAndPositionManager = _ref.columnSizeAndPositionManager;
+  var columnStartIndex = _ref.columnStartIndex;
+  var columnStopIndex = _ref.columnStopIndex;
+  var horizontalOffsetAdjustment = _ref.horizontalOffsetAdjustment;
+  var isScrolling = _ref.isScrolling;
+  var rowSizeAndPositionManager = _ref.rowSizeAndPositionManager;
+  var rowStartIndex = _ref.rowStartIndex;
+  var rowStopIndex = _ref.rowStopIndex;
+  var scrollLeft = _ref.scrollLeft;
+  var scrollTop = _ref.scrollTop;
+  var verticalOffsetAdjustment = _ref.verticalOffsetAdjustment;
 
   var renderedCells = [];
 
   for (var rowIndex = rowStartIndex; rowIndex <= rowStopIndex; rowIndex++) {
-    var rowDatum = rowMetadata[rowIndex];
+    var rowDatum = rowSizeAndPositionManager.getSizeAndPositionOfCell(rowIndex);
 
     for (var columnIndex = columnStartIndex; columnIndex <= columnStopIndex; columnIndex++) {
-      var columnDatum = columnMetadata[columnIndex];
-      var renderedCell = renderCell({ columnIndex: columnIndex, rowIndex: rowIndex });
+      var columnDatum = columnSizeAndPositionManager.getSizeAndPositionOfCell(columnIndex);
       var key = rowIndex + '-' + columnIndex;
+      var cellStyleObject = cellStyle({ rowIndex: rowIndex, columnIndex: columnIndex });
+      var renderedCell = void 0;
+
+      // Avoid re-creating cells while scrolling.
+      // This can lead to the same cell being created many times and can cause performance issues for "heavy" cells.
+      // If a scroll is in progress- cache and reuse cells.
+      // This cache will be thrown away once scrolling complets.
+      if (isScrolling) {
+        if (!cellCache[key]) {
+          cellCache[key] = cellRenderer({
+            columnIndex: columnIndex,
+            isScrolling: isScrolling,
+            rowIndex: rowIndex
+          });
+        }
+        renderedCell = cellCache[key];
+        // If the user is no longer scrolling, don't cache cells.
+        // This makes dynamic cell content difficult for users and would also lead to a heavier memory footprint.
+      } else {
+        renderedCell = cellRenderer({
+          columnIndex: columnIndex,
+          isScrolling: isScrolling,
+          rowIndex: rowIndex
+        });
+      }
 
       if (renderedCell == null || renderedCell === false) {
         continue;
       }
 
+      var className = cellClassName({ columnIndex: columnIndex, rowIndex: rowIndex });
+
       var child = _react2.default.createElement(
         'div',
         {
           key: key,
-          className: 'Grid__cell',
-          style: {
+          className: (0, _classnames2.default)('Grid__cell', className),
+          style: _extends({
             height: rowDatum.size,
-            left: columnDatum.offset,
-            top: rowDatum.offset,
+            left: columnDatum.offset + horizontalOffsetAdjustment,
+            top: rowDatum.offset + verticalOffsetAdjustment,
             width: columnDatum.size
-          }
+          }, cellStyleObject)
         },
         renderedCell
       );
@@ -5810,23 +9333,543 @@ function defaultRenderCellRanges(_ref8) {
 
   return renderedCells;
 }
-},{"../utils/createCallbackMemoizer":66,"../utils/getUpdatedOffsetForIndex":67,"../utils/initCellMetadata":68,"./utils/calculateSizeAndPositionDataAndUpdateScrollOffset":54,"./utils/getNearestIndex":55,"./utils/getOverscanIndices":56,"./utils/getVisibleCellIndices":57,"./utils/updateScrollIndexHelper":58,"classnames":undefined,"dom-helpers/util/scrollbarSize":18,"raf":28,"react":undefined,"react-addons-shallow-compare":29}],53:[function(require,module,exports){
+},{"classnames":undefined,"react":undefined}],72:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Grid = exports.default = undefined;
+exports.defaultCellRangeRenderer = exports.Grid = exports.default = undefined;
 
 var _Grid2 = require('./Grid');
 
 var _Grid3 = _interopRequireDefault(_Grid2);
 
+var _defaultCellRangeRenderer2 = require('./defaultCellRangeRenderer');
+
+var _defaultCellRangeRenderer3 = _interopRequireDefault(_defaultCellRangeRenderer2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _Grid3.default;
 exports.Grid = _Grid3.default;
-},{"./Grid":52}],54:[function(require,module,exports){
+exports.defaultCellRangeRenderer = _defaultCellRangeRenderer3.default;
+},{"./Grid":70,"./defaultCellRangeRenderer":71}],73:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Just-in-time calculates and caches size and position information for a collection of cells.
+ */
+var CellSizeAndPositionManager = function () {
+  function CellSizeAndPositionManager(_ref) {
+    var cellCount = _ref.cellCount;
+    var cellSizeGetter = _ref.cellSizeGetter;
+    var estimatedCellSize = _ref.estimatedCellSize;
+
+    _classCallCheck(this, CellSizeAndPositionManager);
+
+    this._cellSizeGetter = cellSizeGetter;
+    this._cellCount = cellCount;
+    this._estimatedCellSize = estimatedCellSize;
+
+    // Cache of size and position data for cells, mapped by cell index.
+    // Note that invalid values may exist in this map so only rely on cells up to this._lastMeasuredIndex
+    this._cellSizeAndPositionData = {};
+
+    // Measurements for cells up to this index can be trusted; cells afterward should be estimated.
+    this._lastMeasuredIndex = -1;
+  }
+
+  _createClass(CellSizeAndPositionManager, [{
+    key: 'configure',
+    value: function configure(_ref2) {
+      var cellCount = _ref2.cellCount;
+      var estimatedCellSize = _ref2.estimatedCellSize;
+
+      this._cellCount = cellCount;
+      this._estimatedCellSize = estimatedCellSize;
+    }
+  }, {
+    key: 'getCellCount',
+    value: function getCellCount() {
+      return this._cellCount;
+    }
+  }, {
+    key: 'getEstimatedCellSize',
+    value: function getEstimatedCellSize() {
+      return this._estimatedCellSize;
+    }
+  }, {
+    key: 'getLastMeasuredIndex',
+    value: function getLastMeasuredIndex() {
+      return this._lastMeasuredIndex;
+    }
+
+    /**
+     * This method returns the size and position for the cell at the specified index.
+     * It just-in-time calculates (or used cached values) for cells leading up to the index.
+     */
+
+  }, {
+    key: 'getSizeAndPositionOfCell',
+    value: function getSizeAndPositionOfCell(index) {
+      if (index < 0 || index >= this._cellCount) {
+        throw Error('Requested index ' + index + ' is outside of range 0..' + this._cellCount);
+      }
+
+      if (index > this._lastMeasuredIndex) {
+        var lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+        var _offset = lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size;
+
+        for (var i = this._lastMeasuredIndex + 1; i <= index; i++) {
+          var _size = this._cellSizeGetter({ index: i });
+
+          if (_size == null || isNaN(_size)) {
+            throw Error('Invalid size returned for cell ' + i + ' of value ' + _size);
+          }
+
+          this._cellSizeAndPositionData[i] = {
+            offset: _offset,
+            size: _size
+          };
+
+          _offset += _size;
+        }
+
+        this._lastMeasuredIndex = index;
+      }
+
+      return this._cellSizeAndPositionData[index];
+    }
+  }, {
+    key: 'getSizeAndPositionOfLastMeasuredCell',
+    value: function getSizeAndPositionOfLastMeasuredCell() {
+      return this._lastMeasuredIndex >= 0 ? this._cellSizeAndPositionData[this._lastMeasuredIndex] : {
+        offset: 0,
+        size: 0
+      };
+    }
+
+    /**
+     * Total size of all cells being measured.
+     * This value will be completedly estimated initially.
+     * As cells as measured the estimate will be updated.
+     */
+
+  }, {
+    key: 'getTotalSize',
+    value: function getTotalSize() {
+      var lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+
+      return lastMeasuredCellSizeAndPosition.offset + lastMeasuredCellSizeAndPosition.size + (this._cellCount - this._lastMeasuredIndex - 1) * this._estimatedCellSize;
+    }
+
+    /**
+     * Determines a new offset that ensures a certain cell is visible, given the current offset.
+     * If the cell is already visible then the current offset will be returned.
+     * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
+     *
+     * @param align Desired alignment within container; one of "auto" (default), "start", or "end"
+     * @param containerSize Size (width or height) of the container viewport
+     * @param currentOffset Container's current (x or y) offset
+     * @param totalSize Total size (width or height) of all cells
+     * @return Offset to use to ensure the specified cell is visible
+     */
+
+  }, {
+    key: 'getUpdatedOffsetForIndex',
+    value: function getUpdatedOffsetForIndex(_ref3) {
+      var _ref3$align = _ref3.align;
+      var align = _ref3$align === undefined ? 'auto' : _ref3$align;
+      var containerSize = _ref3.containerSize;
+      var currentOffset = _ref3.currentOffset;
+      var targetIndex = _ref3.targetIndex;
+
+      var datum = this.getSizeAndPositionOfCell(targetIndex);
+      var maxOffset = datum.offset;
+      var minOffset = maxOffset - containerSize + datum.size;
+
+      var idealOffset = void 0;
+
+      switch (align) {
+        case 'start':
+          idealOffset = maxOffset;
+          break;
+        case 'end':
+          idealOffset = minOffset;
+          break;
+        case 'center':
+          idealOffset = maxOffset - (containerSize - datum.size) / 2;
+          break;
+        default:
+          idealOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
+          break;
+      }
+
+      var totalSize = this.getTotalSize();
+
+      return Math.max(0, Math.min(totalSize - containerSize, idealOffset));
+    }
+  }, {
+    key: 'getVisibleCellRange',
+    value: function getVisibleCellRange(_ref4) {
+      var containerSize = _ref4.containerSize;
+      var offset = _ref4.offset;
+
+      var totalSize = this.getTotalSize();
+
+      if (totalSize === 0) {
+        return {};
+      }
+
+      var maxOffset = offset + containerSize;
+      var start = this._findNearestCell(offset);
+
+      var datum = this.getSizeAndPositionOfCell(start);
+      offset = datum.offset + datum.size;
+
+      var stop = start;
+
+      while (offset < maxOffset && stop < this._cellCount - 1) {
+        stop++;
+
+        offset += this.getSizeAndPositionOfCell(stop).size;
+      }
+
+      return {
+        start: start,
+        stop: stop
+      };
+    }
+
+    /**
+     * Clear all cached values for cells after the specified index.
+     * This method should be called for any cell that has changed its size.
+     * It will not immediately perform any calculations; they'll be performed the next time getSizeAndPositionOfCell() is called.
+     */
+
+  }, {
+    key: 'resetCell',
+    value: function resetCell(index) {
+      this._lastMeasuredIndex = Math.min(this._lastMeasuredIndex, index - 1);
+    }
+  }, {
+    key: '_binarySearch',
+    value: function _binarySearch(_ref5) {
+      var high = _ref5.high;
+      var low = _ref5.low;
+      var offset = _ref5.offset;
+
+      var middle = void 0;
+      var currentOffset = void 0;
+
+      while (low <= high) {
+        middle = low + Math.floor((high - low) / 2);
+        currentOffset = this.getSizeAndPositionOfCell(middle).offset;
+
+        if (currentOffset === offset) {
+          return middle;
+        } else if (currentOffset < offset) {
+          low = middle + 1;
+        } else if (currentOffset > offset) {
+          high = middle - 1;
+        }
+      }
+
+      if (low > 0) {
+        return low - 1;
+      }
+    }
+  }, {
+    key: '_exponentialSearch',
+    value: function _exponentialSearch(_ref6) {
+      var index = _ref6.index;
+      var offset = _ref6.offset;
+
+      var interval = 1;
+
+      while (index < this._cellCount && this.getSizeAndPositionOfCell(index).offset < offset) {
+        index += interval;
+        interval *= 2;
+      }
+
+      return this._binarySearch({
+        high: Math.min(index, this._cellCount - 1),
+        low: Math.floor(index / 2),
+        offset: offset
+      });
+    }
+
+    /**
+     * Searches for the cell (index) nearest the specified offset.
+     *
+     * If no exact match is found the next lowest cell index will be returned.
+     * This allows partially visible cells (with offsets just before/above the fold) to be visible.
+     */
+
+  }, {
+    key: '_findNearestCell',
+    value: function _findNearestCell(offset) {
+      if (isNaN(offset)) {
+        throw Error('Invalid offset ' + offset + ' specified');
+      }
+
+      // Our search algorithms find the nearest match at or below the specified offset.
+      // So make sure the offset is at least 0 or no match will be found.
+      offset = Math.max(0, offset);
+
+      var lastMeasuredCellSizeAndPosition = this.getSizeAndPositionOfLastMeasuredCell();
+      var lastMeasuredIndex = Math.max(0, this._lastMeasuredIndex);
+
+      if (lastMeasuredCellSizeAndPosition.offset >= offset) {
+        // If we've already measured cells within this range just use a binary search as it's faster.
+        return this._binarySearch({
+          high: lastMeasuredIndex,
+          low: 0,
+          offset: offset
+        });
+      } else {
+        // If we haven't yet measured this high, fallback to an exponential search with an inner binary search.
+        // The exponential search avoids pre-computing sizes for the full set of cells as a binary search would.
+        // The overall complexity for this approach is O(log n).
+        return this._exponentialSearch({
+          index: lastMeasuredIndex,
+          offset: offset
+        });
+      }
+    }
+  }]);
+
+  return CellSizeAndPositionManager;
+}();
+
+exports.default = CellSizeAndPositionManager;
+},{}],74:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DEFAULT_MAX_SCROLL_SIZE = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _CellSizeAndPositionManager = require('./CellSizeAndPositionManager');
+
+var _CellSizeAndPositionManager2 = _interopRequireDefault(_CellSizeAndPositionManager);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Browsers have scroll offset limitations (eg Chrome stops scrolling at ~33.5M pixels where as Edge tops out at ~1.5M pixels).
+ * After a certain position, the browser won't allow the user to scroll further (even via JavaScript scroll offset adjustments).
+ * This util picks a lower ceiling for max size and artificially adjusts positions within to make it transparent for users.
+ */
+var DEFAULT_MAX_SCROLL_SIZE = exports.DEFAULT_MAX_SCROLL_SIZE = 1500000;
+
+/**
+ * Extends CellSizeAndPositionManager and adds scaling behavior for lists that are too large to fit within a browser's native limits.
+ */
+
+var ScalingCellSizeAndPositionManager = function () {
+  function ScalingCellSizeAndPositionManager(_ref) {
+    var _ref$maxScrollSize = _ref.maxScrollSize;
+    var maxScrollSize = _ref$maxScrollSize === undefined ? DEFAULT_MAX_SCROLL_SIZE : _ref$maxScrollSize;
+
+    var params = _objectWithoutProperties(_ref, ['maxScrollSize']);
+
+    _classCallCheck(this, ScalingCellSizeAndPositionManager);
+
+    // Favor composition over inheritance to simplify IE10 support
+    this._cellSizeAndPositionManager = new _CellSizeAndPositionManager2.default(params);
+    this._maxScrollSize = maxScrollSize;
+  }
+
+  _createClass(ScalingCellSizeAndPositionManager, [{
+    key: 'configure',
+    value: function configure(params) {
+      this._cellSizeAndPositionManager.configure(params);
+    }
+  }, {
+    key: 'getCellCount',
+    value: function getCellCount() {
+      return this._cellSizeAndPositionManager.getCellCount();
+    }
+  }, {
+    key: 'getEstimatedCellSize',
+    value: function getEstimatedCellSize() {
+      return this._cellSizeAndPositionManager.getEstimatedCellSize();
+    }
+  }, {
+    key: 'getLastMeasuredIndex',
+    value: function getLastMeasuredIndex() {
+      return this._cellSizeAndPositionManager.getLastMeasuredIndex();
+    }
+
+    /**
+     * Number of pixels a cell at the given position (offset) should be shifted in order to fit within the scaled container.
+     * The offset passed to this function is scalled (safe) as well.
+     */
+
+  }, {
+    key: 'getOffsetAdjustment',
+    value: function getOffsetAdjustment(_ref2) {
+      var containerSize = _ref2.containerSize;
+      var offset = _ref2.offset;
+
+      var totalSize = this._cellSizeAndPositionManager.getTotalSize();
+      var safeTotalSize = this.getTotalSize();
+      var offsetPercentage = this._getOffsetPercentage({
+        containerSize: containerSize,
+        offset: offset,
+        totalSize: safeTotalSize
+      });
+
+      return Math.round(offsetPercentage * (safeTotalSize - totalSize));
+    }
+  }, {
+    key: 'getSizeAndPositionOfCell',
+    value: function getSizeAndPositionOfCell(index) {
+      return this._cellSizeAndPositionManager.getSizeAndPositionOfCell(index);
+    }
+  }, {
+    key: 'getSizeAndPositionOfLastMeasuredCell',
+    value: function getSizeAndPositionOfLastMeasuredCell() {
+      return this._cellSizeAndPositionManager.getSizeAndPositionOfLastMeasuredCell();
+    }
+
+    /** See CellSizeAndPositionManager#getTotalSize */
+
+  }, {
+    key: 'getTotalSize',
+    value: function getTotalSize() {
+      return Math.min(this._maxScrollSize, this._cellSizeAndPositionManager.getTotalSize());
+    }
+
+    /** See CellSizeAndPositionManager#getUpdatedOffsetForIndex */
+
+  }, {
+    key: 'getUpdatedOffsetForIndex',
+    value: function getUpdatedOffsetForIndex(_ref3) {
+      var _ref3$align = _ref3.align;
+      var align = _ref3$align === undefined ? 'auto' : _ref3$align;
+      var containerSize = _ref3.containerSize;
+      var currentOffset = _ref3.currentOffset;
+      var targetIndex = _ref3.targetIndex;
+      var totalSize = _ref3.totalSize;
+
+      currentOffset = this._safeOffsetToOffset({
+        containerSize: containerSize,
+        offset: currentOffset
+      });
+
+      var offset = this._cellSizeAndPositionManager.getUpdatedOffsetForIndex({
+        align: align,
+        containerSize: containerSize,
+        currentOffset: currentOffset,
+        targetIndex: targetIndex,
+        totalSize: totalSize
+      });
+
+      return this._offsetToSafeOffset({
+        containerSize: containerSize,
+        offset: offset
+      });
+    }
+
+    /** See CellSizeAndPositionManager#getVisibleCellRange */
+
+  }, {
+    key: 'getVisibleCellRange',
+    value: function getVisibleCellRange(_ref4) {
+      var containerSize = _ref4.containerSize;
+      var offset = _ref4.offset;
+
+      offset = this._safeOffsetToOffset({
+        containerSize: containerSize,
+        offset: offset
+      });
+
+      return this._cellSizeAndPositionManager.getVisibleCellRange({
+        containerSize: containerSize,
+        offset: offset
+      });
+    }
+  }, {
+    key: 'resetCell',
+    value: function resetCell(index) {
+      this._cellSizeAndPositionManager.resetCell(index);
+    }
+  }, {
+    key: '_getOffsetPercentage',
+    value: function _getOffsetPercentage(_ref5) {
+      var containerSize = _ref5.containerSize;
+      var offset = _ref5.offset;
+      var totalSize = _ref5.totalSize;
+
+      return totalSize <= containerSize ? 0 : offset / (totalSize - containerSize);
+    }
+  }, {
+    key: '_offsetToSafeOffset',
+    value: function _offsetToSafeOffset(_ref6) {
+      var containerSize = _ref6.containerSize;
+      var offset = _ref6.offset;
+
+      var totalSize = this._cellSizeAndPositionManager.getTotalSize();
+      var safeTotalSize = this.getTotalSize();
+
+      if (totalSize === safeTotalSize) {
+        return offset;
+      } else {
+        var offsetPercentage = this._getOffsetPercentage({
+          containerSize: containerSize,
+          offset: offset,
+          totalSize: totalSize
+        });
+
+        return Math.round(offsetPercentage * (safeTotalSize - containerSize));
+      }
+    }
+  }, {
+    key: '_safeOffsetToOffset',
+    value: function _safeOffsetToOffset(_ref7) {
+      var containerSize = _ref7.containerSize;
+      var offset = _ref7.offset;
+
+      var totalSize = this._cellSizeAndPositionManager.getTotalSize();
+      var safeTotalSize = this.getTotalSize();
+
+      if (totalSize === safeTotalSize) {
+        return offset;
+      } else {
+        var offsetPercentage = this._getOffsetPercentage({
+          containerSize: containerSize,
+          offset: offset,
+          totalSize: safeTotalSize
+        });
+
+        return Math.round(offsetPercentage * (totalSize - containerSize));
+      }
+    }
+  }]);
+
+  return ScalingCellSizeAndPositionManager;
+}();
+
+exports.default = ScalingCellSizeAndPositionManager;
+},{"./CellSizeAndPositionManager":73}],75:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5840,7 +9883,6 @@ exports.default = calculateSizeAndPositionDataAndUpdateScrollOffset;
  * @param cellsSize Width or height of cells for the current axis
  * @param computeMetadataCallback Method to invoke if cell metadata should be recalculated
  * @param computeMetadataCallbackProps Parameters to pass to :computeMetadataCallback
- * @param computeMetadataOnNextUpdate Flag specifying that metadata should be recalculated
  * @param nextCellsCount Newly updated number of rows or columns in the current axis
  * @param nextCellsSize Newly updated width or height of cells for the current axis
  * @param nextScrollToIndex Newly updated scroll-to-index
@@ -5852,7 +9894,6 @@ function calculateSizeAndPositionDataAndUpdateScrollOffset(_ref) {
   var cellSize = _ref.cellSize;
   var computeMetadataCallback = _ref.computeMetadataCallback;
   var computeMetadataCallbackProps = _ref.computeMetadataCallbackProps;
-  var computeMetadataOnNextUpdate = _ref.computeMetadataOnNextUpdate;
   var nextCellsCount = _ref.nextCellsCount;
   var nextCellSize = _ref.nextCellSize;
   var nextScrollToIndex = _ref.nextScrollToIndex;
@@ -5861,7 +9902,7 @@ function calculateSizeAndPositionDataAndUpdateScrollOffset(_ref) {
 
   // Don't compare cell sizes if they are functions because inline functions would cause infinite loops.
   // In that event users should use the manual recompute methods to inform of changes.
-  if (computeMetadataOnNextUpdate || cellCount !== nextCellsCount || (typeof cellSize === 'number' || typeof nextCellSize === 'number') && cellSize !== nextCellSize) {
+  if (cellCount !== nextCellsCount || (typeof cellSize === 'number' || typeof nextCellSize === 'number') && cellSize !== nextCellSize) {
     computeMetadataCallback(computeMetadataCallbackProps);
 
     // Updated cell metadata may have hidden the previous scrolled-to item.
@@ -5871,35 +9912,23 @@ function calculateSizeAndPositionDataAndUpdateScrollOffset(_ref) {
     }
   }
 }
-},{}],55:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = getNearestIndex;
-/**
- * Finds the nearest valid index to the one specified if the specified index is invalid.
- * @param cellCount Number of rows or columns in the current axis
- * @param targetIndex Index to use if possible
- */
-function getNearestIndex(_ref) {
-  var cellCount = _ref.cellCount;
-  var targetIndex = _ref.targetIndex;
-
-  return Math.max(0, Math.min(cellCount - 1, targetIndex));
-}
-},{}],56:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = getOverscanIndices;
+var SCROLL_DIRECTION_BACKWARD = exports.SCROLL_DIRECTION_BACKWARD = -1;
+var SCROLL_DIRECTION_FIXED = exports.SCROLL_DIRECTION_FIXED = 0;
+var SCROLL_DIRECTION_FORWARD = exports.SCROLL_DIRECTION_FORWARD = 1;
+
 /**
  * Calculates the number of cells to overscan before and after a specified range.
  * This function ensures that overscanning doesn't exceed the available cells.
+ *
  * @param cellCount Number of rows or columns in the current axis
+ * @param scrollDirection One of SCROLL_DIRECTION_BACKWARD
  * @param overscanCellsCount Maximum number of cells to over-render in either direction
  * @param startIndex Begin of range of visible cells
  * @param stopIndex End of range of visible cells
@@ -5907,134 +9936,42 @@ exports.default = getOverscanIndices;
 function getOverscanIndices(_ref) {
   var cellCount = _ref.cellCount;
   var overscanCellsCount = _ref.overscanCellsCount;
+  var scrollDirection = _ref.scrollDirection;
   var startIndex = _ref.startIndex;
   var stopIndex = _ref.stopIndex;
 
-  return {
-    overscanStartIndex: Math.max(0, startIndex - overscanCellsCount),
-    overscanStopIndex: Math.min(cellCount - 1, stopIndex + overscanCellsCount)
-  };
-}
-},{}],57:[function(require,module,exports){
-"use strict";
+  var overscanStartIndex = void 0;
+  var overscanStopIndex = void 0;
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = getVisibleCellIndices;
-/**
- * Determines the range of cells to display for a given offset in order to fill the specified container.
- *
- * @param cellMetadata Metadata initially computed by initCellMetadata()
- * @param containerSize Total size (width or height) of the container
- * @param currentOffset Container's current (x or y) offset
- * @return An object containing :start and :stop attributes, each specifying a cell index
- */
-function getVisibleCellIndices(_ref) {
-  var cellMetadata = _ref.cellMetadata;
-  var containerSize = _ref.containerSize;
-  var currentOffset = _ref.currentOffset;
-
-  var cellCount = cellMetadata.length;
-
-  if (cellCount === 0) {
-    return {};
-  }
-
-  // TODO Add better guards here against NaN offset
-
-  var lastDatum = cellMetadata[cellMetadata.length - 1];
-  var totalCellSize = lastDatum.offset + lastDatum.size;
-
-  // Ensure offset is within reasonable bounds
-  currentOffset = Math.max(0, Math.min(totalCellSize - containerSize, currentOffset));
-
-  var maxOffset = Math.min(totalCellSize, currentOffset + containerSize);
-
-  var start = findNearestCell({
-    cellMetadata: cellMetadata,
-    mode: EQUAL_OR_LOWER,
-    offset: currentOffset
-  });
-
-  var datum = cellMetadata[start];
-  currentOffset = datum.offset + datum.size;
-
-  var stop = start;
-
-  while (currentOffset < maxOffset && stop < cellCount - 1) {
-    stop++;
-
-    currentOffset += cellMetadata[stop].size;
+  if (scrollDirection === SCROLL_DIRECTION_FORWARD) {
+    overscanStartIndex = startIndex;
+    overscanStopIndex = stopIndex + overscanCellsCount * 2;
+  } else if (scrollDirection === SCROLL_DIRECTION_BACKWARD) {
+    overscanStartIndex = startIndex - overscanCellsCount * 2;
+    overscanStopIndex = stopIndex;
+  } else {
+    overscanStartIndex = startIndex - overscanCellsCount;
+    overscanStopIndex = stopIndex + overscanCellsCount;
   }
 
   return {
-    start: start,
-    stop: stop
+    overscanStartIndex: Math.max(0, overscanStartIndex),
+    overscanStopIndex: Math.min(cellCount - 1, overscanStopIndex)
   };
 }
-
-/**
- * Binary search function inspired by react-infinite.
- */
-function findNearestCell(_ref2) {
-  var cellMetadata = _ref2.cellMetadata;
-  var mode = _ref2.mode;
-  var offset = _ref2.offset;
-
-  var high = cellMetadata.length - 1;
-  var low = 0;
-  var middle = undefined;
-  var currentOffset = undefined;
-
-  // TODO Add better guards here against NaN offset
-
-  while (low <= high) {
-    middle = low + Math.floor((high - low) / 2);
-    currentOffset = cellMetadata[middle].offset;
-
-    if (currentOffset === offset) {
-      return middle;
-    } else if (currentOffset < offset) {
-      low = middle + 1;
-    } else if (currentOffset > offset) {
-      high = middle - 1;
-    }
-  }
-
-  if (mode === EQUAL_OR_LOWER && low > 0) {
-    return low - 1;
-  } else if (mode === EQUAL_OR_HIGHER && high < cellMetadata.length - 1) {
-    return high + 1;
-  }
-}
-
-var EQUAL_OR_LOWER = 1;
-var EQUAL_OR_HIGHER = 2;
-},{}],58:[function(require,module,exports){
+},{}],77:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = updateScrollIndexHelper;
-
-var _getNearestIndex = require('./getNearestIndex');
-
-var _getNearestIndex2 = _interopRequireDefault(_getNearestIndex);
-
-var _getUpdatedOffsetForIndex = require('../../utils/getUpdatedOffsetForIndex');
-
-var _getUpdatedOffsetForIndex2 = _interopRequireDefault(_getUpdatedOffsetForIndex);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
  * Helper function that determines when to update scroll offsets to ensure that a scroll-to-index remains visible.
+ * This function also ensures that the scroll ofset isn't past the last column/row of cells.
  *
- * @param cellMetadata Metadata initially computed by initCellMetadata()
- * @param cellCount Number of rows or columns in the current axis
  * @param cellsSize Width or height of cells for the current axis
+ * @param cellSizeAndPositionManager Manages size and position metadata of cells
  * @param previousCellsCount Previous number of rows or columns
  * @param previousCellsSize Previous width or height of cells
  * @param previousScrollToIndex Previous scroll-to-index
@@ -6045,51 +9982,41 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param updateScrollIndexCallback Callback to invoke with an scroll-to-index value
  */
 function updateScrollIndexHelper(_ref) {
-  var cellMetadata = _ref.cellMetadata;
-  var cellCount = _ref.cellCount;
   var cellSize = _ref.cellSize;
+  var cellSizeAndPositionManager = _ref.cellSizeAndPositionManager;
   var previousCellsCount = _ref.previousCellsCount;
   var previousCellSize = _ref.previousCellSize;
+  var previousScrollToAlignment = _ref.previousScrollToAlignment;
   var previousScrollToIndex = _ref.previousScrollToIndex;
   var previousSize = _ref.previousSize;
   var scrollOffset = _ref.scrollOffset;
+  var scrollToAlignment = _ref.scrollToAlignment;
   var scrollToIndex = _ref.scrollToIndex;
   var size = _ref.size;
   var updateScrollIndexCallback = _ref.updateScrollIndexCallback;
 
+  var cellCount = cellSizeAndPositionManager.getCellCount();
   var hasScrollToIndex = scrollToIndex >= 0 && scrollToIndex < cellCount;
   var sizeHasChanged = size !== previousSize || !previousCellSize || typeof cellSize === 'number' && cellSize !== previousCellSize;
 
   // If we have a new scroll target OR if height/row-height has changed,
   // We should ensure that the scroll target is visible.
-  if (hasScrollToIndex && (sizeHasChanged || scrollToIndex !== previousScrollToIndex)) {
+  if (hasScrollToIndex && (sizeHasChanged || scrollToAlignment !== previousScrollToAlignment || scrollToIndex !== previousScrollToIndex)) {
     updateScrollIndexCallback(scrollToIndex);
 
     // If we don't have a selected item but list size or number of children have decreased,
     // Make sure we aren't scrolled too far past the current content.
   } else if (!hasScrollToIndex && cellCount > 0 && (size < previousSize || cellCount < previousCellsCount)) {
-      scrollToIndex = (0, _getNearestIndex2.default)({
-        cellCount: cellCount,
-        targetIndex: cellCount - 1
-      });
-
-      if (scrollToIndex < cellCount) {
-        var cellMetadatum = cellMetadata[scrollToIndex];
-        var calculatedScrollOffset = (0, _getUpdatedOffsetForIndex2.default)({
-          cellOffset: cellMetadatum.offset,
-          cellSize: cellMetadatum.size,
-          containerSize: size,
-          currentOffset: scrollOffset
-        });
-
-        // Only adjust the scroll position if we've scrolled below the last set of rows.
-        if (calculatedScrollOffset < scrollOffset) {
-          updateScrollIndexCallback(cellCount - 1);
-        }
-      }
+    // We need to ensure that the current scroll offset is still within the collection's range.
+    // To do this, we don't need to measure everything; CellMeasurer would perform poorly.
+    // Just check to make sure we're still okay.
+    // Only adjust the scroll position if we've scrolled below the last set of rows.
+    if (scrollOffset > cellSizeAndPositionManager.getTotalSize() - size) {
+      updateScrollIndexCallback(cellCount - 1);
     }
+  }
 }
-},{"../../utils/getUpdatedOffsetForIndex":67,"./getNearestIndex":55}],59:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6100,12 +10027,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.isRangeVisible = isRangeVisible;
 exports.scanForUnloadedRanges = scanForUnloadedRanges;
+exports.forceUpdateReactVirtualizedComponent = forceUpdateReactVirtualizedComponent;
 
 var _react = require('react');
 
 var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
 var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
+
+var _createCallbackMemoizer = require('../utils/createCallbackMemoizer');
+
+var _createCallbackMemoizer2 = _interopRequireDefault(_createCallbackMemoizer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6120,14 +10052,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * This component decorates a virtual component and just-in-time prefetches rows as a user scrolls.
  * It is intended as a convenience component; fork it if you'd like finer-grained control over data-loading.
  */
-
 var InfiniteLoader = function (_Component) {
   _inherits(InfiniteLoader, _Component);
 
   function InfiniteLoader(props, context) {
     _classCallCheck(this, InfiniteLoader);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfiniteLoader).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (InfiniteLoader.__proto__ || Object.getPrototypeOf(InfiniteLoader)).call(this, props, context));
+
+    _this._loadMoreRowsMemoizer = (0, _createCallbackMemoizer2.default)();
 
     _this._onRowsRendered = _this._onRowsRendered.bind(_this);
     _this._registerChild = _this._registerChild.bind(_this);
@@ -6151,30 +10084,12 @@ var InfiniteLoader = function (_Component) {
       return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
     }
   }, {
-    key: '_onRowsRendered',
-    value: function _onRowsRendered(_ref) {
+    key: '_loadUnloadedRanges',
+    value: function _loadUnloadedRanges(unloadedRanges) {
       var _this2 = this;
 
-      var startIndex = _ref.startIndex;
-      var stopIndex = _ref.stopIndex;
-      var _props = this.props;
-      var isRowLoaded = _props.isRowLoaded;
-      var loadMoreRows = _props.loadMoreRows;
-      var minimumBatchSize = _props.minimumBatchSize;
-      var rowsCount = _props.rowsCount;
-      var threshold = _props.threshold;
+      var loadMoreRows = this.props.loadMoreRows;
 
-
-      this._lastRenderedStartIndex = startIndex;
-      this._lastRenderedStopIndex = stopIndex;
-
-      var unloadedRanges = scanForUnloadedRanges({
-        isRowLoaded: isRowLoaded,
-        minimumBatchSize: minimumBatchSize,
-        rowsCount: rowsCount,
-        startIndex: Math.max(0, startIndex - threshold),
-        stopIndex: Math.min(rowsCount - 1, stopIndex + threshold)
-      });
 
       unloadedRanges.forEach(function (unloadedRange) {
         var promise = loadMoreRows(unloadedRange);
@@ -6189,11 +10104,48 @@ var InfiniteLoader = function (_Component) {
               stopIndex: unloadedRange.stopIndex
             })) {
               if (_this2._registeredChild) {
-                _this2._registeredChild.forceUpdate();
+                forceUpdateReactVirtualizedComponent(_this2._registeredChild);
               }
             }
           });
         }
+      });
+    }
+  }, {
+    key: '_onRowsRendered',
+    value: function _onRowsRendered(_ref) {
+      var _this3 = this;
+
+      var startIndex = _ref.startIndex;
+      var stopIndex = _ref.stopIndex;
+      var _props = this.props;
+      var isRowLoaded = _props.isRowLoaded;
+      var minimumBatchSize = _props.minimumBatchSize;
+      var rowCount = _props.rowCount;
+      var threshold = _props.threshold;
+
+
+      this._lastRenderedStartIndex = startIndex;
+      this._lastRenderedStopIndex = stopIndex;
+
+      var unloadedRanges = scanForUnloadedRanges({
+        isRowLoaded: isRowLoaded,
+        minimumBatchSize: minimumBatchSize,
+        rowCount: rowCount,
+        startIndex: Math.max(0, startIndex - threshold),
+        stopIndex: Math.min(rowCount - 1, stopIndex + threshold)
+      });
+
+      // For memoize comparison
+      var squashedUnloadedRanges = unloadedRanges.reduce(function (reduced, unloadedRange) {
+        return reduced.concat([unloadedRange.startIndex, unloadedRange.stopIndex]);
+      }, []);
+
+      this._loadMoreRowsMemoizer({
+        callback: function callback() {
+          _this3._loadUnloadedRanges(unloadedRanges);
+        },
+        indices: { squashedUnloadedRanges: squashedUnloadedRanges }
       });
     }
   }, {
@@ -6224,7 +10176,7 @@ InfiniteLoader.propTypes = {
 
   /**
    * Function responsible for tracking the loaded state of each row.
-   * It should implement the following signature: (index: number): boolean
+   * It should implement the following signature: ({ index: number }): boolean
    */
   isRowLoaded: _react.PropTypes.func.isRequired,
 
@@ -6246,7 +10198,7 @@ InfiniteLoader.propTypes = {
   /**
    * Number of rows in list; can be arbitrary high number if actual number is unknown.
    */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowCount: _react.PropTypes.number.isRequired,
 
   /**
    * Threshold at which to pre-fetch data.
@@ -6257,7 +10209,7 @@ InfiniteLoader.propTypes = {
 };
 InfiniteLoader.defaultProps = {
   minimumBatchSize: 10,
-  rowsCount: 0,
+  rowCount: 0,
   threshold: 15
 };
 exports.default = InfiniteLoader;
@@ -6276,7 +10228,7 @@ function isRangeVisible(_ref2) {
 function scanForUnloadedRanges(_ref3) {
   var isRowLoaded = _ref3.isRowLoaded;
   var minimumBatchSize = _ref3.minimumBatchSize;
-  var rowsCount = _ref3.rowsCount;
+  var rowCount = _ref3.rowCount;
   var startIndex = _ref3.startIndex;
   var stopIndex = _ref3.stopIndex;
 
@@ -6285,13 +10237,13 @@ function scanForUnloadedRanges(_ref3) {
   var rangeStartIndex = null;
   var rangeStopIndex = null;
 
-  for (var i = startIndex; i <= stopIndex; i++) {
-    var loaded = isRowLoaded(i);
+  for (var index = startIndex; index <= stopIndex; index++) {
+    var loaded = isRowLoaded({ index: index });
 
     if (!loaded) {
-      rangeStopIndex = i;
+      rangeStopIndex = index;
       if (rangeStartIndex === null) {
-        rangeStartIndex = i;
+        rangeStartIndex = index;
       }
     } else if (rangeStopIndex !== null) {
       unloadedRanges.push({
@@ -6303,13 +10255,14 @@ function scanForUnloadedRanges(_ref3) {
     }
   }
 
+  // If :rangeStopIndex is not null it means we haven't ran out of unloaded rows.
+  // Scan forward to try filling our :minimumBatchSize.
   if (rangeStopIndex !== null) {
-    // Attempt to satisfy :minimumBatchSize requirement but don't exceed :rowsCount
-    var potentialStopIndex = Math.min(Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1), rowsCount - 1);
+    var potentialStopIndex = Math.min(Math.max(rangeStopIndex, rangeStartIndex + minimumBatchSize - 1), rowCount - 1);
 
-    for (var i = rangeStopIndex + 1; i <= potentialStopIndex; i++) {
-      if (!isRowLoaded(i)) {
-        rangeStopIndex = i;
+    for (var _index = rangeStopIndex + 1; _index <= potentialStopIndex; _index++) {
+      if (!isRowLoaded({ index: _index })) {
+        rangeStopIndex = _index;
       } else {
         break;
       }
@@ -6321,9 +10274,36 @@ function scanForUnloadedRanges(_ref3) {
     });
   }
 
+  // Check to see if our first range ended prematurely.
+  // In this case we should scan backwards to try filling our :minimumBatchSize.
+  if (unloadedRanges.length) {
+    var firstUnloadedRange = unloadedRanges[0];
+
+    while (firstUnloadedRange.stopIndex - firstUnloadedRange.startIndex + 1 < minimumBatchSize && firstUnloadedRange.startIndex > 0) {
+      var _index2 = firstUnloadedRange.startIndex - 1;
+
+      if (!isRowLoaded({ index: _index2 })) {
+        firstUnloadedRange.startIndex = _index2;
+      } else {
+        break;
+      }
+    }
+  }
+
   return unloadedRanges;
 }
-},{"react":undefined,"react-addons-shallow-compare":29}],60:[function(require,module,exports){
+
+/**
+ * Since RV components use shallowCompare we need to force a render (even though props haven't changed).
+ * However InfiniteLoader may wrap a Grid or it may wrap a FlexTable or VirtualScroll.
+ * In the first case the built-in React forceUpdate() method is sufficient to force a re-render,
+ * But in the latter cases we need to use the RV-specific forceUpdateGrid() method.
+ * Else the inner Grid will not be re-rendered and visuals may be stale.
+ */
+function forceUpdateReactVirtualizedComponent(component) {
+  typeof component.forceUpdateGrid === 'function' ? component.forceUpdateGrid() : component.forceUpdate();
+}
+},{"../utils/createCallbackMemoizer":88,"react":undefined,"react-addons-shallow-compare":30}],79:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6339,7 +10319,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _InfiniteLoader3.default;
 exports.InfiniteLoader = _InfiniteLoader3.default;
-},{"./InfiniteLoader":59}],61:[function(require,module,exports){
+},{"./InfiniteLoader":78}],80:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6365,14 +10345,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /**
  * HOC that simplifies the process of synchronizing scrolling between two or more virtualized components.
  */
-
 var ScrollSync = function (_Component) {
   _inherits(ScrollSync, _Component);
 
   function ScrollSync(props, context) {
     _classCallCheck(this, ScrollSync);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ScrollSync).call(this, props, context));
+    var _this = _possibleConstructorReturn(this, (ScrollSync.__proto__ || Object.getPrototypeOf(ScrollSync)).call(this, props, context));
 
     _this.state = {
       clientHeight: 0,
@@ -6441,7 +10420,7 @@ ScrollSync.propTypes = {
   children: _react.PropTypes.func.isRequired
 };
 exports.default = ScrollSync;
-},{"react":undefined,"react-addons-shallow-compare":29}],62:[function(require,module,exports){
+},{"react":undefined,"react-addons-shallow-compare":30}],81:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6457,12 +10436,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _ScrollSync3.default;
 exports.ScrollSync = _ScrollSync3.default;
-},{"./ScrollSync":61}],63:[function(require,module,exports){
+},{"./ScrollSync":80}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -6498,89 +10479,156 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  *
  * This component renders a virtualized list of elements with either fixed or dynamic heights.
  */
-
 var VirtualScroll = function (_Component) {
   _inherits(VirtualScroll, _Component);
 
-  function VirtualScroll() {
+  function VirtualScroll(props, context) {
     _classCallCheck(this, VirtualScroll);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(VirtualScroll).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (VirtualScroll.__proto__ || Object.getPrototypeOf(VirtualScroll)).call(this, props, context));
+
+    _this._cellRenderer = _this._cellRenderer.bind(_this);
+    _this._createRowClassNameGetter = _this._createRowClassNameGetter.bind(_this);
+    _this._createRowStyleGetter = _this._createRowStyleGetter.bind(_this);
+    _this._onScroll = _this._onScroll.bind(_this);
+    _this._onSectionRendered = _this._onSectionRendered.bind(_this);
+    return _this;
   }
 
   _createClass(VirtualScroll, [{
+    key: 'forceUpdateGrid',
+    value: function forceUpdateGrid() {
+      this.Grid.forceUpdate();
+    }
+
+    /** See Grid#measureAllCells */
+
+  }, {
+    key: 'measureAllRows',
+    value: function measureAllRows() {
+      this.Grid.measureAllCells();
+    }
+
+    /** See Grid#recomputeGridSize */
+
+  }, {
     key: 'recomputeRowHeights',
-
-
-    /**
-     * See Grid#recomputeGridSize
-     */
     value: function recomputeRowHeights() {
-      this.refs.Grid.recomputeGridSize();
+      var index = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
+      this.Grid.recomputeGridSize({
+        rowIndex: index
+      });
+      this.forceUpdateGrid();
     }
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var _props = this.props;
       var className = _props.className;
-      var height = _props.height;
       var noRowsRenderer = _props.noRowsRenderer;
-      var onRowsRendered = _props.onRowsRendered;
-      var _onScroll = _props.onScroll;
-      var rowHeight = _props.rowHeight;
-      var rowRenderer = _props.rowRenderer;
-      var overscanRowsCount = _props.overscanRowsCount;
-      var rowsCount = _props.rowsCount;
       var scrollToIndex = _props.scrollToIndex;
-      var scrollTop = _props.scrollTop;
       var width = _props.width;
 
 
       var classNames = (0, _classnames2.default)('VirtualScroll', className);
 
-      return _react2.default.createElement(_Grid2.default, {
-        ref: 'Grid',
-        'aria-label': this.props['aria-label'],
+      return _react2.default.createElement(_Grid2.default, _extends({}, this.props, {
+        autoContainerWidth: true,
+        cellRenderer: this._cellRenderer,
+        cellClassName: this._createRowClassNameGetter(),
+        cellStyle: this._createRowStyleGetter(),
         className: classNames,
         columnWidth: width,
-        columnsCount: 1,
-        height: height,
+        columnCount: 1,
         noContentRenderer: noRowsRenderer,
-        onScroll: function onScroll(_ref) {
-          var clientHeight = _ref.clientHeight;
-          var scrollHeight = _ref.scrollHeight;
-          var scrollTop = _ref.scrollTop;
-          return _onScroll({ clientHeight: clientHeight, scrollHeight: scrollHeight, scrollTop: scrollTop });
+        onScroll: this._onScroll,
+        onSectionRendered: this._onSectionRendered,
+        ref: function ref(_ref) {
+          _this2.Grid = _ref;
         },
-        onSectionRendered: function onSectionRendered(_ref2) {
-          var rowOverscanStartIndex = _ref2.rowOverscanStartIndex;
-          var rowOverscanStopIndex = _ref2.rowOverscanStopIndex;
-          var rowStartIndex = _ref2.rowStartIndex;
-          var rowStopIndex = _ref2.rowStopIndex;
-          return onRowsRendered({
-            overscanStartIndex: rowOverscanStartIndex,
-            overscanStopIndex: rowOverscanStopIndex,
-            startIndex: rowStartIndex,
-            stopIndex: rowStopIndex
-          });
-        },
-        overscanRowsCount: overscanRowsCount,
-        renderCell: function renderCell(_ref3) {
-          var columnIndex = _ref3.columnIndex;
-          var rowIndex = _ref3.rowIndex;
-          return rowRenderer(rowIndex);
-        },
-        rowHeight: rowHeight,
-        rowsCount: rowsCount,
-        scrollToRow: scrollToIndex,
-        scrollTop: scrollTop,
-        width: width
-      });
+        scrollToRow: scrollToIndex
+      }));
     }
   }, {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
       return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
+    }
+  }, {
+    key: '_cellRenderer',
+    value: function _cellRenderer(_ref2) {
+      var columnIndex = _ref2.columnIndex;
+      var isScrolling = _ref2.isScrolling;
+      var rowIndex = _ref2.rowIndex;
+      var rowRenderer = this.props.rowRenderer;
+
+
+      return rowRenderer({
+        index: rowIndex,
+        isScrolling: isScrolling
+      });
+    }
+  }, {
+    key: '_createRowClassNameGetter',
+    value: function _createRowClassNameGetter() {
+      var rowClassName = this.props.rowClassName;
+
+
+      return rowClassName instanceof Function ? function (_ref3) {
+        var rowIndex = _ref3.rowIndex;
+        return rowClassName({ index: rowIndex });
+      } : function () {
+        return rowClassName;
+      };
+    }
+  }, {
+    key: '_createRowStyleGetter',
+    value: function _createRowStyleGetter() {
+      var rowStyle = this.props.rowStyle;
+
+
+      var wrapped = rowStyle instanceof Function ? rowStyle : function () {
+        return rowStyle;
+      };
+
+      // Default width to 100% to prevent list rows from flowing under the vertical scrollbar
+      return function (_ref4) {
+        var rowIndex = _ref4.rowIndex;
+        return _extends({
+          width: '100%'
+        }, wrapped({ index: rowIndex }));
+      };
+    }
+  }, {
+    key: '_onScroll',
+    value: function _onScroll(_ref5) {
+      var clientHeight = _ref5.clientHeight;
+      var scrollHeight = _ref5.scrollHeight;
+      var scrollTop = _ref5.scrollTop;
+      var onScroll = this.props.onScroll;
+
+
+      onScroll({ clientHeight: clientHeight, scrollHeight: scrollHeight, scrollTop: scrollTop });
+    }
+  }, {
+    key: '_onSectionRendered',
+    value: function _onSectionRendered(_ref6) {
+      var rowOverscanStartIndex = _ref6.rowOverscanStartIndex;
+      var rowOverscanStopIndex = _ref6.rowOverscanStopIndex;
+      var rowStartIndex = _ref6.rowStartIndex;
+      var rowStopIndex = _ref6.rowStopIndex;
+      var onRowsRendered = this.props.onRowsRendered;
+
+
+      onRowsRendered({
+        overscanStartIndex: rowOverscanStartIndex,
+        overscanStopIndex: rowOverscanStopIndex,
+        startIndex: rowStartIndex,
+        stopIndex: rowStopIndex
+      });
     }
   }]);
 
@@ -6590,13 +10638,25 @@ var VirtualScroll = function (_Component) {
 VirtualScroll.propTypes = {
   'aria-label': _react.PropTypes.string,
 
+  /**
+   * Removes fixed height from the scrollingContainer so that the total height
+   * of rows can stretch the window. Intended for use with WindowScroller
+   */
+  autoHeight: _react.PropTypes.bool,
+
   /** Optional CSS class name */
   className: _react.PropTypes.string,
+
+  /**
+   * Used to estimate the total height of a VirtualScroll before all of its rows have actually been measured.
+   * The estimated total height is adjusted as rows are rendered.
+   */
+  estimatedRowSize: _react.PropTypes.number.isRequired,
 
   /** Height constraint for list (determines how many actual rows are rendered) */
   height: _react.PropTypes.number.isRequired,
 
-  /** Optional renderer to be used in place of rows when rowsCount is 0 */
+  /** Optional renderer to be used in place of rows when rowCount is 0 */
   noRowsRenderer: _react.PropTypes.func.isRequired,
 
   /**
@@ -6609,7 +10669,7 @@ VirtualScroll.propTypes = {
    * Number of rows to render above/below the visible bounds of the list.
    * These rows can help for smoother scrolling on touch devices.
    */
-  overscanRowsCount: _react.PropTypes.number.isRequired,
+  overscanRowCount: _react.PropTypes.number.isRequired,
 
   /**
    * Callback invoked whenever the scroll offset changes within the inner scrollable region.
@@ -6620,15 +10680,24 @@ VirtualScroll.propTypes = {
 
   /**
    * Either a fixed row height (number) or a function that returns the height of a row given its index.
-   * (index: number): number
+   * ({ index: number }): number
    */
   rowHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
 
-  /** Responsbile for rendering a row given an index */
+  /** Responsbile for rendering a row given an index; ({ index: number }): node */
   rowRenderer: _react.PropTypes.func.isRequired,
 
+  /** Optional custom CSS class for individual rows */
+  rowClassName: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.func]),
+
   /** Number of rows in list. */
-  rowsCount: _react.PropTypes.number.isRequired,
+  rowCount: _react.PropTypes.number.isRequired,
+
+  /** Optional custom styles for individual cells */
+  rowStyle: _react.PropTypes.oneOfType([_react.PropTypes.object, _react.PropTypes.func]),
+
+  /** See Grid#scrollToAlignment */
+  scrollToAlignment: _react.PropTypes.oneOf(['auto', 'end', 'start', 'center']).isRequired,
 
   /** Row index to ensure visible (by forcefully scrolling if necessary) */
   scrollToIndex: _react.PropTypes.number,
@@ -6636,10 +10705,17 @@ VirtualScroll.propTypes = {
   /** Vertical offset. */
   scrollTop: _react.PropTypes.number,
 
+  /** Optional inline style */
+  style: _react.PropTypes.object,
+
+  /** Tab index for focus */
+  tabIndex: _react.PropTypes.number,
+
   /** Width of list */
   width: _react.PropTypes.number.isRequired
 };
 VirtualScroll.defaultProps = {
+  estimatedRowSize: 30,
   noRowsRenderer: function noRowsRenderer() {
     return null;
   },
@@ -6649,10 +10725,12 @@ VirtualScroll.defaultProps = {
   onScroll: function onScroll() {
     return null;
   },
-  overscanRowsCount: 10
+  overscanRowCount: 10,
+  scrollToAlignment: 'auto',
+  style: {}
 };
 exports.default = VirtualScroll;
-},{"../Grid":53,"classnames":undefined,"react":undefined,"react-addons-shallow-compare":29}],64:[function(require,module,exports){
+},{"../Grid":72,"classnames":undefined,"react":undefined,"react-addons-shallow-compare":30}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6668,7 +10746,299 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = _VirtualScroll3.default;
 exports.VirtualScroll = _VirtualScroll3.default;
-},{"./VirtualScroll":63}],65:[function(require,module,exports){
+},{"./VirtualScroll":82}],84:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
+
+var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
+
+var _raf = require('raf');
+
+var _raf2 = _interopRequireDefault(_raf);
+
+var _onScroll = require('./utils/onScroll');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var WindowScroller = function (_Component) {
+  _inherits(WindowScroller, _Component);
+
+  function WindowScroller(props) {
+    _classCallCheck(this, WindowScroller);
+
+    var _this = _possibleConstructorReturn(this, (WindowScroller.__proto__ || Object.getPrototypeOf(WindowScroller)).call(this, props));
+
+    var height = typeof window !== 'undefined' ? window.innerHeight : 0;
+
+    _this.state = {
+      isScrolling: false,
+      height: height,
+      scrollTop: 0
+    };
+
+    _this._onScrollWindow = _this._onScrollWindow.bind(_this);
+    _this._onResizeWindow = _this._onResizeWindow.bind(_this);
+    _this._enablePointerEventsAfterDelayCallback = _this._enablePointerEventsAfterDelayCallback.bind(_this);
+    return _this;
+  }
+
+  _createClass(WindowScroller, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var height = this.state.height;
+
+      // Subtract documentElement top to handle edge-case where a user is navigating back (history) from an already-scrolled bage.
+      // In this case the body's top position will be a negative number and this element's top will be increased (by that amount).
+
+      this._positionFromTop = _reactDom2.default.findDOMNode(this).getBoundingClientRect().top - document.documentElement.getBoundingClientRect().top;
+
+      if (height !== window.innerHeight) {
+        this.setState({
+          height: window.innerHeight
+        });
+      }
+
+      (0, _onScroll.registerScrollListener)(this);
+      window.addEventListener('resize', this._onResizeWindow, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      (0, _onScroll.unregisterScrollListener)(this);
+
+      window.removeEventListener('resize', this._onResizeWindow, false);
+    }
+
+    /**
+     * Updates the state during the next animation frame.
+     * Use this method to avoid multiple renders in a small span of time.
+     * This helps performance for bursty events (like onScroll).
+     */
+
+  }, {
+    key: '_setNextState',
+    value: function _setNextState(state) {
+      var _this2 = this;
+
+      if (this._setNextStateAnimationFrameId) {
+        _raf2.default.cancel(this._setNextStateAnimationFrameId);
+      }
+
+      this._setNextStateAnimationFrameId = (0, _raf2.default)(function () {
+        _this2._setNextStateAnimationFrameId = null;
+        _this2.setState(state);
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var children = this.props.children;
+      var _state = this.state;
+      var isScrolling = _state.isScrolling;
+      var scrollTop = _state.scrollTop;
+      var height = _state.height;
+
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        children({
+          height: height,
+          isScrolling: isScrolling,
+          scrollTop: scrollTop
+        })
+      );
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      return (0, _reactAddonsShallowCompare2.default)(this, nextProps, nextState);
+    }
+  }, {
+    key: '_enablePointerEventsAfterDelayCallback',
+    value: function _enablePointerEventsAfterDelayCallback() {
+      this.setState({
+        isScrolling: false
+      });
+    }
+  }, {
+    key: '_onResizeWindow',
+    value: function _onResizeWindow(event) {
+      var onResize = this.props.onResize;
+
+
+      var height = window.innerHeight || 0;
+
+      this.setState({ height: height });
+
+      onResize({ height: height });
+    }
+  }, {
+    key: '_onScrollWindow',
+    value: function _onScrollWindow(event) {
+      var onScroll = this.props.onScroll;
+
+      // In IE10+ scrollY is undefined, so we replace that with the latter
+
+      var scrollY = 'scrollY' in window ? window.scrollY : document.documentElement.scrollTop;
+
+      var scrollTop = Math.max(0, scrollY - this._positionFromTop);
+
+      var state = {
+        isScrolling: true,
+        scrollTop: scrollTop
+      };
+
+      if (!this.state.isScrolling) {
+        this.setState(state);
+      } else {
+        this._setNextState(state);
+      }
+
+      onScroll({ scrollTop: scrollTop });
+    }
+  }]);
+
+  return WindowScroller;
+}(_react.Component);
+
+WindowScroller.propTypes = {
+  /**
+   * Function respondible for rendering children.
+   * This function should implement the following signature:
+   * ({ height, scrollTop }) => PropTypes.element
+   */
+  children: _react.PropTypes.func.isRequired,
+
+  /** Callback to be invoked on-resize: ({ height }) */
+  onResize: _react.PropTypes.func.isRequired,
+
+  /** Callback to be invoked on-scroll: ({ scrollTop }) */
+  onScroll: _react.PropTypes.func.isRequired
+};
+WindowScroller.defaultProps = {
+  onResize: function onResize() {},
+  onScroll: function onScroll() {}
+};
+exports.default = WindowScroller;
+},{"./utils/onScroll":86,"raf":29,"react":undefined,"react-addons-shallow-compare":30,"react-dom":undefined}],85:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.IS_SCROLLING_TIMEOUT = exports.WindowScroller = exports.default = undefined;
+
+var _WindowScroller2 = require('./WindowScroller');
+
+var _WindowScroller3 = _interopRequireDefault(_WindowScroller2);
+
+var _onScroll = require('./utils/onScroll');
+
+var _onScroll2 = _interopRequireDefault(_onScroll);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _WindowScroller3.default;
+exports.WindowScroller = _WindowScroller3.default;
+exports.IS_SCROLLING_TIMEOUT = _onScroll2.default;
+},{"./WindowScroller":84,"./utils/onScroll":86}],86:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerScrollListener = registerScrollListener;
+exports.unregisterScrollListener = unregisterScrollListener;
+var mountedInstances = [];
+var originalBodyPointerEvents = null;
+var disablePointerEventsTimeoutId = null;
+
+/**
+ * Specifies the number of miliseconds during which to disable pointer events while a scroll is in progress.
+ * This improves performance and makes scrolling smoother.
+ */
+var IS_SCROLLING_TIMEOUT = exports.IS_SCROLLING_TIMEOUT = 150;
+
+function enablePointerEventsIfDisabled() {
+  if (disablePointerEventsTimeoutId) {
+    disablePointerEventsTimeoutId = null;
+
+    document.body.style.pointerEvents = originalBodyPointerEvents;
+
+    originalBodyPointerEvents = null;
+  }
+}
+
+function enablePointerEventsAfterDelayCallback() {
+  enablePointerEventsIfDisabled();
+  mountedInstances.forEach(function (component) {
+    return component._enablePointerEventsAfterDelayCallback();
+  });
+}
+
+function enablePointerEventsAfterDelay() {
+  if (disablePointerEventsTimeoutId) {
+    clearTimeout(disablePointerEventsTimeoutId);
+  }
+
+  disablePointerEventsTimeoutId = setTimeout(enablePointerEventsAfterDelayCallback, IS_SCROLLING_TIMEOUT);
+}
+
+function onScrollWindow(event) {
+  if (originalBodyPointerEvents == null) {
+    originalBodyPointerEvents = document.body.style.pointerEvents;
+
+    document.body.style.pointerEvents = 'none';
+
+    enablePointerEventsAfterDelay();
+  }
+  mountedInstances.forEach(function (component) {
+    return component._onScrollWindow(event);
+  });
+}
+
+function registerScrollListener(component) {
+  if (!mountedInstances.length) {
+    window.addEventListener('scroll', onScrollWindow);
+  }
+  mountedInstances.push(component);
+}
+
+function unregisterScrollListener(component) {
+  mountedInstances = mountedInstances.filter(function (c) {
+    return c !== component;
+  });
+  if (!mountedInstances.length) {
+    window.removeEventListener('scroll', onScrollWindow);
+    if (disablePointerEventsTimeoutId) {
+      clearTimeout(disablePointerEventsTimeoutId);
+      enablePointerEventsIfDisabled();
+    }
+  }
+}
+},{}],87:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6693,6 +11063,27 @@ Object.defineProperty(exports, 'AutoSizer', {
   }
 });
 
+var _CellMeasurer = require('./CellMeasurer');
+
+Object.defineProperty(exports, 'CellMeasurer', {
+  enumerable: true,
+  get: function get() {
+    return _CellMeasurer.CellMeasurer;
+  }
+});
+Object.defineProperty(exports, 'defaultCellMeasurerCellSizeCache', {
+  enumerable: true,
+  get: function get() {
+    return _CellMeasurer.defaultCellSizeCache;
+  }
+});
+Object.defineProperty(exports, 'uniformSizeCellMeasurerCellSizeCache', {
+  enumerable: true,
+  get: function get() {
+    return _CellMeasurer.defaultCellSizeCache;
+  }
+});
+
 var _Collection = require('./Collection');
 
 Object.defineProperty(exports, 'Collection', {
@@ -6713,6 +11104,30 @@ Object.defineProperty(exports, 'ColumnSizer', {
 
 var _FlexTable = require('./FlexTable');
 
+Object.defineProperty(exports, 'defaultFlexTableCellDataGetter', {
+  enumerable: true,
+  get: function get() {
+    return _FlexTable.defaultCellDataGetter;
+  }
+});
+Object.defineProperty(exports, 'defaultFlexTableCellRenderer', {
+  enumerable: true,
+  get: function get() {
+    return _FlexTable.defaultCellRenderer;
+  }
+});
+Object.defineProperty(exports, 'defaultFlexTableHeaderRenderer', {
+  enumerable: true,
+  get: function get() {
+    return _FlexTable.defaultHeaderRenderer;
+  }
+});
+Object.defineProperty(exports, 'defaultFlexTableRowRenderer', {
+  enumerable: true,
+  get: function get() {
+    return _FlexTable.defaultRowRenderer;
+  }
+});
 Object.defineProperty(exports, 'FlexTable', {
   enumerable: true,
   get: function get() {
@@ -6740,6 +11155,12 @@ Object.defineProperty(exports, 'SortIndicator', {
 
 var _Grid = require('./Grid');
 
+Object.defineProperty(exports, 'defaultCellRangeRenderer', {
+  enumerable: true,
+  get: function get() {
+    return _Grid.defaultCellRangeRenderer;
+  }
+});
 Object.defineProperty(exports, 'Grid', {
   enumerable: true,
   get: function get() {
@@ -6773,8 +11194,17 @@ Object.defineProperty(exports, 'VirtualScroll', {
     return _VirtualScroll.VirtualScroll;
   }
 });
-},{"./ArrowKeyStepper":36,"./AutoSizer":38,"./Collection":43,"./ColumnSizer":46,"./FlexTable":51,"./Grid":53,"./InfiniteLoader":60,"./ScrollSync":62,"./VirtualScroll":64}],66:[function(require,module,exports){
-"use strict";
+
+var _WindowScroller = require('./WindowScroller');
+
+Object.defineProperty(exports, 'WindowScroller', {
+  enumerable: true,
+  get: function get() {
+    return _WindowScroller.WindowScroller;
+  }
+});
+},{"./ArrowKeyStepper":47,"./AutoSizer":49,"./CellMeasurer":52,"./Collection":57,"./ColumnSizer":60,"./FlexTable":69,"./Grid":72,"./InfiniteLoader":79,"./ScrollSync":81,"./VirtualScroll":83,"./WindowScroller":85}],88:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6794,10 +11224,14 @@ function createCallbackMemoizer() {
 
     var keys = Object.keys(indices);
     var allInitialized = !requireAllKeys || keys.every(function (key) {
-      return indices[key] >= 0;
+      var value = indices[key];
+      return Array.isArray(value) ? value.length > 0 : value >= 0;
     });
     var indexChanged = keys.length !== Object.keys(cachedIndices).length || keys.some(function (key) {
-      return cachedIndices[key] !== indices[key];
+      var cachedValue = cachedIndices[key];
+      var value = indices[key];
+
+      return Array.isArray(value) ? cachedValue.join(',') !== value.join(',') : cachedValue !== value;
     });
 
     cachedIndices = indices;
@@ -6807,8 +11241,8 @@ function createCallbackMemoizer() {
     }
   };
 }
-},{}],67:[function(require,module,exports){
-"use strict";
+},{}],89:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6819,6 +11253,7 @@ exports.default = getUpdatedOffsetForIndex;
  * If the cell is already visible then the current offset will be returned.
  * If the current offset is too great or small, it will be adjusted just enough to ensure the specified index is visible.
  *
+ * @param align Desired alignment within container; one of "auto" (default), "start", or "end"
  * @param cellOffset Offset (x or y) position for cell
  * @param cellSize Size (width or height) of cell
  * @param containerSize Total size (width or height) of the container
@@ -6826,6 +11261,8 @@ exports.default = getUpdatedOffsetForIndex;
  * @return Offset to use to ensure the specified cell is visible
  */
 function getUpdatedOffsetForIndex(_ref) {
+  var _ref$align = _ref.align;
+  var align = _ref$align === undefined ? 'auto' : _ref$align;
   var cellOffset = _ref.cellOffset;
   var cellSize = _ref.cellSize;
   var containerSize = _ref.containerSize;
@@ -6833,54 +11270,19 @@ function getUpdatedOffsetForIndex(_ref) {
 
   var maxOffset = cellOffset;
   var minOffset = maxOffset - containerSize + cellSize;
-  var newOffset = Math.max(minOffset, Math.min(maxOffset, currentOffset));
 
-  return newOffset;
-}
-},{}],68:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = initCellMetadata;
-/**
- * Initializes metadata for an axis and its cells.
- * This data is used to determine which cells are visible given a container size and scroll position.
- *
- * @param cellCount Total number of cells.
- * @param size Either a fixed size or a function that returns the size for a given given an index.
- * @return Object mapping cell index to cell metadata (size, offset)
- */
-function initCellMetadata(_ref) {
-  var cellCount = _ref.cellCount;
-  var size = _ref.size;
-
-  var sizeGetter = size instanceof Function ? size : function (index) {
-    return size;
-  };
-
-  var cellMetadata = [];
-  var offset = 0;
-
-  for (var i = 0; i < cellCount; i++) {
-    var _size = sizeGetter(i);
-
-    if (_size == null || isNaN(_size)) {
-      throw Error("Invalid size returned for cell " + i + " of value " + _size);
-    }
-
-    cellMetadata[i] = {
-      size: _size,
-      offset: offset
-    };
-
-    offset += _size;
+  switch (align) {
+    case 'start':
+      return maxOffset;
+    case 'end':
+      return minOffset;
+    case 'center':
+      return maxOffset - (containerSize - cellSize) / 2;
+    default:
+      return Math.max(minOffset, Math.min(maxOffset, currentOffset));
   }
-
-  return cellMetadata;
 }
-},{}],69:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7033,7 +11435,7 @@ var removeResizeListener = function removeResizeListener(element, fn) {
   if (attachEvent) element.detachEvent('onresize', fn);else {
     element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
     if (!element.__resizeListeners__.length) {
-      element.removeEventListener('scroll', scrollListener);
+      element.removeEventListener('scroll', scrollListener, true);
       element.__resizeTriggers__ = !element.removeChild(element.__resizeTriggers__);
     }
   }
@@ -7043,7 +11445,7 @@ module.exports = {
   addResizeListener: addResizeListener,
   removeResizeListener: removeResizeListener
 };
-},{}],70:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -7062,13 +11464,14 @@ var shallowEqual = require('fbjs/lib/shallowEqual');
 /**
  * Does a shallow comparison for props and state.
  * See ReactComponentWithPureRenderMixin
+ * See also https://facebook.github.io/react/docs/shallow-compare.html
  */
 function shallowCompare(instance, nextProps, nextState) {
   return !shallowEqual(instance.props, nextProps) || !shallowEqual(instance.state, nextState);
 }
 
 module.exports = shallowCompare;
-},{"fbjs/lib/shallowEqual":19}],71:[function(require,module,exports){
+},{"fbjs/lib/shallowEqual":20}],92:[function(require,module,exports){
 'use strict';
 module.exports = function (str) {
 	return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
@@ -7076,7 +11479,7 @@ module.exports = function (str) {
 	});
 };
 
-},{}],72:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 (function(self) {
   'use strict';
 
