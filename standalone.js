@@ -467,10 +467,10 @@ var Creatable = _react2['default'].createClass({
 		}
 	},
 
-	onClose: function onClose(event) {
+	onClose: function onClose() {
 		this.inputValue = '';
-		if (this.props.onBlur) {
-			this.props.onBlur(event);
+		if (this.props.onClose) {
+			this.props.onClose();
 		}
 	},
 
