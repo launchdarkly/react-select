@@ -206,6 +206,20 @@ const Creatable = React.createClass({
 		}
 	},
 
+	onBlur(event) {
+		this.inputValue = '';
+		if (this.props.onBlur) {
+			this.props.onBlur(event);
+		}
+	},
+
+	onClose(event) {
+		this.inputValue = '';
+		if (this.props.onBlur) {
+			this.props.onBlur(event);
+		}
+	},
+
 	render () {
 		const {
 			newOptionCreator,
@@ -229,6 +243,8 @@ const Creatable = React.createClass({
 			menuRenderer: this.menuRenderer,
 			onInputChange: this.onInputChange,
 			onInputKeyDown: this.onInputKeyDown,
+			onBlur: this.onBlur,
+			onClose: this.onClose,
 			ref: (ref) => {
 				this.select = ref;
 
