@@ -455,6 +455,20 @@ var Creatable = _react2['default'].createClass({
 		}
 	},
 
+	onBlur: function onBlur(event) {
+		this.inputValue = '';
+		if (this.props.onBlur) {
+			this.props.onBlur(event);
+		}
+	},
+
+	onClose: function onClose(event) {
+		this.inputValue = '';
+		if (this.props.onBlur) {
+			this.props.onBlur(event);
+		}
+	},
+
 	render: function render() {
 		var _this = this;
 
@@ -472,6 +486,8 @@ var Creatable = _react2['default'].createClass({
 			menuRenderer: this.menuRenderer,
 			onInputChange: this.onInputChange,
 			onInputKeyDown: this.onInputKeyDown,
+			onBlur: this.onBlur,
+			onClose: this.onClose,
 			ref: function ref(_ref) {
 				_this.select = _ref;
 
