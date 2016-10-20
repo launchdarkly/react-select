@@ -224,12 +224,15 @@ var Async = (function (_Component) {
 			var _this3 = this;
 
 			var _props3 = this.props;
+			var value = _props3.value;
 			var children = _props3.children;
 			var loadingPlaceholder = _props3.loadingPlaceholder;
 			var placeholder = _props3.placeholder;
 			var _state = this.state;
 			var isLoading = _state.isLoading;
 			var options = _state.options;
+
+			console.log('value', value);
 
 			var props = {
 				noResultsText: this.noResultsText(),
@@ -870,6 +873,8 @@ function stringifyValue(value) {
 
 var stringOrNode = _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.node]);
 
+var stringOrNodeOrFunction = _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.node, _react2['default'].PropTypes.func]);
+
 var instanceId = 1;
 
 var Select = _react2['default'].createClass({
@@ -913,7 +918,7 @@ var Select = _react2['default'].createClass({
 		menuStyle: _react2['default'].PropTypes.object, // optional style to apply to the menu
 		multi: _react2['default'].PropTypes.bool, // multi-value input
 		name: _react2['default'].PropTypes.string, // generates a hidden <input /> tag with this field name for html forms
-		noResultsText: stringOrNode, // placeholder displayed when there are no matching search results
+		noResultsText: stringOrNodeOrFunction, // placeholder displayed when there are no matching search results
 		onBlur: _react2['default'].PropTypes.func, // onBlur handler: function (event) {}
 		onBlurResetsInput: _react2['default'].PropTypes.bool, // whether input is cleared on blur
 		onChange: _react2['default'].PropTypes.func, // onChange handler: function (newValue) {}
@@ -1856,7 +1861,7 @@ var Select = _react2['default'].createClass({
 			return _react2['default'].createElement(
 				'div',
 				{ className: 'Select-noresults' },
-				this.props.noResultsText
+				typeof this.props.noResultsText === 'function' ? this.props.noResultsText(this.state.inputValue) : this.props.noResultsText
 			);
 		} else {
 			return null;

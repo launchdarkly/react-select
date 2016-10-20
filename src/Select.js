@@ -38,6 +38,12 @@ const stringOrNode = React.PropTypes.oneOfType([
 	React.PropTypes.node
 ]);
 
+const stringOrNodeOrFunction = React.PropTypes.oneOfType([
+	React.PropTypes.string,
+	React.PropTypes.node,
+	React.PropTypes.func
+]);
+
 let instanceId = 1;
 
 const Select = React.createClass({
@@ -81,7 +87,7 @@ const Select = React.createClass({
 		menuStyle: React.PropTypes.object,          // optional style to apply to the menu
 		multi: React.PropTypes.bool,                // multi-value input
 		name: React.PropTypes.string,               // generates a hidden <input /> tag with this field name for html forms
-		noResultsText: stringOrNode,                // placeholder displayed when there are no matching search results
+		noResultsText: stringOrNodeOrFunction,      // placeholder displayed when there are no matching search results
 		onBlur: React.PropTypes.func,               // onBlur handler: function (event) {}
 		onBlurResetsInput: React.PropTypes.bool,    // whether input is cleared on blur
 		onChange: React.PropTypes.func,             // onChange handler: function (newValue) {}
@@ -987,7 +993,7 @@ const Select = React.createClass({
 		} else if (this.props.noResultsText) {
 			return (
 				<div className="Select-noresults">
-					{this.props.noResultsText}
+					{typeof this.props.noResultsText === 'function' ? this.props.noResultsText(this.state.inputValue) : this.props.noResultsText}
 				</div>
 			);
 		} else {
