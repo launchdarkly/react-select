@@ -190,10 +190,10 @@ const Creatable = React.createClass({
 		}
 	},
 
-	onClose(event) {
+	onClose() {
 		this.inputValue = '';
-		if (this.props.onBlur) {
-			this.props.onBlur(event);
+		if (this.props.onClose) {
+			this.props.onClose();
 		}
 	},
 

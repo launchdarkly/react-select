@@ -136,8 +136,10 @@ export default class Async extends Component {
 	}
 
 	render () {
-		const { children, loadingPlaceholder, placeholder, searchPromptText } = this.props;
+		const { value, children, loadingPlaceholder, placeholder, searchPromptText } = this.props;
 		const { isLoading, options } = this.state;
+
+		console.log('value', value);
 
 		const props = {
 			noResultsText: isLoading ? loadingPlaceholder : searchPromptText,
